@@ -1,0 +1,660 @@
+[
+    {
+        "name": "Python",
+        "category": "Backend/Data",
+        "icon": "🐍",
+        "demandIndex": 9.8,
+        "salary": 135000,
+        "growth": 22,
+        "experienceBarrier": "Medium",
+        "saturationRisk": "Low",
+        "description": "Versatile General-Purpose Programming Language",
+        "tags": [
+            "Most Demanded",
+            "AI/ML Leader"
+        ],
+        "recommended": [
+            "Pandas",
+            "NumPy",
+            "SQL",
+            "FastAPI",
+            "Django"
+        ],
+        "careerPaths": [
+            "Data Science",
+            "Backend Engineering",
+            "AI & Machine Learning"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "Critical"
+            },
+            {
+                "city": "New York, NY",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Austin, TX",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "React",
+        "category": "Frontend",
+        "icon": "⚛️",
+        "demandIndex": 9.2,
+        "salary": 124000,
+        "growth": 18,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Elevated",
+        "description": "Meta's Industry-Standard UI Library",
+        "tags": [
+            "Market Leader",
+            "Most Wanted"
+        ],
+        "recommended": [
+            "TypeScript",
+            "Next.js",
+            "Redux",
+            "Tailwind CSS"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Full-Stack Development",
+            "Mobile Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "Critical"
+            },
+            {
+                "city": "New York, NY",
+                "level": "Critical"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Berlin, DE",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "TypeScript",
+        "category": "Frontend",
+        "icon": "📘",
+        "demandIndex": 8.9,
+        "salary": 128000,
+        "growth": 34,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Low",
+        "description": "Strongly-Typed JavaScript Superset",
+        "tags": [
+            "Trending",
+            "Fast Adopting"
+        ],
+        "recommended": [
+            "React",
+            "Node.js",
+            "NestJS",
+            "Angular"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Backend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "Singapore",
+                "level": "Critical"
+            },
+            {
+                "city": "San Francisco, CA",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Toronto, CA",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "Angular",
+        "category": "Frontend",
+        "icon": "🅰️",
+        "demandIndex": 7.2,
+        "salary": 118500,
+        "growth": 4.2,
+        "experienceBarrier": "High",
+        "saturationRisk": "Stable",
+        "description": "Google's Enterprise-Grade Frontend Framework",
+        "tags": [
+            "Enterprise",
+            "Scalable"
+        ],
+        "recommended": [
+            "TypeScript",
+            "RxJS",
+            "NgRx",
+            "NestJS"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Enterprise Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "Chicago, IL",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Bangalore, IN",
+                "level": "Critical"
+            },
+            {
+                "city": "Frankfurt, DE",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "Vue.js",
+        "category": "Frontend",
+        "icon": "💚",
+        "demandIndex": 6.5,
+        "salary": 112000,
+        "growth": 12.8,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Low Risk",
+        "description": "Community-Driven Progressive Framework",
+        "tags": [
+            "Dev Friendly",
+            "Flexible"
+        ],
+        "recommended": [
+            "Nuxt.js",
+            "Pinia",
+            "TypeScript",
+            "Vite"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Startup Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "Shanghai, CN",
+                "level": "Critical"
+            },
+            {
+                "city": "Amsterdam, NL",
+                "level": "High"
+            },
+            {
+                "city": "São Paulo, BR",
+                "level": "Rising"
+            },
+            {
+                "city": "Tokyo, JP",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "Generative AI",
+        "category": "AI & Data",
+        "icon": "🤖",
+        "demandIndex": 9.5,
+        "salary": 165000,
+        "growth": 248,
+        "experienceBarrier": "High",
+        "saturationRisk": "Low",
+        "description": "AI Model Building & Prompt Engineering",
+        "tags": [
+            "Fastest Growing",
+            "Highest Paying"
+        ],
+        "recommended": [
+            "Python",
+            "LangChain",
+            "OpenAI API",
+            "Hugging Face"
+        ],
+        "careerPaths": [
+            "AI Engineering",
+            "ML Research",
+            "Product AI"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "Critical"
+            },
+            {
+                "city": "London, UK",
+                "level": "Critical"
+            },
+            {
+                "city": "Toronto, CA",
+                "level": "High"
+            },
+            {
+                "city": "Berlin, DE",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "Rust",
+        "category": "Systems",
+        "icon": "🦀",
+        "demandIndex": 7.8,
+        "salary": 145000,
+        "growth": 82,
+        "experienceBarrier": "High",
+        "saturationRisk": "Niche Fast-Growth",
+        "description": "High-Performance Systems Programming Language",
+        "tags": [
+            "Emerging Tech",
+            "Systemic"
+        ],
+        "recommended": [
+            "C++",
+            "WebAssembly",
+            "Go",
+            "Linux"
+        ],
+        "careerPaths": [
+            "Systems Engineering",
+            "WebAssembly",
+            "Blockchain"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "High"
+            },
+            {
+                "city": "Berlin, DE",
+                "level": "High"
+            },
+            {
+                "city": "Seattle, WA",
+                "level": "Critical"
+            },
+            {
+                "city": "Zurich, CH",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "Node.js",
+        "category": "Backend",
+        "icon": "🟢",
+        "demandIndex": 8.7,
+        "salary": 121000,
+        "growth": 14,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "JavaScript Runtime for Server-Side Development",
+        "tags": [
+            "Ubiquitous",
+            "Full-Stack Friendly"
+        ],
+        "recommended": [
+            "Express",
+            "NestJS",
+            "MongoDB",
+            "TypeScript"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Full-Stack Development",
+            "API Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "New York, NY",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Bangalore, IN",
+                "level": "Critical"
+            },
+            {
+                "city": "Sydney, AU",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "Kubernetes",
+        "category": "DevOps",
+        "icon": "☸️",
+        "demandIndex": 8.4,
+        "salary": 149000,
+        "growth": 28,
+        "experienceBarrier": "High",
+        "saturationRisk": "Low",
+        "description": "Container Orchestration at Enterprise Scale",
+        "tags": [
+            "DevOps Essential",
+            "Cloud Native"
+        ],
+        "recommended": [
+            "Docker",
+            "Helm",
+            "Terraform",
+            "AWS"
+        ],
+        "careerPaths": [
+            "DevOps Engineering",
+            "SRE",
+            "Cloud Architecture"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "Critical"
+            },
+            {
+                "city": "Amsterdam, NL",
+                "level": "High"
+            },
+            {
+                "city": "Singapore",
+                "level": "High"
+            },
+            {
+                "city": "Munich, DE",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "AWS",
+        "category": "Cloud",
+        "icon": "☁️",
+        "demandIndex": 9.0,
+        "salary": 142000,
+        "growth": 19,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Amazon Web Services – Global Cloud Computing Leader",
+        "tags": [
+            "Top Tier",
+            "Industry Standard"
+        ],
+        "recommended": [
+            "Terraform",
+            "Kubernetes",
+            "Lambda",
+            "DynamoDB"
+        ],
+        "careerPaths": [
+            "Cloud Engineering",
+            "Solutions Architecture",
+            "DevOps"
+        ],
+        "regionalDemand": [
+            {
+                "city": "Seattle, WA",
+                "level": "Critical"
+            },
+            {
+                "city": "Dublin, IE",
+                "level": "Critical"
+            },
+            {
+                "city": "Sydney, AU",
+                "level": "High"
+            },
+            {
+                "city": "Tokyo, JP",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "SQL",
+        "category": "Data",
+        "icon": "🗃️",
+        "demandIndex": 8.6,
+        "salary": 108000,
+        "growth": 8,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Structured Query Language – Universal Data Standard",
+        "tags": [
+            "Ubiquitous",
+            "Evergreen"
+        ],
+        "recommended": [
+            "PostgreSQL",
+            "MySQL",
+            "Python",
+            "Data Warehousing"
+        ],
+        "careerPaths": [
+            "Data Engineering",
+            "Data Analysis",
+            "Backend Engineering"
+        ],
+        "regionalDemand": [
+            {
+                "city": "New York, NY",
+                "level": "Critical"
+            },
+            {
+                "city": "Chicago, IL",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "High"
+            },
+            {
+                "city": "Frankfurt, DE",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "Go",
+        "category": "Backend",
+        "icon": "🐹",
+        "demandIndex": 8.1,
+        "salary": 138000,
+        "growth": 31,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "Google's Fast & Efficient Systems Language",
+        "tags": [
+            "Trending",
+            "Cloud Native"
+        ],
+        "recommended": [
+            "Kubernetes",
+            "gRPC",
+            "Docker",
+            "PostgreSQL"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Infrastructure",
+            "Fintech"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "High"
+            },
+            {
+                "city": "New York, NY",
+                "level": "High"
+            },
+            {
+                "city": "Singapore",
+                "level": "Rising"
+            },
+            {
+                "city": "Zurich, CH",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "Docker",
+        "category": "DevOps",
+        "icon": "🐳",
+        "demandIndex": 8.8,
+        "salary": 130000,
+        "growth": 16,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Containerization Platform for Modern Applications",
+        "tags": [
+            "DevOps Essential",
+            "Widely Adopted"
+        ],
+        "recommended": [
+            "Kubernetes",
+            "CI/CD",
+            "Linux",
+            "AWS"
+        ],
+        "careerPaths": [
+            "DevOps Engineering",
+            "Backend Engineering",
+            "Platform Engineering"
+        ],
+        "regionalDemand": [
+            {
+                "city": "Berlin, DE",
+                "level": "High"
+            },
+            {
+                "city": "San Francisco, CA",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "Critical"
+            },
+            {
+                "city": "Bangalore, IN",
+                "level": "High"
+            }
+        ]
+    },
+    {
+        "name": "Next.js",
+        "category": "Frontend",
+        "icon": "▲",
+        "demandIndex": 8.5,
+        "salary": 126000,
+        "growth": 44,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "Production-Grade React Framework by Vercel",
+        "tags": [
+            "Trending",
+            "Full-Stack"
+        ],
+        "recommended": [
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Prisma"
+        ],
+        "careerPaths": [
+            "Full-Stack Development",
+            "Frontend Engineering"
+        ],
+        "regionalDemand": [
+            {
+                "city": "San Francisco, CA",
+                "level": "High"
+            },
+            {
+                "city": "New York, NY",
+                "level": "High"
+            },
+            {
+                "city": "London, UK",
+                "level": "Rising"
+            },
+            {
+                "city": "Amsterdam, NL",
+                "level": "Rising"
+            }
+        ]
+    },
+    {
+        "name": "Java",
+        "category": "Backend",
+        "icon": "☕",
+        "demandIndex": 8.3,
+        "salary": 125000,
+        "growth": 6,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Enterprise-Grade Object-Oriented Programming Language",
+        "tags": [
+            "Enterprise Staple",
+            "Mature"
+        ],
+        "recommended": [
+            "Spring Boot",
+            "Microservices",
+            "Kafka",
+            "SQL"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Enterprise Software",
+            "Android Development"
+        ],
+        "regionalDemand": [
+            {
+                "city": "New York, NY",
+                "level": "High"
+            },
+            {
+                "city": "Frankfurt, DE",
+                "level": "Critical"
+            },
+            {
+                "city": "Bangalore, IN",
+                "level": "High"
+            },
+            {
+                "city": "Chicago, IL",
+                "level": "High"
+            }
+        ]
+    }
+]
