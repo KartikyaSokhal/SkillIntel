@@ -12,7 +12,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('/api/trending')
+        fetch('/api/skills/trending')
             .then(r => r.json())
             .then(json => { setTrending(json.data || []); setLoading(false); })
             .catch(() => setLoading(false));

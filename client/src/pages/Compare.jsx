@@ -42,7 +42,7 @@ export default function Compare() {
         industryRandRef.current = chosen.map(() => INDUSTRIES.map(() => Math.floor(Math.random() * 40 + 15)));
 
         try {
-            const res = await fetch(`/api/compare?skills=${encodeURIComponent(chosen.join(','))}`);
+            const res = await fetch(`/api/skills/compare?skills=${encodeURIComponent(chosen.join(','))}`);
             const json = await res.json();
             if (json.error) throw new Error(json.error);
             const valid = json.data.filter(s => !s.error);

@@ -53,7 +53,7 @@ export default function SkillDetail() {
                 setSkill(json.data);
                 setLoading(false);
                 // fetch recommended
-                return fetch(`/api/recommended/${encodeURIComponent(json.data.name)}`);
+                return fetch(`/api/skills/recommended/${encodeURIComponent(json.data.name)}`);
             })
             .then(r => r.json())
             .then(json => setRecommended(json.data || []))
