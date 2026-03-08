@@ -96,7 +96,7 @@ export default function Home() {
                         <span className="stat-badge blue">Top Tier</span>
                         <span className="stat-label">Highest Paying</span>
                         <span className="stat-value">
-                            {highestPay ? `${formatSalaryLPA(highestPay)} Avg.` : '₹137 LPA Avg.'}
+                            {highestPay ? `${formatSalaryLPA(highestPay)} Avg.` : '₹19 LPA Avg.'}
                         </span>
                     </div>
                     <div className="stat-item">
