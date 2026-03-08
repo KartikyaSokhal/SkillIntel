@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
+import { formatSalaryLPA } from '../utils/currency';
 
 const CAREER_ICONS = {
     'Data Science': '🧪',
@@ -134,9 +135,9 @@ export default function SkillDetail() {
                             <div className="metric-cell-sub">Score out of 10</div>
                         </div>
                         <div className="metric-cell">
-                            <div className="metric-cell-label">Avg Salary</div>
-                            <div className="metric-cell-value">${skill.salary.toLocaleString()}</div>
-                            <div className="metric-cell-sub">Yearly USD</div>
+                            <div className="metric-cell-label">Estimated Salary (India)</div>
+                            <div className="metric-cell-value">{formatSalaryLPA(skill.salary)}</div>
+                            <div className="metric-cell-sub">Yearly (LPA)</div>
                         </div>
                         <div className="metric-cell">
                             <div className="metric-cell-label">Growth Momentum</div>
@@ -254,7 +255,7 @@ export default function SkillDetail() {
                                             </div>
                                             <div className="metric-item">
                                                 <div className="metric-label">Salary</div>
-                                                <div className="metric-value">${(s.salary / 1000).toFixed(0)}k</div>
+                                                <div className="metric-value">{formatSalaryLPA(s.salary)}</div>
                                             </div>
                                         </div>
                                         <div className="skill-card-footer">

@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
+import { formatSalaryLPA } from '../utils/currency';
 
 const SKILL_COLORS = ['#2563eb', '#ef4444', '#10b981', '#8b5cf6'];
 const INDUSTRIES = ['FinTech & Banking', 'E-Commerce', 'Healthcare', 'AI & Startups'];
@@ -206,8 +207,8 @@ export default function Compare() {
                                             ))}
                                         </tr>
                                         <tr>
-                                            <td className="metric-col">Avg Salary (USD)</td>
-                                            {results.map(s => <td key={s.name}><strong>${s.salary.toLocaleString()}</strong></td>)}
+                                            <td className="metric-col">Avg Salary (India)</td>
+                                            {results.map(s => <td key={s.name}><strong>{formatSalaryLPA(s.salary)}</strong></td>)}
                                         </tr>
                                         <tr>
                                             <td className="metric-col">Growth Momentum (YoY)</td>

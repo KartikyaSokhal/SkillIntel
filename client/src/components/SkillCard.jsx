@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { formatSalaryLPA } from '../utils/currency';
 
 export default function SkillCard({ skill, index = 0 }) {
     const navigate = useNavigate();
@@ -37,8 +38,8 @@ export default function SkillCard({ skill, index = 0 }) {
                     </div>
                 </div>
                 <div className="metric-item">
-                    <div className="metric-label">Avg Salary</div>
-                    <div className="metric-value">${(skill.salary / 1000).toFixed(0)}k</div>
+                    <div className="metric-label">Avg Salary (India)</div>
+                    <div className="metric-value">{formatSalaryLPA(skill.salary)}</div>
                 </div>
                 <div className="metric-item">
                     <div className="metric-label">Growth YoY</div>
