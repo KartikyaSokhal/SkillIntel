@@ -7,21 +7,19 @@ const {
   getTrendingSkills,
   getRecommendedSkills,
   compareSkills,
+  refreshSkills
 } = require("../controllers/skillController");
 
-// All skills
 router.get("/skills", getAllSkills);
 
-// Single skill
-router.get("/skills/:name", getSkillByName);
-
-// Trending skills
 router.get("/skills/trending", getTrendingSkills);
 
-// Recommended skills
 router.get("/skills/recommended/:skill", getRecommendedSkills);
 
-// Compare skills
 router.get("/skills/compare", compareSkills);
+
+router.get("/skills/:name", getSkillByName);
+
+router.post("/skills/refresh", refreshSkills);
 
 module.exports = router;

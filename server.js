@@ -9,6 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+const runSkillPipeline = require("./jobs/skillPipeline");
+
+runSkillPipeline();
+
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));
 
