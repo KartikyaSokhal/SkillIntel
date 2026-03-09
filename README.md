@@ -1,50 +1,46 @@
-Here is a clean, professional README.md suitable for your SkillIndex / Skill to Economy Engine backend project. It will look good on GitHub and for project evaluation or viva.
+# 🚀 SkillIndex – Skill to Economy Engine
 
-⸻
+SkillIndex is a backend-powered platform that analyzes market data to determine the **most valuable skills in the economy**.  
+It processes skill data through a pipeline and provides an API to access ranked skills based on demand, growth, and salary trends.
 
-:::writing{variant=“standard” id=“readme1”}
+This project demonstrates **backend architecture, REST APIs, middleware usage, and automated data pipelines using Node.js and Express.**
 
-SkillIndex – Skill to Economy Engine
+---
 
-SkillIndex is a backend-powered platform that analyzes market data to determine the most valuable skills in the economy.
-It aggregates data, processes it through a skill analysis pipeline, and exposes an API to retrieve ranked skills.
+# 📌 Features
 
-The project demonstrates backend architecture, data pipelines, and API design using Node.js and Express.
+- Skill demand analysis pipeline
+- REST API for retrieving ranked skills
+- Automatic pipeline execution on server startup
+- Static frontend file serving
+- Custom 404 error handling
+- Global server error handler
+- Modular backend structure
 
-⸻
+---
 
-🚀 Features
-	•	Skill demand analysis pipeline
-	•	REST API for retrieving ranked skills
-	•	Automated data processing on server startup
-	•	Static frontend support
-	•	Custom 404 page handling
-	•	Global error handling system
-	•	Modular backend architecture
+# 🏗 Tech Stack
 
-⸻
+**Backend**
+- Node.js
+- Express.js
 
-🏗️ Tech Stack
+**Other Tools**
+- JavaScript
+- REST APIs
+- Middleware Architecture
 
-Backend:
-	•	Node.js
-	•	Express.js
+---
 
-Other Tools:
-	•	JavaScript
-	•	REST API Architecture
-	•	Middleware based server design
+# 📂 Project Structure
 
-⸻
-
-📂 Project Structure
-
+```
 SkillIntel
 │
-├── server.js                # Main server entry point
+├── server.js                # Main server file
 │
 ├── routes
-│   └── skillRoutes.js       # API route definitions
+│   └── skillRoutes.js       # API routes
 │
 ├── jobs
 │   └── skillPipeline.js     # Skill processing pipeline
@@ -54,85 +50,102 @@ SkillIntel
 │   └── 404.html
 │
 └── package.json
+```
 
+---
 
-⸻
-
-⚙️ Installation
+# ⚙️ Installation
 
 Clone the repository:
 
+```bash
 git clone https://github.com/your-username/skillindex.git
+```
 
-Navigate to the project directory:
+Move into the project directory:
 
+```bash
 cd skillindex
+```
 
 Install dependencies:
 
+```bash
 npm install
+```
 
+---
 
-⸻
-
-▶️ Running the Server
+# ▶️ Running the Server
 
 Start the server:
 
+```bash
 node server.js
+```
 
-Or using nodemon for development:
+Or with nodemon (recommended for development):
 
+```bash
 npm run dev
+```
 
-Server will start at:
+Server will run on:
 
+```
 http://localhost:3000
+```
 
+---
 
-⸻
+# 📡 API Endpoints
 
-📡 API Endpoints
+## Get Ranked Skills
 
-Get Ranked Skills
-
+```
 GET /api/skills
+```
 
-Example response:
+Example Response:
 
+```json
 [
   {
     "skill": "React",
+    "category": "Frontend",
     "demandScore": 98,
-    "averageSalary": 130000,
-    "growth": 15
+    "growth": 15,
+    "averageSalary": 130000
   }
 ]
+```
 
+---
 
-⸻
+# 🔄 Skill Processing Pipeline
 
-🔄 Skill Analysis Pipeline
+When the server starts, a **Skill Pipeline** runs automatically.
 
-When the server starts, the Skill Pipeline runs automatically.
+The pipeline:
 
-Responsibilities include:
-	•	Aggregating skill data
-	•	Processing demand metrics
-	•	Ranking skills by market value
-	•	Preparing data for API consumption
+1. Collects skill data
+2. Processes demand and salary metrics
+3. Ranks skills by economic value
+4. Prepares data for API access
 
-This pipeline is located in:
+Pipeline file location:
 
+```
 /jobs/skillPipeline.js
+```
 
+---
 
-⸻
+# 🧠 Backend Architecture
 
-🧠 Backend Architecture
+Request Flow:
 
-Request flow:
-
+```
 Client Request
       │
       ▼
@@ -148,52 +161,67 @@ Skill Processing Logic
       │
       ▼
 Response Sent
+```
 
+---
 
-⸻
+# ❗ Error Handling
 
-❗ Error Handling
+The application includes robust error handling.
 
-The application includes:
+### 404 Handler
 
-404 Handler
-	•	Returns JSON for API requests
-	•	Returns custom HTML page for frontend routes
+- Returns JSON for API requests
+- Returns a custom HTML page for frontend routes
 
-Global Error Handler
+### Global Error Handler
 
-Handles unexpected server errors and prevents server crashes.
+Handles unexpected errors and prevents server crashes.
 
-Example error response:
+Example response:
 
+```json
 {
   "error": "Internal Server Error",
   "message": "Something went wrong"
 }
+```
 
+---
 
-⸻
+# 🌐 Static File Serving
 
-🌐 Static File Serving
+Frontend files are served using Express static middleware.
 
-Frontend files are served from the public directory using Express static middleware.
-
+```
 app.use(express.static('public'))
+```
 
-This allows the server to host:
+Example access:
 
+```
 http://localhost:3000/index.html
+```
 
+---
 
-⸻
+# 🔮 Future Improvements
 
-📌 Future Improvements
-	•	AI powered skill demand prediction
-	•	Real-time job market scraping
-	•	Skill recommendation engine
-	•	Salary forecasting model
-	•	Frontend dashboard for skill analytics
+- AI-powered skill demand prediction
+- Real-time job market scraping
+- Skill recommendation engine
+- Salary prediction model
+- Interactive analytics dashboard
 
-⸻
+---
 
+# 👨‍💻 Author
 
+**Piyush Garg**  
+Computer Science Engineering Student
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
