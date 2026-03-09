@@ -1,26 +1,10 @@
 [
   {
-    "name": "AWS",
-    "category": "Cloud",
-    "demandScore": 100,
-    "growth": 20,
-    "averageSalary": 140000,
-    "recommended": [
-      "Kubernetes",
-      "Docker",
-      "Terraform",
-      "Azure",
-      "GCP",
-      "Serverless",
-      "CI/CD"
-    ]
-  },
-  {
     "name": "React",
     "category": "Frontend",
-    "demandScore": 86,
+    "demandScore": 100,
     "growth": 18,
-    "averageSalary": 130000,
+    "averageSalary": 145000,
     "recommended": [
       "JavaScript",
       "TypeScript",
@@ -32,27 +16,11 @@
     ]
   },
   {
-    "name": "TypeScript",
-    "category": "Programming Language",
-    "demandScore": 86,
-    "growth": 25,
-    "averageSalary": 135000,
-    "recommended": [
-      "JavaScript",
-      "Node.js",
-      "React",
-      "Angular",
-      "Vue.js",
-      "Deno",
-      "NestJS"
-    ]
-  },
-  {
     "name": "SQL",
     "category": "Database",
-    "demandScore": 86,
-    "growth": 10,
-    "averageSalary": 115000,
+    "demandScore": 91,
+    "growth": 8,
+    "averageSalary": 125000,
     "recommended": [
       "PostgreSQL",
       "MySQL",
@@ -64,91 +32,11 @@
     ]
   },
   {
-    "name": "Python",
-    "category": "Programming Language",
-    "demandScore": 57,
-    "growth": 15,
-    "averageSalary": 125000,
-    "recommended": [
-      "Django",
-      "Flask",
-      "FastAPI",
-      "Data Science",
-      "Machine Learning",
-      "AWS",
-      "Docker"
-    ]
-  },
-  {
-    "name": "Kubernetes",
-    "category": "DevOps",
-    "demandScore": 57,
-    "growth": 22,
-    "averageSalary": 150000,
-    "recommended": [
-      "Docker",
-      "AWS",
-      "GCP",
-      "Azure",
-      "Helm",
-      "Terraform",
-      "CI/CD"
-    ]
-  },
-  {
-    "name": "JavaScript",
-    "category": "Programming Language",
-    "demandScore": 43,
-    "growth": 12,
-    "averageSalary": 120000,
-    "recommended": [
-      "TypeScript",
-      "Node.js",
-      "React",
-      "Angular",
-      "Vue.js",
-      "Express.js",
-      "WebAssembly"
-    ]
-  },
-  {
-    "name": "Docker",
-    "category": "DevOps",
-    "demandScore": 36,
-    "growth": 18,
-    "averageSalary": 130000,
-    "recommended": [
-      "Kubernetes",
-      "AWS",
-      "CI/CD",
-      "Microservices",
-      "Linux",
-      "Git",
-      "Helm"
-    ]
-  },
-  {
-    "name": "Machine Learning",
-    "category": "AI",
-    "demandScore": 21,
-    "growth": 30,
-    "averageSalary": 155000,
-    "recommended": [
-      "Python",
-      "TensorFlow",
-      "PyTorch",
-      "Scikit-learn",
-      "AWS SageMaker",
-      "Data Science",
-      "MLOps"
-    ]
-  },
-  {
     "name": "Node.js",
     "category": "Backend",
-    "demandScore": 14,
-    "growth": 15,
-    "averageSalary": 130000,
+    "demandScore": 82,
+    "growth": 12,
+    "averageSalary": 140000,
     "recommended": [
       "JavaScript",
       "TypeScript",
@@ -156,55 +44,135 @@
       "NestJS",
       "MongoDB",
       "PostgreSQL",
-      "AWS Lambda"
+      "Docker"
     ]
   },
   {
-    "name": "Flask",
-    "category": "Backend",
-    "demandScore": 14,
-    "growth": 10,
-    "averageSalary": 120000,
+    "name": "AWS",
+    "category": "Cloud",
+    "demandScore": 82,
+    "growth": 18,
+    "averageSalary": 155000,
     "recommended": [
-      "Python",
-      "Django",
-      "FastAPI",
-      "REST APIs",
-      "PostgreSQL",
       "Docker",
-      "Jinja2"
+      "Kubernetes",
+      "Terraform",
+      "Azure",
+      "GCP",
+      "Serverless",
+      "CI/CD"
+    ]
+  },
+  {
+    "name": "JavaScript",
+    "category": "Programming Language",
+    "demandScore": 64,
+    "growth": 10,
+    "averageSalary": 125000,
+    "recommended": [
+      "TypeScript",
+      "React",
+      "Node.js",
+      "HTML",
+      "CSS",
+      "Webpack",
+      "Jest"
+    ]
+  },
+  {
+    "name": "TypeScript",
+    "category": "Programming Language",
+    "demandScore": 45,
+    "growth": 22,
+    "averageSalary": 142000,
+    "recommended": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "NestJS",
+      "GraphQL",
+      "Zod",
+      "Vitest"
+    ]
+  },
+  {
+    "name": "Python",
+    "category": "Programming Language",
+    "demandScore": 45,
+    "growth": 13,
+    "averageSalary": 135000,
+    "recommended": [
+      "Django",
+      "Flask",
+      "FastAPI",
+      "Pandas",
+      "NumPy",
+      "Machine Learning",
+      "AWS"
+    ]
+  },
+  {
+    "name": "Docker",
+    "category": "DevOps",
+    "demandScore": 36,
+    "growth": 12,
+    "averageSalary": 140000,
+    "recommended": [
+      "Kubernetes",
+      "AWS",
+      "CI/CD",
+      "Linux",
+      "Jenkins",
+      "Helm",
+      "GitLab CI"
+    ]
+  },
+  {
+    "name": "Kubernetes",
+    "category": "DevOps",
+    "demandScore": 27,
+    "growth": 18,
+    "averageSalary": 160000,
+    "recommended": [
+      "Docker",
+      "AWS",
+      "Terraform",
+      "Helm",
+      "Prometheus",
+      "Istio",
+      "GitOps"
     ]
   },
   {
     "name": "MongoDB",
     "category": "Database",
-    "demandScore": 14,
-    "growth": 12,
-    "averageSalary": 125000,
+    "demandScore": 18,
+    "growth": 10,
+    "averageSalary": 130000,
     "recommended": [
       "SQL",
       "PostgreSQL",
-      "AWS DynamoDB",
-      "Firebase",
+      "Express.js",
       "Node.js",
       "Mongoose",
-      "Atlas"
+      "Redis",
+      "Apache Cassandra"
     ]
   },
   {
-    "name": "Django",
-    "category": "Backend",
-    "demandScore": 7,
-    "growth": 8,
-    "averageSalary": 125000,
+    "name": "Machine Learning",
+    "category": "AI",
+    "demandScore": 9,
+    "growth": 28,
+    "averageSalary": 170000,
     "recommended": [
       "Python",
-      "Flask",
-      "FastAPI",
-      "PostgreSQL",
-      "REST APIs",
-      "Docker",
-      "Jinja2"
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "Data Science",
+      "AWS SageMaker",
+      "MLOps"
     ]
   }
 ]

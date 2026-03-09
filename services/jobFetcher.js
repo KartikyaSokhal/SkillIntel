@@ -1,133 +1,89 @@
 const axios = require("axios");
 
 /*
-Tech keywords for identifying technical roles
+Load env variables
+*/
+require("dotenv").config();
+
+/*
+API keys
+*/
+const JSEARCH_API_KEY = process.env.JSEARCH_API_KEY;
+const ADZUNA_APP_ID = process.env.ADZUNA_APP_ID;
+const ADZUNA_API_KEY = process.env.ADZUNA_API_KEY;
+
+
+/*
+Debug env variables
+*/
+console.log("---- ENV DEBUG ----");
+console.log("JSEARCH_API_KEY:", JSEARCH_API_KEY ? "Loaded" : "Missing");
+console.log("ADZUNA_APP_ID:", ADZUNA_APP_ID ? "Loaded" : "Missing");
+console.log("ADZUNA_API_KEY:", ADZUNA_API_KEY ? "Loaded" : "Missing");
+console.log("-------------------");
+
+
+/*
+Tech keywords for filtering
 */
 const TECH_KEYWORDS = [
-  "engineer",
-  "developer",
   "software",
+  "developer",
+  "engineer",
   "backend",
   "frontend",
   "full stack",
-  "web",
-  "mobile",
-  "ios",
-  "android",
   "react",
+  "angular",
   "node",
-  "javascript",
-  "typescript",
   "python",
+  "java",
+  "spring",
   "django",
   "flask",
-  "data",
-  "data engineer",
-  "data scientist",
-  "machine learning",
-  "deep learning",
-  "ai",
-  "ml",
-  "cloud",
   "aws",
-  "azure",
-  "gcp",
-  "devops",
-  "kubernetes",
   "docker",
-  "infrastructure",
-  "platform",
-  "security",
-  "cybersecurity",
-  "blockchain"
+  "kubernetes",
+  "devops",
+  "machine learning",
+  "data engineer",
+  "data scientist"
 ];
 
+
 /*
-Roles we want to exclude
+Exclude non-tech roles
 */
-const EXCLUDED_KEYWORDS = [
+const EXCLUDED = [
   "sales",
   "marketing",
   "recruiter",
   "customer support",
-  "customer service",
   "account manager",
-  "business development",
-  "rater",
-  "moderator",
-  "content reviewer"
+  "business development"
 ];
 
+
 /*
-Check if job is a tech role
+Check if job is tech
 */
 function isTechJob(job) {
 
-  const title = job.title.toLowerCase();
-  const description = job.description.toLowerCase();
+  const text = (
+    job.title + " " + job.description
+  ).toLowerCase();
 
-  const techRoles = [
-    "software engineer",
-    "software developer",
-    "backend engineer",
-    "frontend engineer",
-    "full stack",
-    "web developer",
-    "mobile developer",
-    "ios developer",
-    "android developer",
-    "data engineer",
-    "machine learning engineer",
-    "ml engineer",
-    "ai engineer",
-    "platform engineer",
-    "devops engineer",
-    "cloud engineer",
-    "site reliability engineer"
-  ];
-
-  const techStack = [
-    "javascript",
-    "typescript",
-    "react",
-    "node",
-    "python",
-    "django",
-    "flask",
-    "docker",
-    "kubernetes",
-    "aws",
-    "azure",
-    "gcp",
-    "sql",
-    "mongodb",
-    "graphql"
-  ];
-
-  const excluded = [
-    "marketing",
-    "sales",
-    "brand manager",
-    "product manager",
-    "product designer",
-    "crypto market",
-    "account manager",
-    "customer support",
-    "recruiter",
-    "seo"
-  ];
-
-  if (excluded.some(k => title.includes(k))) {
+  if (EXCLUDED.some(k => text.includes(k))) {
     return false;
   }
 
-  if (techRoles.some(k => title.includes(k))) {
-    return true;
-  }
-
-  return techStack.some(k => description.includes(k));
-
+  return TECH_KEYWORDS.some(k => text.includes(k));
 }
+
+
+/*
+Remove duplicates
+*/
 function dedupe(jobs) {
 
   const seen = new Set();
@@ -149,115 +105,127 @@ function dedupe(jobs) {
   }
 
   return unique;
-
 }
+
+
 /*
-Fetch jobs from Remotive
+Fetch jobs from JSearch
 */
-async function fetchRemotive() {
+async function fetchJSearch() {
+
+  console.log("\nFetching jobs from JSearch...");
 
   try {
 
     const res = await axios.get(
-      "https://remotive.com/api/remote-jobs"
+      "https://jsearch.p.rapidapi.com/search",
+      {
+        params: {
+          query: "software developer india",
+          page: "1",
+          num_pages: "2"
+        },
+        headers: {
+          "X-RapidAPI-Key": JSEARCH_API_KEY,
+          "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+        }
+      }
     );
 
-    return res.data.jobs.map(job => ({
+    const jobs = res.data.data.map(job => ({
+      title: job.job_title || "",
+      description: job.job_description || "",
+      company: job.employer_name || "",
+      location: job.job_city || "India",
+      source: "jsearch"
+    }));
+
+    console.log("Jobs from JSearch:", jobs.length);
+
+    return jobs;
+
+  } catch (error) {
+
+    console.log("JSearch fetch error:", error.response?.status);
+    console.log(error.response?.data || error.message);
+
+    return [];
+
+  }
+
+}
+
+
+/*
+Fetch jobs from Adzuna
+*/
+async function fetchAdzuna() {
+
+  console.log("\nFetching jobs from Adzuna...");
+
+  try {
+
+    const res = await axios.get(
+      "https://api.adzuna.com/v1/api/jobs/in/search/1",
+      {
+        params: {
+          app_id: ADZUNA_APP_ID,
+          app_key: ADZUNA_API_KEY,
+          results_per_page: 50,
+          what: "software developer"
+        }
+      }
+    );
+
+    const jobs = res.data.results.map(job => ({
       title: job.title,
-      description: job.description,
-      company: job.company_name,
-      source: "remotive"
+      description: job.description || "",
+      company: job.company.display_name || "",
+      location: job.location.display_name || "India",
+      source: "adzuna"
     }));
 
-  } catch (err) {
+    console.log("Jobs from Adzuna:", jobs.length);
 
-    console.log("Remotive fetch error:", err.message);
+    return jobs;
+
+  } catch (error) {
+
+    console.log("Adzuna fetch error:", error.response?.status);
+    console.log(error.response?.data || error.message);
+
     return [];
 
   }
 
 }
 
-/*
-Fetch jobs from Arbeitnow
-*/
-async function fetchArbeitnow() {
-
-  try {
-
-    const res = await axios.get(
-      "https://www.arbeitnow.com/api/job-board-api"
-    );
-
-    return res.data.data.map(job => ({
-      title: job.title,
-      description: job.description,
-      company: job.company_name,
-      source: "arbeitnow"
-    }));
-
-  } catch (err) {
-
-    console.log("Arbeitnow fetch error:", err.message);
-    return [];
-
-  }
-
-}
 
 /*
-Fetch jobs from The Muse
-*/
-async function fetchMuse() {
-
-  try {
-
-    const res = await axios.get(
-      "https://www.themuse.com/api/public/jobs?page=1"
-    );
-
-    return res.data.results.map(job => ({
-      title: job.name,
-      description: job.contents,
-      company: job.company.name,
-      source: "themuse"
-    }));
-
-  } catch (err) {
-
-    console.log("Muse fetch error:", err.message);
-    return [];
-
-  }
-
-}
-
-/*
-Main job fetcher
+Main pipeline
 */
 async function fetchJobs() {
 
-  console.log("Collecting jobs from multiple sources...\n");
+  console.log("\nCollecting Indian tech jobs...\n");
 
   let jobs = [];
 
   try {
 
-    const [remotive, arbeitnow, muse] = await Promise.all([
-      fetchRemotive(),
-      fetchArbeitnow(),
-      fetchMuse()
+    const [jsearchJobs, adzunaJobs] = await Promise.all([
+      fetchJSearch(),
+      fetchAdzuna()
     ]);
 
-    jobs = [...remotive, ...arbeitnow, ...muse];
+    jobs = [...jsearchJobs, ...adzunaJobs];
 
   } catch (err) {
 
-    console.log("Job fetch error:", err.message);
+    console.log("Job fetch pipeline error:", err.message);
 
   }
 
-  console.log("Total jobs collected:", jobs.length);
+  console.log("\nTotal jobs collected:", jobs.length);
 
   const techJobs = jobs.filter(job => isTechJob(job));
 
@@ -267,7 +235,7 @@ async function fetchJobs() {
 
   console.log("Unique tech jobs:", uniqueJobs.length);
 
-  const limited = uniqueJobs.slice(0, 80);
+  const limited = uniqueJobs.slice(0, 150);
 
   console.log("\nSample jobs:");
 
