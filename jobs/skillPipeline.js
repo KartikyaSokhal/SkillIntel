@@ -1,6 +1,9 @@
 const fetchJobs = require("../services/jobFetcher");
-const analyzeJobs = require("../services/geminiAnalyzer");
+const extractSkills = require("../services/skillExtractor");
+const calculateDemand = require("../services/demandCalculator");
+const analyzeSkills = require("../services/geminiAnalyzer");
 const updateSkillsFile = require("../services/skillUpdater");
+const formatSkills = require("../services/skillFormatter");
 
 async function runSkillPipeline() {
 
@@ -8,25 +11,33 @@ async function runSkillPipeline() {
 
   const jobs = await fetchJobs();
 
-  if (jobs.length === 0) {
-    console.log("No jobs found.");
-    return;
-  }
+  console.log("Extracting skills...");
 
-  console.log("Sending jobs to Gemini for analysis...");
+  const skillCounts = extractSkills(jobs);
 
-  const skills = await analyzeJobs(jobs);
+  console.log("Calculating demand...");
 
-  if (!skills.length) {
-    console.log("Gemini returned no skills.");
-    return;
-  }
+  let demandSkills = calculateDemand(skillCounts);
 
-  console.log("Updating skills.json...");
+  demandSkills = demandSkills.slice(0, 30);
 
-  updateSkillsFile(skills);
+  const demandMap = {};
 
-  console.log("Skill pipeline completed.");
+  demandSkills.forEach(s => {
+    demandMap[s.name.toLowerCase()] = s.demandScore;
+  });
+
+  console.log("Enriching with AI...");
+
+  const enrichedSkills = await analyzeSkills(demandSkills);
+
+  console.log("Gemini output sample:", enrichedSkills[0]);
+
+  const formattedSkills = formatSkills(enrichedSkills, demandMap);
+
+  updateSkillsFile(formattedSkills);
+
+  console.log("skills.json updated successfully");
 
 }
 

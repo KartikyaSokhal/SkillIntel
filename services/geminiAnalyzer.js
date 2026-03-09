@@ -1,27 +1,96 @@
 const model = require("../config/gemini");
 
-async function analyzeJobs(jobs) {
+async function analyzeSkills(skills) {
 
   const prompt = `
-You are a job market analysis AI.
+You are a senior technology labor-market analyst.
 
-Analyze these job listings and extract top technical skills.
+You are given a list of skills extracted from real software engineering job listings.
 
-Return STRICT JSON array.
+Your task is to enrich each skill with market intelligence.
 
-Each skill must contain:
+Detected skills with demand scores:
+
+${JSON.stringify(skills)}
+
+For EACH skill generate the following fields:
 
 name
 category
-demandScore (0-100)
-growth (percentage estimate)
-averageSalary (USD yearly estimate)
-recommended (related skills)
+growth
+averageSalary
+recommended
 
-Only JSON. No explanation.
+Definitions:
 
-Jobs:
-${JSON.stringify(jobs)}
+name
+Correct technology name with proper industry capitalization.
+
+category
+Must be ONE of the following categories only:
+
+Frontend
+Backend
+Cloud
+DevOps
+AI
+Database
+Programming Language
+Data
+Security
+
+growth
+Estimated yearly demand growth percentage (integer).
+
+averageSalary
+Average yearly salary in USD (number only).
+
+recommended
+5–7 related technologies developers should learn next.
+
+IMPORTANT RULES
+
+1. Return ONLY valid JSON.
+2. Do NOT include explanations.
+3. Do NOT include markdown.
+4. Every skill MUST contain all fields.
+5. Recommended skills must be single technologies only.
+6. Do NOT combine technologies like "AWS/GCP".
+7. Use correct industry capitalization.
+
+Examples of correct capitalization:
+
+AWS
+JavaScript
+TypeScript
+SQL
+MongoDB
+Machine Learning
+Node.js
+React
+Docker
+Kubernetes
+
+Example output format:
+
+[
+{
+"name": "React",
+"category": "Frontend",
+"growth": 18,
+"averageSalary": 130000,
+"recommended": [
+"JavaScript",
+"TypeScript",
+"Next.js",
+"Redux",
+"Tailwind CSS",
+"GraphQL"
+]
+}
+]
+
+Return only JSON.
 `;
 
   try {
@@ -35,7 +104,9 @@ ${JSON.stringify(jobs)}
       .replace(/```/g, "")
       .trim();
 
-    return JSON.parse(cleaned);
+    const parsed = JSON.parse(cleaned);
+
+    return parsed;
 
   } catch (error) {
 
@@ -44,6 +115,7 @@ ${JSON.stringify(jobs)}
     return [];
 
   }
+
 }
 
-module.exports = analyzeJobs;
+module.exports = analyzeSkills;
