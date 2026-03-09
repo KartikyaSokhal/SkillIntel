@@ -214,14 +214,3 @@ http://localhost:3000/index.html
 - Interactive analytics dashboard
 
 ---
-
-# 👨‍💻 Author
-
-**Piyush Garg**  
-Computer Science Engineering Student
-
----
-
-# 📄 License
-
-This project is licensed under the MIT License.
