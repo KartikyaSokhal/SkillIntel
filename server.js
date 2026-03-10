@@ -5,17 +5,17 @@ const skillRoutes = require('./routes/skillRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
+// for middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
+// for filehaandling
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// api routes 
 app.use('/api', skillRoutes);
 
-
+// catch-all for 404
 app.use((req, res, next) => {
 
     if (req.originalUrl.startsWith('/api')) {
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
-
+// global error handler
 app.use((err, req, res, next) => {
     console.error('[Error]', err.message);
     res.status(500).json({
