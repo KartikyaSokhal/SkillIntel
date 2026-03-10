@@ -7,7 +7,7 @@ export default function Footer({ cols }) {
                 <div className="footer-brand">
                     <div className="footer-logo">
                         <div className="footer-logo-icon">⚡</div>
-                        SkillIndex
+                        SkillIntel
                     </div>
                     <p className="footer-desc">
                         The global standard for real-time technical skill analysis and professional growth benchmarking.

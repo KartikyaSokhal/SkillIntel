@@ -6,7 +6,7 @@ export default function Navbar({ action }) {
             <div className="nav-inner">
                 <Link to="/" className="nav-logo">
                     <div className="nav-logo-icon">⚡</div>
-                    SkillIndex
+                    SkillIntel
                 </Link>
                 <div className="nav-links">
                     <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>

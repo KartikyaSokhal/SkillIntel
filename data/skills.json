@@ -27,19 +27,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "San Francisco, CA",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "New York, NY",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
             },
             {
-                "city": "London, UK",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "Austin, TX",
+                "city": "Chennai, Tamil Nadu",
                 "level": "Rising"
             }
         ]
@@ -71,20 +71,20 @@
         ],
         "regionalDemand": [
             {
-                "city": "San Francisco, CA",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "New York, NY",
-                "level": "Critical"
-            },
-            {
-                "city": "London, UK",
+                "city": "Gurgaon, Haryana",
                 "level": "High"
             },
             {
-                "city": "Berlin, DE",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
+            },
+            {
+                "city": "Noida, Uttar Pradesh",
+                "level": "Rising"
             }
         ]
     },
@@ -115,19 +115,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "Singapore",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "San Francisco, CA",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "London, UK",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
             },
             {
-                "city": "Toronto, CA",
+                "city": "Delhi NCR",
                 "level": "Rising"
             }
         ]
@@ -158,19 +158,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "Chicago, IL",
+                "city": "Bangalore, Karnataka",
                 "level": "High"
             },
             {
-                "city": "London, UK",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "Bangalore, IN",
+                "city": "Hyderabad, Telangana",
                 "level": "Critical"
             },
             {
-                "city": "Frankfurt, DE",
+                "city": "Chennai, Tamil Nadu",
                 "level": "High"
             }
         ]
@@ -201,19 +201,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "Shanghai, CN",
-                "level": "Critical"
-            },
-            {
-                "city": "Amsterdam, NL",
+                "city": "Bangalore, Karnataka",
                 "level": "High"
             },
             {
-                "city": "São Paulo, BR",
+                "city": "Hyderabad, Telangana",
+                "level": "High"
+            },
+            {
+                "city": "Pune, Maharashtra",
                 "level": "Rising"
             },
             {
-                "city": "Tokyo, JP",
+                "city": "Mumbai, Maharashtra",
                 "level": "High"
             }
         ]
@@ -245,19 +245,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "San Francisco, CA",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "London, UK",
+                "city": "Hyderabad, Telangana",
                 "level": "Critical"
             },
             {
-                "city": "Toronto, CA",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "Berlin, DE",
+                "city": "Delhi NCR",
                 "level": "Rising"
             }
         ]
@@ -289,19 +289,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "San Francisco, CA",
+                "city": "Bangalore, Karnataka",
                 "level": "High"
             },
             {
-                "city": "Berlin, DE",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
             },
             {
-                "city": "Seattle, WA",
+                "city": "Pune, Maharashtra",
                 "level": "Critical"
             },
             {
-                "city": "Zurich, CH",
+                "city": "Chennai, Tamil Nadu",
                 "level": "Rising"
             }
         ]
@@ -333,19 +333,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "New York, NY",
-                "level": "High"
-            },
-            {
-                "city": "London, UK",
-                "level": "High"
-            },
-            {
-                "city": "Bangalore, IN",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "Sydney, AU",
+                "city": "Hyderabad, Telangana",
+                "level": "High"
+            },
+            {
+                "city": "Gurgaon, Haryana",
+                "level": "High"
+            },
+            {
+                "city": "Noida, Uttar Pradesh",
                 "level": "Rising"
             }
         ]
@@ -377,19 +377,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "San Francisco, CA",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "Amsterdam, NL",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
             },
             {
-                "city": "Singapore",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "Munich, DE",
+                "city": "Mumbai, Maharashtra",
                 "level": "Rising"
             }
         ]
@@ -421,238 +421,19 @@
         ],
         "regionalDemand": [
             {
-                "city": "Seattle, WA",
+                "city": "Bangalore, Karnataka",
                 "level": "Critical"
             },
             {
-                "city": "Dublin, IE",
-                "level": "Critical"
-            },
-            {
-                "city": "Sydney, AU",
+                "city": "Hyderabad, Telangana",
                 "level": "High"
             },
             {
-                "city": "Tokyo, JP",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "SQL",
-        "category": "Data",
-        "icon": "🗃️",
-        "demandIndex": 8.6,
-        "salary": 1200000,
-        "growth": 8,
-        "experienceBarrier": "Low",
-        "saturationRisk": "Stable",
-        "description": "Structured Query Language – Universal Data Standard",
-        "tags": [
-            "Ubiquitous",
-            "Evergreen"
-        ],
-        "recommended": [
-            "PostgreSQL",
-            "MySQL",
-            "Python",
-            "Data Warehousing"
-        ],
-        "careerPaths": [
-            "Data Engineering",
-            "Data Analysis",
-            "Backend Engineering"
-        ],
-        "regionalDemand": [
-            {
-                "city": "New York, NY",
-                "level": "Critical"
-            },
-            {
-                "city": "Chicago, IL",
+                "city": "Pune, Maharashtra",
                 "level": "High"
             },
             {
-                "city": "London, UK",
-                "level": "High"
-            },
-            {
-                "city": "Frankfurt, DE",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "Go",
-        "category": "Backend",
-        "icon": "🐹",
-        "demandIndex": 8.1,
-        "salary": 1700000,
-        "growth": 31,
-        "experienceBarrier": "Moderate",
-        "saturationRisk": "Low",
-        "description": "Google's Fast & Efficient Systems Language",
-        "tags": [
-            "Trending",
-            "Cloud Native"
-        ],
-        "recommended": [
-            "Kubernetes",
-            "gRPC",
-            "Docker",
-            "PostgreSQL"
-        ],
-        "careerPaths": [
-            "Backend Engineering",
-            "Infrastructure",
-            "Fintech"
-        ],
-        "regionalDemand": [
-            {
-                "city": "San Francisco, CA",
-                "level": "High"
-            },
-            {
-                "city": "New York, NY",
-                "level": "High"
-            },
-            {
-                "city": "Singapore",
-                "level": "Rising"
-            },
-            {
-                "city": "Zurich, CH",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "Docker",
-        "category": "DevOps",
-        "icon": "🐳",
-        "demandIndex": 8.8,
-        "salary": 1600000,
-        "growth": 16,
-        "experienceBarrier": "Low",
-        "saturationRisk": "Stable",
-        "description": "Containerization Platform for Modern Applications",
-        "tags": [
-            "DevOps Essential",
-            "Widely Adopted"
-        ],
-        "recommended": [
-            "Kubernetes",
-            "CI/CD",
-            "Linux",
-            "AWS"
-        ],
-        "careerPaths": [
-            "DevOps Engineering",
-            "Backend Engineering",
-            "Platform Engineering"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Berlin, DE",
-                "level": "High"
-            },
-            {
-                "city": "San Francisco, CA",
-                "level": "High"
-            },
-            {
-                "city": "London, UK",
-                "level": "Critical"
-            },
-            {
-                "city": "Bangalore, IN",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "Next.js",
-        "category": "Frontend",
-        "icon": "▲",
-        "demandIndex": 8.5,
-        "salary": 1350000,
-        "growth": 44,
-        "experienceBarrier": "Moderate",
-        "saturationRisk": "Low",
-        "description": "Production-Grade React Framework by Vercel",
-        "tags": [
-            "Trending",
-            "Full-Stack"
-        ],
-        "recommended": [
-            "React",
-            "TypeScript",
-            "Tailwind CSS",
-            "Prisma"
-        ],
-        "careerPaths": [
-            "Full-Stack Development",
-            "Frontend Engineering"
-        ],
-        "regionalDemand": [
-            {
-                "city": "San Francisco, CA",
-                "level": "High"
-            },
-            {
-                "city": "New York, NY",
-                "level": "High"
-            },
-            {
-                "city": "London, UK",
-                "level": "Rising"
-            },
-            {
-                "city": "Amsterdam, NL",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "Java",
-        "category": "Backend",
-        "icon": "☕",
-        "demandIndex": 8.3,
-        "salary": 1300000,
-        "growth": 6,
-        "experienceBarrier": "Moderate",
-        "saturationRisk": "Stable",
-        "description": "Enterprise-Grade Object-Oriented Programming Language",
-        "tags": [
-            "Enterprise Staple",
-            "Mature"
-        ],
-        "recommended": [
-            "Spring Boot",
-            "Microservices",
-            "Kafka",
-            "SQL"
-        ],
-        "careerPaths": [
-            "Backend Engineering",
-            "Enterprise Software",
-            "Android Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "New York, NY",
-                "level": "High"
-            },
-            {
-                "city": "Frankfurt, DE",
-                "level": "Critical"
-            },
-            {
-                "city": "Bangalore, IN",
-                "level": "High"
-            },
-            {
-                "city": "Chicago, IL",
+                "city": "Chennai, Tamil Nadu",
                 "level": "High"
             }
         ]

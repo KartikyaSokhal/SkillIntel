@@ -1,9 +1,6 @@
 const { readSkills, findSkillByName } = require('../utils/fileHandler');
 
-/**
- * GET /api/skills
- * Returns all skills
- */
+
 const getAllSkills = (req, res, next) => {
     try {
         const skills = readSkills();
@@ -13,10 +10,7 @@ const getAllSkills = (req, res, next) => {
     }
 };
 
-/**
- * GET /api/skills/:name
- * Returns a single skill by name
- */
+
 const getSkillByName = (req, res, next) => {
     try {
         const { name } = req.params;
@@ -30,10 +24,7 @@ const getSkillByName = (req, res, next) => {
     }
 };
 
-/**
- * GET /api/trending
- * Returns skills sorted by growth rate (desc)
- */
+
 const getTrendingSkills = (req, res, next) => {
     try {
         const skills = readSkills();
@@ -44,10 +35,7 @@ const getTrendingSkills = (req, res, next) => {
     }
 };
 
-/**
- * GET /api/recommended/:skill
- * Returns recommended skills related to a given skill
- */
+
 const getRecommendedSkills = (req, res, next) => {
     try {
         const { skill } = req.params;
@@ -56,7 +44,7 @@ const getRecommendedSkills = (req, res, next) => {
             return res.status(404).json({ error: 'Skill not found' });
         }
         const allSkills = readSkills();
-        // Get full objects for recommended skills where available, else return name strings
+       
         const recommended = foundSkill.recommended.map(recName => {
             const match = allSkills.find(s => s.name.toLowerCase() === recName.toLowerCase());
             return match || { name: recName };
@@ -67,10 +55,7 @@ const getRecommendedSkills = (req, res, next) => {
     }
 };
 
-/**
- * GET /api/compare?skills=react,angular,vue
- * Returns comparison data for multiple skills
- */
+
 const compareSkills = (req, res, next) => {
     try {
         const { skills: skillsQuery } = req.query;
