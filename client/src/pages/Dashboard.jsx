@@ -157,7 +157,7 @@ export default function Dashboard() {
                 <div style={styles.section}>
                     <h2 style={styles.sectionTitle}>📦 All Skills</h2>
                     {loading ? (
-                        <p style={{ color: '#94a3b8' }}>Loading skills…</p>
+                        <p style={{ color: 'var(--text-muted)' }}>Loading skills…</p>
                     ) : (
                         <div style={styles.skillsGrid}>
                             {skills.map(skill => (
@@ -177,7 +177,7 @@ export default function Dashboard() {
                                         </div>
                                         <div>
                                             <div style={styles.metaLabel}>Growth</div>
-                                            <div style={{ ...styles.metaValue, color: '#4ade80' }}>
+                                            <div style={{ ...styles.metaValue, color: '#4CAFD6' }}>
                                                 +{skill.growth}%
                                             </div>
                                         </div>
@@ -209,20 +209,20 @@ export default function Dashboard() {
 
 const styles = {
     header: {
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-        borderBottom: '1px solid var(--border-color, #2a3450)',
+        background: 'radial-gradient(ellipse 60% 70% at 10% 0%, #0A1E3C, transparent 65%), #050C14',
+        borderBottom: '1px solid var(--border-color)',
         padding: '2rem',
     },
     headerInner: { maxWidth: '1200px', margin: '0 auto' },
-    title: { fontSize: '1.6rem', fontWeight: 700, color: '#f1f5f9' },
-    subtitle: { color: '#94a3b8', fontSize: '0.9rem', marginTop: '0.3rem' },
+    title: { fontSize: '1.6rem', fontWeight: 700, color: 'var(--text-primary)' },
+    subtitle: { color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.3rem' },
     socketBadge: {
         marginLeft: '1rem',
         fontSize: '0.75rem',
         padding: '0.15rem 0.5rem',
         borderRadius: '20px',
-        background: '#1e293b',
-        border: '1px solid #334155',
+        background: 'var(--bg-primary)',
+        border: '1px solid var(--border-color)',
     },
     statsRow: {
         display: 'flex',
@@ -233,24 +233,24 @@ const styles = {
     },
     statCard: {
         flex: 1,
-        background: '#151c2f',
-        border: '1px solid #2a3450',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '12px',
         padding: '1.2rem',
         textAlign: 'center',
     },
-    statNumber: { fontSize: '2rem', fontWeight: 700, color: '#38bdf8' },
-    statLabel: { fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' },
+    statNumber: { fontSize: '2rem', fontWeight: 700, color: 'var(--accent-blue)' },
+    statLabel: { fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' },
     content: { maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 3rem' },
     section: { marginTop: '2rem' },
-    sectionTitle: { fontSize: '1.2rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem' },
+    sectionTitle: { fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' },
     liveTag: {
         fontSize: '0.65rem',
         marginLeft: '0.5rem',
         padding: '0.15rem 0.5rem',
         borderRadius: '20px',
-        background: '#166534',
-        color: '#86efac',
+        background: 'var(--accent-green-light)',
+        color: 'var(--accent-green)',
         verticalAlign: 'middle',
     },
     trendingGrid: { display: 'flex', gap: '0.75rem', flexWrap: 'wrap' },
@@ -258,8 +258,8 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         gap: '0.75rem',
-        background: '#151c2f',
-        border: '1px solid #2a3450',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '10px',
         padding: '0.75rem 1.2rem',
         textDecoration: 'none',
@@ -267,17 +267,17 @@ const styles = {
         transition: 'border-color 0.2s',
         flex: '1 1 180px',
     },
-    trendRank: { fontSize: '1.4rem', fontWeight: 700, color: '#38bdf8' },
-    trendName: { fontSize: '0.95rem', fontWeight: 600, color: '#f1f5f9' },
-    trendGrowth: { fontSize: '0.8rem', color: '#4ade80' },
+    trendRank: { fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-blue)' },
+    trendName: { fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)' },
+    trendGrowth: { fontSize: '0.8rem', color: 'var(--accent-green)' },
     skillsGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1rem',
     },
     skillCard: {
-        background: '#151c2f',
-        border: '1px solid #2a3450',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '12px',
         padding: '1.2rem',
         textDecoration: 'none',
@@ -286,19 +286,19 @@ const styles = {
     },
     skillTop: { display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' },
     skillIcon: { fontSize: '1.3rem' },
-    skillName: { fontSize: '1rem', fontWeight: 600, color: '#f1f5f9' },
+    skillName: { fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' },
     skillMeta: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' },
-    metaLabel: { fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase' },
-    metaValue: { fontSize: '0.9rem', fontWeight: 600, color: '#e2e8f0' },
+    metaLabel: { fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' },
+    metaValue: { fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' },
     demandTrack: {
         height: '4px',
-        background: '#2a3450',
+        background: 'rgba(30, 70, 110, 0.35)',
         borderRadius: '2px',
         overflow: 'hidden',
     },
     demandFill: {
         height: '100%',
-        background: 'linear-gradient(90deg, #38bdf8, #818cf8)',
+        background: 'linear-gradient(90deg, #3BA8D0 0%, #2A7A9A 100%)',
         borderRadius: '2px',
     },
 };

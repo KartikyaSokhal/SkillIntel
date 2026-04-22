@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
 
-const SKILL_COLORS = ['#2563eb', '#ef4444', '#10b981', '#8b5cf6'];
+const SKILL_COLORS = ['#2E86DE', '#4CAFD6', '#5DC8E8', '#3BA8C8'];
 const INDUSTRIES = ['FinTech & Banking', 'E-Commerce', 'Healthcare', 'AI & Startups'];
 
 export default function Compare() {
@@ -95,7 +95,7 @@ export default function Compare() {
             </div>
 
             {/* Selector */}
-            <div style={{ background: 'white', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
+            <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
                         <input
@@ -160,7 +160,7 @@ export default function Compare() {
             {results && !loading && (
                 <>
                     {/* Cards header */}
-                    <div style={{ background: 'white', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
+                    <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
                         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${results.length}, 1fr)`, gap: '1rem' }}>
                                 {results.map((s, i) => (
@@ -293,19 +293,19 @@ export default function Compare() {
 
                         {/* Expert Verdict */}
                         {expertVerdict && (
-                            <div style={{ marginTop: '1.5rem', background: 'var(--bg-dark)', borderRadius: 'var(--border-radius)', padding: '1.75rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                                <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
+                            <div style={{ marginTop: '1.5rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)', padding: '1.75rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                                <div style={{ width: 48, height: 48, background: 'var(--accent-blue-light)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
                                     💡
                                 </div>
                                 <div style={{ flex: 1, minWidth: 200 }}>
-                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', color: 'rgba(255,255,255,0.5)', marginBottom: '0.5rem' }}>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
                                         EXPERT VERDICT
                                     </div>
-                                    <p style={{ color: 'white', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                                    <p style={{ color: 'var(--text-primary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
                                         Based on current market trends,{' '}
-                                        <span style={{ color: '#60a5fa', fontWeight: 700 }}>{expertVerdict.top.name}</span> leads with the highest demand index of {expertVerdict.top.demandIndex}/10.{' '}
+                                        <span style={{ color: 'var(--accent-blue)', fontWeight: 700 }}>{expertVerdict.top.name}</span> leads with the highest demand index of {expertVerdict.top.demandIndex}/10.{' '}
                                         {expertVerdict.runner && expertVerdict.runner.growth > expertVerdict.top.growth
-                                            ? <><span style={{ color: '#34d399', fontWeight: 700 }}>{expertVerdict.runner.name}</span> is outpacing with {expertVerdict.runner.growth}% YoY growth.</>
+                                            ? <><span style={{ color: 'var(--accent-green)', fontWeight: 700 }}>{expertVerdict.runner.name}</span> is outpacing with {expertVerdict.runner.growth}% YoY growth.</>
                                             : <>{expertVerdict.top.name} continues to dominate placement rates across sectors.</>
                                         }
                                     </p>
