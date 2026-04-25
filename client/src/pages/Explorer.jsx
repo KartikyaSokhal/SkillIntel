@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
+import { formatSalaryLPA } from '../utils/currency';
 
 function ExplorerCard({ skill, index }) {
     const navigate = useNavigate();
@@ -36,8 +37,8 @@ function ExplorerCard({ skill, index }) {
 
             <div className="skill-metrics">
                 <div className="metric-item">
-                    <div className="metric-label">Avg Salary</div>
-                    <div className="metric-value">${(skill.salary / 1000).toFixed(0)}k</div>
+                    <div className="metric-label">Avg Salary (India)</div>
+                    <div className="metric-value">{formatSalaryLPA(skill.salary)}</div>
                 </div>
                 <div className="metric-item">
                     <div className="metric-label">Growth YoY</div>

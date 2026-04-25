@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SkillCard from '../components/SkillCard';
 import Spinner from '../components/Spinner';
+import { formatSalaryLPA } from '../utils/currency';
 
 export default function Home() {
     const [trending, setTrending] = useState([]);
@@ -95,7 +96,7 @@ export default function Home() {
                         <span className="stat-badge blue">Top Tier</span>
                         <span className="stat-label">Highest Paying</span>
                         <span className="stat-value">
-                            {highestPay ? `$${(highestPay / 1000).toFixed(0)}k Avg.` : '$165k Avg.'}
+                            {highestPay ? `${formatSalaryLPA(highestPay)} Avg.` : '₹19 LPA Avg.'}
                         </span>
                     </div>
                     <div className="stat-item">
