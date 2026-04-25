@@ -1,5 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { formatSalaryLPA } from '../utils/currency';
+
+const directionGlyph = { UP: '↑', DOWN: '↓', STABLE: '→' };
+const directionClass = { UP: 'trend-up', DOWN: 'trend-down', STABLE: 'trend-stable' };
 
 export default function SkillCard({ skill, index = 0 }) {
     const navigate = useNavigate();
@@ -7,10 +11,17 @@ export default function SkillCard({ skill, index = 0 }) {
     const growthSign = skill.growth > 0 ? '+' : '';
     const demandPct = (skill.demandIndex / 10) * 100;
 
+    const hasTrend = typeof skill.trendScore === 'number' && skill.direction;
+    const pctChange = typeof skill.percentChange === 'number' ? skill.percentChange : null;
+    const pctSign = pctChange !== null && pctChange > 0 ? '+' : '';
+
     return (
-        <div
-            className="skill-card fade-in"
-            style={{ animationDelay: `${Math.min(index, 8) * 0.07}s` }}
+        <motion.div
+            className="skill-card"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: Math.min(index, 8) * 0.05, ease: 'easeOut' }}
+            whileHover={{ y: -4, boxShadow: '0 12px 28px rgba(8, 15, 24, 0.45)' }}
             onClick={() => navigate(`/skill/${encodeURIComponent(skill.name)}`)}
         >
             <div className="skill-card-header">
@@ -21,6 +32,14 @@ export default function SkillCard({ skill, index = 0 }) {
                     <div className="skill-name">{skill.name}</div>
                     <div className="skill-category">{skill.category}</div>
                 </div>
+                {hasTrend && (
+                    <div className={`trend-badge ${directionClass[skill.direction] || 'trend-stable'}`} title={`Trend score ${skill.trendScore}`}>
+                        <span className="trend-arrow">{directionGlyph[skill.direction] || '→'}</span>
+                        {pctChange !== null && (
+                            <span className="trend-pct">{pctSign}{pctChange.toFixed(1)}%</span>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className="skill-tags">
@@ -62,6 +81,6 @@ export default function SkillCard({ skill, index = 0 }) {
             <div className="skill-card-footer">
                 <span className="text-muted" style={{ fontSize: '0.8rem' }}>View Details →</span>
             </div>
-        </div>
+        </motion.div>
     );
 }

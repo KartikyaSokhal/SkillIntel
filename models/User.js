@@ -51,6 +51,73 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
 
+    /**
+     * Extended profile fields.
+     *
+     * Schema is additive: legacy fields (status, currentRole, salary, intent,
+     * resume.{fileName,uploadedAt}, skills) are preserved verbatim so existing
+     * users keep working. New v2 fields are added below for the redesigned
+     * profile dashboard (location, organization, bio, headline, avatarUrl,
+     * interestsTechnical, interestsStrategic, skillsDetailed, and the resume
+     * binary fields fileData + mimeType).
+     */
+    profile: {
+        // ─── Legacy fields (preserved) ──────────────────────────
+        status: {
+            type: String,
+            enum: ['Student', 'Working Professional'],
+            default: 'Student'
+        },
+        currentRole: {
+            type: String,
+            default: ''
+        },
+        salary: {
+            type: Number,
+            default: null
+        },
+        intent: {
+            type: String,
+            default: ''
+        },
+        skills: {
+            type: [String],
+            default: []
+        },
+
+        // ─── v2 fields (additive) ───────────────────────────────
+        location: { type: String, default: '' },
+        organization: { type: String, default: '' },
+        bio: { type: String, default: '', maxlength: 1000 },
+        headline: { type: String, default: '' },
+        avatarUrl: { type: String, default: '' },
+        interestsTechnical: { type: [String], default: [] },
+        interestsStrategic: { type: [String], default: [] },
+        skillsDetailed: {
+            type: [{
+                _id: false,
+                name: { type: String, required: true, trim: true },
+                level: {
+                    type: String,
+                    enum: ['Beginner', 'Intermediate', 'Advanced', 'Expert'],
+                    default: 'Intermediate'
+                },
+                score: { type: Number, min: 0, max: 100, default: 50 }
+            }],
+            default: []
+        },
+
+        resume: {
+            fileName: { type: String, default: '' },
+            mimeType: { type: String, default: '' },
+            // Stored inline as a Buffer so the document is fully self-contained
+            // and visible in MongoDB Compass. Capped at 5 MB by the upload route.
+            fileData: { type: Buffer, default: null },
+            sizeBytes: { type: Number, default: 0 },
+            uploadedAt: { type: Date, default: null }
+        }
+    },
+
     /** Account creation timestamp */
     createdAt: {
         type: Date,

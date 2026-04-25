@@ -10,13 +10,37 @@ export default function Home() {
     const [trending, setTrending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchVal, setSearchVal] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('/api/skills/trending')
-            .then(r => r.json())
-            .then(json => { setTrending(json.data || []); setLoading(false); })
-            .catch(() => setLoading(false));
+        let isMounted = true;
+
+        fetch('/api/trending?limit=24')
+            .then(async (response) => {
+                const json = await response.json();
+                if (!response.ok || json.success === false) {
+                    throw new Error(json.message || 'Failed to load trending skills');
+                }
+                return json;
+            })
+            .then((json) => {
+                if (!isMounted) return;
+                setTrending(Array.isArray(json.data) ? json.data : []);
+                setErrorMessage('');
+            })
+            .catch((error) => {
+                if (!isMounted) return;
+                setTrending([]);
+                setErrorMessage(error.message || 'Unable to load skills right now.');
+            })
+            .finally(() => {
+                if (isMounted) setLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const handleSearch = () => {
@@ -32,7 +56,7 @@ export default function Home() {
 
     return (
         <>
-            <Navbar action={<Link to="/explorer" className="btn btn-primary">Explore Skills</Link>} />
+            <Navbar />
 
             {/* Hero */}
             <section className="hero">
@@ -78,7 +102,13 @@ export default function Home() {
 
                 <div className="hero-cta">
                     <Link to="/explorer" className="btn btn-primary">Explore the Skill Market</Link>
-                    <Link to="/explorer" className="btn btn-secondary">View All Skills →</Link>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => document.getElementById('trending-dashboard')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    >
+                        View All Skills →
+                    </button>
                 </div>
             </section>
 
@@ -115,8 +145,8 @@ export default function Home() {
             </div>
 
             {/* Trending Dashboard */}
-            <div style={{ background: 'white', borderBottom: '1px solid var(--border-color)', padding: '3rem 2rem' }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <section id="trending-dashboard" className="trending-section" aria-live="polite">
+                <div className="trending-section-inner">
                     <div className="section-header">
                         <div className="section-label">🔥 TRENDING NOW</div>
                         <h2 className="section-title">Skill Intelligence Dashboard</h2>
@@ -125,20 +155,24 @@ export default function Home() {
                     {loading ? (
                         <Spinner message="Loading trending skills…" />
                     ) : top6.length > 0 ? (
-                        <div className="skills-grid">
+                        <div className="trending-grid">
                             {top6.map((skill, i) => <SkillCard key={skill.name} skill={skill} index={i} />)}
                         </div>
-                    ) : (
+                    ) : errorMessage ? (
                         <div className="error-state">
                             <h2>⚠️ Could not load data</h2>
-                            <p>Make sure the server is running on port 3000.</p>
+                            <p>{errorMessage}</p>
+                        </div>
+                    ) : (
+                        <div className="empty-state">
+                            <p>No trending skills yet. The pipeline will populate this section on the next run.</p>
                         </div>
                     )}
-                    <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                    <div className="trending-cta">
                         <Link to="/explorer" className="btn btn-secondary">View All Skills →</Link>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <Footer />
         </>

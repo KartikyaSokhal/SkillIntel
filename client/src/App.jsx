@@ -11,6 +11,12 @@ import Compare from './pages/Compare';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+
+// ── Footer / Static content pages ─────────────────────────────
+import About from './pages/About';
+import Methodology from './pages/Methodology';
+import Contact from './pages/Contact';
 
 import { isAuthenticated } from './utils/api';
 
@@ -42,12 +48,25 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
+                {/* ── Footer content pages ────────────────────── */}
+                <Route path="/about" element={<About />} />
+                <Route path="/methodology" element={<Methodology />} />
+                <Route path="/contact" element={<Contact />} />
+
                 {/* ── Protected Routes (new) ───────────────────── */}
                 <Route
                     path="/dashboard"
                     element={
                         <PrivateRoute>
                             <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <PrivateRoute>
+                            <Profile />
                         </PrivateRoute>
                     }
                 />

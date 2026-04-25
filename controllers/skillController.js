@@ -34,6 +34,8 @@
 
 const Skill = require('../models/Skill');
 
+const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
  * GET ALL SKILLS
  * Route: GET /api/skills
@@ -57,7 +59,8 @@ const getSkillByName = async (req, res, next) => {
     try {
         const { name } = req.params;
         // RegExp with ^ and $ ensures exact match, 'i' flag = case-insensitive
-        const skill = await Skill.findOne({ name: new RegExp(`^${name}$`, 'i') });
+        const normalizedName = escapeRegex((name || '').trim());
+        const skill = await Skill.findOne({ name: new RegExp(`^${normalizedName}$`, 'i') });
 
         if (!skill) {
             return res.status(404).json({ success: false, message: 'Skill not found' });
@@ -66,25 +69,24 @@ const getSkillByName = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-
-    res.json({
-      success: true,
-      data: skill
-    });
-
-  } catch (err) {
-    next(err);
-  }
 };
 
 /**
  * GET TRENDING SKILLS
  * Route: GET /api/trending
- * Returns skills sorted by growth percentage (descending)
+ *
+ * Sorts by the unified `trendScore` (populated by trendsPipeline) and falls
+ * back to legacy `growth` for skills that haven't been scored yet. The
+ * response is additive: the original Skill fields are preserved AND the new
+ * trend fields (trendScore, direction, percentChange, ...) are included
+ * when available.
  */
 const getTrendingSkills = async (req, res, next) => {
     try {
-        const trending = await Skill.find().sort({ growth: -1 });
+        const limit = Math.min(parseInt(req.query.limit, 10) || 0, 100);
+        const cursor = Skill.find().sort({ trendScore: -1, growth: -1, demandIndex: -1 });
+        if (limit > 0) cursor.limit(limit);
+        const trending = await cursor;
         res.json({ success: true, count: trending.length, data: trending });
     } catch (err) {
         next(err);
@@ -99,19 +101,24 @@ const getTrendingSkills = async (req, res, next) => {
 const getRecommendedSkills = async (req, res, next) => {
     try {
         const { skill } = req.params;
-        const foundSkill = await Skill.findOne({ name: new RegExp(`^${skill}$`, 'i') });
+        const normalizedSkill = escapeRegex((skill || '').trim());
+        const foundSkill = await Skill.findOne({ name: new RegExp(`^${normalizedSkill}$`, 'i') });
 
         if (!foundSkill) {
             return res.status(404).json({ success: false, message: 'Skill not found' });
         }
 
         // Find recommended skills that exist in the database
+        const recommendedNames = (foundSkill.recommended || [])
+            .map(name => (name || '').trim())
+            .filter(Boolean);
+
         const recommendedSkills = await Skill.find({
-            name: { $in: foundSkill.recommended.map(n => new RegExp(`^${n}$`, 'i')) }
+            name: { $in: recommendedNames.map(name => new RegExp(`^${escapeRegex(name)}$`, 'i')) }
         });
 
         // Map results, marking skills not found in DB
-        const result = foundSkill.recommended.map(recName => {
+        const result = recommendedNames.map(recName => {
             const match = recommendedSkills.find(
                 s => s.name.toLowerCase() === recName.toLowerCase()
             );
@@ -122,28 +129,6 @@ const getRecommendedSkills = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-
-    const allSkills = readSkills();
-
-    const recommended = foundSkill.recommended.map(recName => {
-
-      const match = allSkills.find(
-        s => s.name.toLowerCase() === recName.toLowerCase()
-      );
-
-      return match || { name: recName };
-
-    });
-
-    res.json({
-      success: true,
-      basedOn: foundSkill.name,
-      data: recommended
-    });
-
-  } catch (err) {
-    next(err);
-  }
 };
 
 /**
@@ -161,8 +146,19 @@ const compareSkills = async (req, res, next) => {
             });
         }
 
-        const skillNames = skillsQuery.split(',').map(s => s.trim());
-        const regexNames = skillNames.map(n => new RegExp(`^${n}$`, 'i'));
+        const skillNames = skillsQuery
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        if (!skillNames.length) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide at least one valid skill name'
+            });
+        }
+
+        const regexNames = skillNames.map(name => new RegExp(`^${escapeRegex(name)}$`, 'i'));
 
         const foundSkills = await Skill.find({ name: { $in: regexNames } });
 
@@ -176,28 +172,6 @@ const compareSkills = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-
-    const skillNames = skillsQuery.split(",").map(s => s.trim());
-
-    const results = skillNames.map(name => {
-
-      const skill = findSkillByName(name);
-
-      if (!skill) return { name, error: "Skill not found" };
-
-      return skill;
-
-    });
-
-    res.json({
-      success: true,
-      comparing: skillNames,
-      data: results
-    });
-
-  } catch (err) {
-    next(err);
-  }
 };
 
 /**
@@ -214,11 +188,40 @@ const createSkill = async (req, res, next) => {
     }
 };
 
+/**
+ * REFRESH TRENDS (Protected — requires JWT, admin role)
+ * Route: POST /api/admin/trends/refresh
+ *
+ * Triggers an on-demand run of the trends pipeline. Useful for QA and
+ * for ops to bootstrap the skill_trends collection without waiting for
+ * the next 6-hour cron tick. Runs in a fire-and-forget manner so the
+ * HTTP request returns immediately.
+ */
+const refreshTrends = async (req, res, next) => {
+    try {
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Admin role required' });
+        }
+        const { runTrendsPipeline, getStatus } = require('../services/trendsPipeline');
+        const status = getStatus();
+        if (status.isRunning) {
+            return res.json({ success: true, status: 'already-running', ...status });
+        }
+        runTrendsPipeline().catch((err) => {
+            console.error('[refreshTrends] background run failed:', err.message);
+        });
+        res.status(202).json({ success: true, status: 'started', startedAt: new Date() });
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     getAllSkills,
     getSkillByName,
     getTrendingSkills,
     getRecommendedSkills,
     compareSkills,
-    createSkill
+    createSkill,
+    refreshTrends
 };

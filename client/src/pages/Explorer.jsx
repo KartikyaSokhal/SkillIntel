@@ -48,7 +48,10 @@ function ExplorerCard({ skill, index }) {
 
             <div className="skill-card-footer">
                 <div className="skill-tags" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{skill.description || ''}</div>
-                <span style={{ color: 'var(--accent-blue)', fontSize: '0.82rem', fontWeight: 600 }}>Details →</span>
+                <span style={{ color: 'var(--accent-blue)', fontSize: '0.82rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.2rem', whiteSpace: 'nowrap' }}>
+                    <span>Details</span>
+                    <span aria-hidden="true">→</span>
+                </span>
             </div>
         </div>
     );
@@ -63,8 +66,14 @@ export default function Explorer() {
 
     useEffect(() => {
         fetch('/api/skills')
-            .then(r => r.json())
-            .then(json => { setAllSkills(json.data || []); setLoading(false); })
+            .then(async (response) => {
+                const json = await response.json();
+                if (!response.ok || json.success === false) {
+                    throw new Error(json.message || 'Failed to load skills');
+                }
+                return json;
+            })
+            .then((json) => { setAllSkills(Array.isArray(json.data) ? json.data : []); setLoading(false); })
             .catch(() => { setError(true); setLoading(false); });
     }, []);
 
@@ -89,7 +98,7 @@ export default function Explorer() {
             <Navbar action={<Link to="/compare" className="btn btn-secondary btn-sm">Compare Skills</Link>} />
 
             {/* Page Header */}
-            <div className="page-header">
+            <div className="page-header" style={{ background: 'var(--bg-dark)' }}>
                 <div className="page-header-inner">
                     <div>
                         <div className="breadcrumb">
@@ -115,7 +124,7 @@ export default function Explorer() {
             </div>
 
             {/* Category Filters */}
-            <div style={{ background: 'white', borderBottom: '1px solid var(--border-color)', padding: '0.75rem 2rem' }}>
+            <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '0.75rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div className="filters-bar">
                         {categories.map(cat => (

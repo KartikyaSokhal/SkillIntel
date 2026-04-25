@@ -107,7 +107,21 @@ const skillSchema = new mongoose.Schema({
     lastUpdated: {
         type: Date,
         default: Date.now
-    }
+    },
+
+    // ─── Real-time Trend Engine fields (additive, populated by trendsPipeline) ───
+    // Latest unified trend score (0–100) computed from jobs + GitHub + StackOverflow
+    // + Google Trends. Optional — older docs simply lack these and the controller
+    // gracefully falls back to `growth` when sorting.
+    trendScore: { type: Number },
+    direction: { type: String, enum: ['UP', 'DOWN', 'STABLE', null], default: null },
+    percentChange: { type: Number },
+    jobCountCurrent: { type: Number },
+    jobCountPrevious: { type: Number },
+    githubScore: { type: Number },
+    stackoverflowScore: { type: Number },
+    googleTrendScore: { type: Number },
+    lastTrendComputedAt: { type: Date }
 }, { timestamps: true });
 
 /**

@@ -233,6 +233,15 @@ mongoose.connect(MONGO_URI)
     .then(() => {
         console.log('✅ Connected to MongoDB Atlas');
 
+        // Arm the trends scheduler AFTER Mongo is up so the startup
+        // freshness check can query SkillTrend safely. Wrapped in a
+        // try/catch so a scheduling failure can never block boot.
+        try {
+            require('./jobs/scheduler').arm();
+        } catch (err) {
+            console.error('⚠ Trends scheduler failed to arm:', err.message);
+        }
+
         // Start the HTTP server (NOT app.listen — we use the http server for Socket.io)
         server.listen(PORT, () => {
             console.log(`

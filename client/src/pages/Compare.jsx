@@ -33,7 +33,9 @@ export default function Compare() {
     const setInput = (i, val) => setInputs(prev => { const n = [...prev]; n[i] = val; return n; });
 
     async function doCompare(overrideInputs) {
-        const chosen = (overrideInputs || inputs).filter(Boolean);
+        const chosen = (overrideInputs || inputs)
+            .map(s => s.trim())
+            .filter(Boolean);
         if (chosen.length < 2) { alert('Please enter at least 2 skills to compare.'); return; }
 
         setLoading(true);
@@ -43,10 +45,14 @@ export default function Compare() {
         industryRandRef.current = chosen.map(() => INDUSTRIES.map(() => Math.floor(Math.random() * 40 + 15)));
 
         try {
-            const res = await fetch(`/api/skills/compare?skills=${encodeURIComponent(chosen.join(','))}`);
+            const res = await fetch(`/api/compare?skills=${encodeURIComponent(chosen.join(','))}`);
             const json = await res.json();
-            if (json.error) throw new Error(json.error);
-            const valid = json.data.filter(s => !s.error);
+            if (!res.ok || json.success === false) {
+                throw new Error(json.message || json.error || 'Failed to compare skills');
+            }
+
+            const payload = Array.isArray(json.data) ? json.data : [];
+            const valid = payload.filter(s => s && !s.error);
             if (valid.length === 0) throw new Error('None of the provided skills were found.');
             setResults(valid);
             setSearchParams({ skills: chosen.join(',') });

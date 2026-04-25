@@ -1,43 +1,47 @@
 function formatSkills(skills, demandMap) {
-
   return skills.map(skill => {
+    const rawName = String(skill.name || '').trim();
+    if (!rawName) return null;
 
     const name =
-      skill.name.charAt(0).toUpperCase() +
-      skill.name.slice(1);
+      rawName.charAt(0).toUpperCase() +
+      rawName.slice(1);
 
     const demandScore =
-      demandMap[skill.name.toLowerCase()] || 50;
+      demandMap[rawName.toLowerCase()] || 50;
 
-    let averageSalary = 100000;
+    const demandIndex = Number(Math.min(10, Math.max(1, Math.round((demandScore / 10) * 10) / 10)));
 
-    if (typeof skill.averageSalary === "string") {
-
-      const salaryMatch = skill.averageSalary.match(/\d+/g);
-
+    let averageSalary = 1000000;
+    if (typeof skill.averageSalary === 'string') {
+      const salaryMatch = skill.averageSalary.replace(/,/g, '').match(/\d+/g);
       if (salaryMatch) {
-        averageSalary = parseInt(salaryMatch[0]) * 1000;
+        averageSalary = parseInt(salaryMatch[0], 10);
       }
-
-    } else if (typeof skill.averageSalary === "number") {
-
+    } else if (typeof skill.averageSalary === 'number') {
       averageSalary = skill.averageSalary;
-
     }
+
+    // Gemini prompt asks for USD; convert probable USD values to INR.
+    const salary = averageSalary < 1000000 ? Math.round(averageSalary * 83) : averageSalary;
+    const growth = Number(skill.growthPercentage || skill.growth || 10);
+    const recommended = (skill.recommendedRelatedSkills || skill.recommended || [])
+      .map(item => String(item || '').trim())
+      .filter(Boolean);
 
     return {
       name,
-      category: skill.category || "Technology",
-      demandScore,
-      growth: skill.growthPercentage || skill.growth || 10,
-      averageSalary,
-      recommended:
-        skill.recommendedRelatedSkills ||
-        skill.recommended ||
-        []
+      category: skill.category || 'Technology',
+      demandIndex,
+      salary,
+      growth,
+      experienceBarrier: 'Moderate',
+      saturationRisk: 'Stable',
+      description: `${name} market intelligence from recent hiring trends.`,
+      tags: ['Pipeline'],
+      recommended
     };
-
-  });
+  }).filter(Boolean);
 
 }
 

@@ -36,9 +36,13 @@ const API_BASE = '/api';
 export async function apiFetch(endpoint, options = {}) {
     const token = localStorage.getItem('skillintel_token');
 
-    // Build headers — automatically attach JWT if available
+    // FormData uploads need the browser-managed multipart boundary, so we
+    // skip the JSON Content-Type header in that case. Callers can also
+    // pass `raw: true` to get the Response object back (used for file downloads).
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
     const headers = {
-        'Content-Type': 'application/json',
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...options.headers,
     };
 
@@ -51,16 +55,20 @@ export async function apiFetch(endpoint, options = {}) {
         headers,
     });
 
-    // RESPONSE INTERCEPTION: Handle 401 globally
     if (response.status === 401) {
-        // Token is expired or invalid — clear credentials
         localStorage.removeItem('skillintel_token');
         localStorage.removeItem('skillintel_user');
-
-        // Redirect to login if not already there
         if (!window.location.pathname.includes('/login')) {
             window.location.href = '/login';
         }
+    }
+
+    if (options.raw) {
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            throw { status: response.status, message: text || response.statusText };
+        }
+        return response;
     }
 
     const data = await response.json().catch(() => ({}));

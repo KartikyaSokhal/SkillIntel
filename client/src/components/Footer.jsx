@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function Footer({ cols }) {
+export default function Footer() {
     return (
         <footer>
             <div className="footer-inner">
@@ -14,34 +14,25 @@ export default function Footer({ cols }) {
                     </p>
                 </div>
                 <div>
-                    <div className="footer-col-title">Platform</div>
-                    <div className="footer-col-items">
-                        <Link to="/explorer">Skills Explorer</Link>
-                        <Link to="/compare">Compare Skills</Link>
-                        <Link to="/explorer">Global Trends</Link>
-                        <a href="#">API Docs</a>
-                    </div>
-                </div>
-                <div>
                     <div className="footer-col-title">Company</div>
                     <div className="footer-col-items">
-                        <a href="#">About Us</a>
-                        <a href="#">Methodology</a>
-                        <a href="#">Contact</a>
+                        <Link to="/about">About Us</Link>
+                        <Link to="/methodology">Methodology</Link>
+                        <Link to="/contact">Contact</Link>
                     </div>
                 </div>
                 <div>
                     <div className="footer-col-title">Connect</div>
                     <div className="footer-col-items">
-                        <a href="#">LinkedIn</a>
-                        <a href="#">GitHub</a>
-                        <a href="#">Support</a>
+                        <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+                        <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+                        <Link to="/contact" className="footer-support-btn">Support</Link>
                     </div>
                 </div>
             </div>
             <div className="footer-bottom">
-                <span>© 2024 SkillIndex Market Intelligence. All rights reserved.</span>
-                <span>All data is benchmarked to ISO-2020 standards.</span>
+                <span>© 2026 Skill Intel Market Intelligence. All rights reserved.</span>
+                <span>All data is benchmarked to ISO-2026 standards.</span>
             </div>
         </footer>
     );

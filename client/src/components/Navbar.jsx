@@ -1,13 +1,17 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { getStoredUser, clearAuth, isAuthenticated } from '../utils/api';
+import Avatar from './Avatar';
+import ThemeToggle from './ThemeToggle';
 
 /**
  * Navbar Component
  * ────────────────
- * - Shows "SkillIntel" branding on the left
- * - Navigation links in the center
- * - If logged in: shows user name + Logout button
- * - If not logged in: shows Login and Register links
+ * - Branding on the left
+ * - Section navigation in the center
+ * - Right side:
+ *     - Theme toggle (light / dark)
+ *     - If logged in: Avatar + name + Logout
+ *     - Otherwise: Login + Register CTAs
  */
 export default function Navbar({ action }) {
     const navigate = useNavigate();
@@ -15,13 +19,8 @@ export default function Navbar({ action }) {
     const user = getStoredUser();
 
     const handleLogout = () => {
-        // Clear all authentication data from localStorage
         clearAuth();
-
-        // Also call server logout to destroy session
         fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
-
-        // Redirect to login
         navigate('/login');
     };
 
@@ -30,7 +29,7 @@ export default function Navbar({ action }) {
             <div className="nav-inner">
                 <Link to="/" className="nav-logo">
                     <div className="nav-logo-icon">⚡</div>
-                    SkillIntel
+                    <span className="nav-logo-text">Skill Intel</span>
                 </Link>
                 <div className="nav-links">
                     <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
@@ -48,12 +47,20 @@ export default function Navbar({ action }) {
                         </NavLink>
                     )}
                 </div>
-                <div className="nav-actions">
+                <div className="nav-actions" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <ThemeToggle />
                     {loggedIn ? (
                         <>
-                            <span style={{ color: '#94a3b8', fontSize: '0.85rem', marginRight: '0.75rem' }}>
-                                👤 {user?.name || 'User'}
-                            </span>
+                            <Link
+                                to="/profile"
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'var(--text-secondary)' }}
+                                aria-label="Profile"
+                            >
+                                <Avatar size="sm" name={user?.name} />
+                                <span style={{ fontSize: '0.85rem', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {user?.name || 'User'}
+                                </span>
+                            </Link>
                             <button
                                 onClick={handleLogout}
                                 className="btn btn-secondary btn-sm"
@@ -65,7 +72,7 @@ export default function Navbar({ action }) {
                     ) : (
                         <>
                             <Link to="/login" className="btn btn-secondary btn-sm">Login</Link>
-                            <Link to="/register" className="btn btn-primary btn-sm" style={{ marginLeft: '0.5rem' }}>
+                            <Link to="/register" className="btn btn-primary btn-sm">
                                 Register
                             </Link>
                         </>
