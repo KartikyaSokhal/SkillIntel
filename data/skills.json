@@ -1,34 +1,34 @@
 [
   {
-    "name": "React",
-    "category": "Frontend",
+    "name": "AWS",
+    "category": "Cloud",
     "demandScore": 100,
-    "growth": 18,
-    "averageSalary": 145000,
+    "growth": 20,
+    "averageSalary": 155000,
     "recommended": [
-      "JavaScript",
-      "TypeScript",
-      "Next.js",
-      "Redux",
-      "Tailwind CSS",
-      "GraphQL",
-      "Vite"
+      "Terraform",
+      "GCP",
+      "Azure",
+      "Kubernetes",
+      "Docker",
+      "Serverless",
+      "Python"
     ]
   },
   {
     "name": "SQL",
     "category": "Database",
     "demandScore": 91,
-    "growth": 8,
-    "averageSalary": 125000,
+    "growth": 5,
+    "averageSalary": 110000,
     "recommended": [
       "PostgreSQL",
       "MySQL",
       "NoSQL",
+      "MongoDB",
+      "Redis",
       "Python",
-      "Data Warehousing",
-      "ETL",
-      "BigQuery"
+      "Tableau"
     ]
   },
   {
@@ -36,31 +36,31 @@
     "category": "Backend",
     "demandScore": 82,
     "growth": 12,
-    "averageSalary": 140000,
+    "averageSalary": 135000,
     "recommended": [
-      "JavaScript",
       "TypeScript",
       "Express.js",
       "NestJS",
       "MongoDB",
       "PostgreSQL",
-      "Docker"
+      "Docker",
+      "AWS"
     ]
   },
   {
-    "name": "AWS",
-    "category": "Cloud",
-    "demandScore": 82,
-    "growth": 18,
-    "averageSalary": 155000,
+    "name": "React",
+    "category": "Frontend",
+    "demandScore": 73,
+    "growth": 15,
+    "averageSalary": 130000,
     "recommended": [
-      "Docker",
-      "Kubernetes",
-      "Terraform",
-      "Azure",
-      "GCP",
-      "Serverless",
-      "CI/CD"
+      "TypeScript",
+      "Next.js",
+      "Redux",
+      "Tailwind CSS",
+      "GraphQL",
+      "Storybook",
+      "Testing Library"
     ]
   },
   {
@@ -73,106 +73,106 @@
       "TypeScript",
       "React",
       "Node.js",
-      "HTML",
-      "CSS",
+      "Vite",
       "Webpack",
-      "Jest"
-    ]
-  },
-  {
-    "name": "TypeScript",
-    "category": "Programming Language",
-    "demandScore": 45,
-    "growth": 22,
-    "averageSalary": 142000,
-    "recommended": [
-      "JavaScript",
-      "React",
-      "Node.js",
-      "NestJS",
-      "GraphQL",
-      "Zod",
-      "Vitest"
-    ]
-  },
-  {
-    "name": "Python",
-    "category": "Programming Language",
-    "demandScore": 45,
-    "growth": 13,
-    "averageSalary": 135000,
-    "recommended": [
-      "Django",
-      "Flask",
-      "FastAPI",
-      "Pandas",
-      "NumPy",
-      "Machine Learning",
-      "AWS"
+      "Jest",
+      "Deno"
     ]
   },
   {
     "name": "Docker",
     "category": "DevOps",
-    "demandScore": 36,
-    "growth": 12,
+    "demandScore": 55,
+    "growth": 8,
     "averageSalary": 140000,
     "recommended": [
       "Kubernetes",
       "AWS",
+      "Terraform",
       "CI/CD",
       "Linux",
-      "Jenkins",
       "Helm",
-      "GitLab CI"
+      "Git"
     ]
   },
   {
     "name": "Kubernetes",
     "category": "DevOps",
-    "demandScore": 27,
+    "demandScore": 55,
     "growth": 18,
-    "averageSalary": 160000,
+    "averageSalary": 150000,
     "recommended": [
       "Docker",
-      "AWS",
-      "Terraform",
       "Helm",
+      "Terraform",
       "Prometheus",
+      "Grafana",
       "Istio",
-      "GitOps"
+      "AWS"
     ]
   },
   {
-    "name": "MongoDB",
-    "category": "Database",
-    "demandScore": 18,
-    "growth": 10,
-    "averageSalary": 130000,
+    "name": "Python",
+    "category": "Programming Language",
+    "demandScore": 55,
+    "growth": 18,
+    "averageSalary": 135000,
     "recommended": [
-      "SQL",
-      "PostgreSQL",
-      "Express.js",
-      "Node.js",
-      "Mongoose",
-      "Redis",
-      "Apache Cassandra"
+      "Django",
+      "Flask",
+      "Pandas",
+      "NumPy",
+      "TensorFlow",
+      "PyTorch",
+      "AWS"
     ]
   },
   {
     "name": "Machine Learning",
     "category": "AI",
-    "demandScore": 9,
-    "growth": 28,
-    "averageSalary": 170000,
+    "demandScore": 27,
+    "growth": 30,
+    "averageSalary": 165000,
     "recommended": [
       "Python",
       "TensorFlow",
       "PyTorch",
       "Scikit-learn",
-      "Data Science",
+      "SQL",
       "AWS SageMaker",
-      "MLOps"
+      "Deep Learning"
+    ]
+  },
+  {
+    "name": "TypeScript",
+    "category": "Programming Language",
+    "demandScore": 18,
+    "growth": 22,
+    "averageSalary": 140000,
+    "recommended": [
+      "React",
+      "Node.js",
+      "Next.js",
+      "NestJS",
+      "GraphQL",
+      "Deno",
+      "ESLint"
+    ]
+  },
+  {
+    "name": "MongoDB",
+    "category": "Database",
+    "demandScore": 9,
+    "growth": 10,
+    "averageSalary": 120000,
+    "recommended": [
+      "SQL",
+      "Redis",
+      "Cassandra",
+      "Express.js",
+      "Node.js",
+      "AWS DynamoDB",
+      "Mongoose"
     ]
   }
 ]
