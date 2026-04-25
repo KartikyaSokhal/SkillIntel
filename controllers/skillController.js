@@ -66,6 +66,15 @@ const getSkillByName = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+
+    res.json({
+      success: true,
+      data: skill
+    });
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**
@@ -113,6 +122,28 @@ const getRecommendedSkills = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+
+    const allSkills = readSkills();
+
+    const recommended = foundSkill.recommended.map(recName => {
+
+      const match = allSkills.find(
+        s => s.name.toLowerCase() === recName.toLowerCase()
+      );
+
+      return match || { name: recName };
+
+    });
+
+    res.json({
+      success: true,
+      basedOn: foundSkill.name,
+      data: recommended
+    });
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**
@@ -145,6 +176,28 @@ const compareSkills = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+
+    const skillNames = skillsQuery.split(",").map(s => s.trim());
+
+    const results = skillNames.map(name => {
+
+      const skill = findSkillByName(name);
+
+      if (!skill) return { name, error: "Skill not found" };
+
+      return skill;
+
+    });
+
+    res.json({
+      success: true,
+      comparing: skillNames,
+      data: results
+    });
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**

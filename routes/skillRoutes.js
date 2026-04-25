@@ -66,4 +66,8 @@ router.get('/skills/:name', getSkillByName);
 // POST /api/skills — create a new skill (admin only)
 router.post('/skills', authMiddleware, createSkill);
 
+router.get("/skills/:name", getSkillByName);
+
+router.post("/skills/refresh", refreshSkills);
+
 module.exports = router;
