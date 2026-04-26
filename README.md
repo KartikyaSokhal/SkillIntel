@@ -1,394 +1,204 @@
-# 🚀 SkillIndex – Skill to Economy Engine
+# SkillIntel — Skill Market Intelligence Engine
 
-SkillIndex is a backend-powered platform that analyzes market data to determine the **most valuable skills in the economy**.  
-It processes skill data through a pipeline and provides an API to access ranked skills based on demand, growth, and salary trends.
+SkillIntel is a full‑stack web application that provides **skill market intelligence** (demand, salary benchmarks, growth/trend signals, recommendations) for the tech ecosystem. It includes:
 
-This project demonstrates **backend architecture, REST APIs, middleware usage, and automated data pipelines using Node.js and Express.**
-
----
-
-# 📌 Features
-
-- Skill demand analysis pipeline
-- REST API for retrieving ranked skills
-- Automatic pipeline execution on server startup
-- Static frontend file serving
-- Custom 404 error handling
-- Global server error handler
-- Modular backend structure
+- **Backend**: Node.js + Express, MongoDB Atlas (Mongoose), JWT auth, SSR sessions (EJS), Socket.io
+- **Frontend**: React + Vite SPA consuming the same API
+- **Trend engine**: scheduled + on-demand pipeline that aggregates multiple signals (jobs + GitHub + Stack Overflow + optional Google Trends via `trend-service`)
 
 ---
 
-# 🏗 Tech Stack
+## Features
 
-**Backend**
-- Node.js
-- Express.js
-
-**Other Tools**
-- JavaScript
-- REST APIs
-- Middleware Architecture
-
----
-
-# 📂 Project Structure
-
-```
-SkillIntel
-│
-├── server.js                # Main server file
-│
-├── routes
-│   └── skillRoutes.js       # API routes
-│
-├── jobs
-│   └── skillPipeline.js     # Skill processing pipeline
-│
-├── public                   # Static frontend files
-│   ├── index.html
-│   └── 404.html
-│
-└── package.json
-```
+- **Skills API**: explore skills, compare, recommended skills, trending feed
+- **Auth**: register/login/logout, JWT-protected profile endpoints
+- **Profile**: update profile fields + **resume upload/download** (PDF/DOC/DOCX, ≤5MB)
+- **SSR dashboard**: EJS dashboard protected by server sessions
+- **Real-time**: Socket.io live events (`requestTrending` → `trendingUpdate`)
+- **Trends pipeline**:
+  - scheduled via cron (default every 6 hours)
+  - can be triggered on-demand via an admin endpoint
+  - writes trend history snapshots and updates latest computed fields on `Skill`
 
 ---
 
-# ⚙️ Installation
+## Tech stack
 
-Clone the repository:
+- **Backend**: Node.js, Express.js, Mongoose, MongoDB Atlas
+- **Auth**: JWT (`jsonwebtoken`), password hashing (`bcryptjs`)
+- **Sessions**: `express-session` + `connect-mongo`
+- **SSR**: EJS
+- **Real-time**: Socket.io
+- **Jobs / pipeline**: `node-cron`, axios
+- **Frontend**: React + Vite
 
-```bash
-git clone https://github.com/your-username/skillindex.git
-```
+---
 
-Move into the project directory:
-
-```bash
-cd skillindex
-```
-
-Install dependencies:
-
-# ⚡ SkillIntel — Skill Market Intelligence Engine
-
-> A full-stack web application that provides real-time skill market intelligence — demand indices, salary benchmarks, growth trajectories, and career path recommendations for the Indian tech industry.
-
-## 🏗 Tech Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Runtime** | Node.js | JavaScript runtime |
-| **Framework** | Express.js | HTTP server & routing |
-| **Database** | MongoDB Atlas | Cloud-hosted NoSQL database |
-| **ODM** | Mongoose | MongoDB object modeling |
-| **Auth** | JWT + bcryptjs | Stateless authentication & password hashing |
-| **Sessions** | express-session + connect-mongo | Server-side session storage in MongoDB |
-| **Template Engine** | EJS | Server-side rendering (SSR dashboard) |
-| **Real-time** | Socket.io | WebSocket-based live data feeds |
-| **Frontend** | React + Vite | Single-page application |
-| **Styling** | Vanilla CSS | Custom design system |
-
-## 📁 Folder Structure
+## Project structure (high level)
 
 ```
 SkillIntel/
-├── server.js                 # Main entry point
-├── seed.js                   # Database seeder script
-├── package.json              # Dependencies & scripts
-├── .env                      # Environment variables (gitignored)
-├── .env.example              # Environment template
-│
-├── models/
-│   ├── Skill.js              # Mongoose Skill schema
-│   ├── User.js               # Mongoose User schema (bcrypt hooks)
-│   └── postgresExample.js    # PostgreSQL reference (syllabus)
-│
-├── controllers/
-│   ├── skillController.js    # Skill CRUD logic
-│   ├── authController.js     # Register, Login, Logout, Profile
-│   └── dashboardController.js # SSR dashboard rendering
-│
-├── routes/
-│   ├── skillRoutes.js        # /api/skills/* routes
-│   ├── authRoutes.js         # /api/auth/* routes
-│   └── dashboardRoutes.js    # /dashboard, /login SSR routes
-│
-├── middleware/
-│   ├── logger.js             # Application-level request logger
-│   ├── errorHandler.js       # Global error handler (4-param)
-│   ├── authMiddleware.js     # JWT verification middleware
-│   └── sessionCheck.js       # Session-based route protection
-│
-├── views/
-│   ├── dashboard.ejs         # SSR dashboard template
-│   └── login.ejs             # SSR login form
-│
-├── data/
-│   └── skills.json           # Seed data (10 skills)
-│
-└── client/                   # React SPA (Vite)
-    └── src/
-        ├── App.jsx           # Router with public & protected routes
-        ├── components/
-        │   ├── Navbar.jsx    # Auth-aware navigation bar
-        │   ├── Footer.jsx
-        │   ├── SkillCard.jsx
-        │   └── Spinner.jsx
-        ├── pages/
-        │   ├── Home.jsx      # Landing page
-        │   ├── Explorer.jsx  # Skills browser
-        │   ├── SkillDetail.jsx
-        │   ├── Compare.jsx
-        │   ├── Login.jsx     # JWT login form
-        │   ├── Register.jsx  # Registration form
-        │   └── Dashboard.jsx # Protected dashboard + Socket.io
-        └── utils/
-            ├── api.js        # Fetch wrapper with JWT interceptor
-            └── currency.js   # INR salary formatting
-```
-
-## 🚀 Setup Instructions
-
-### Prerequisites
-- Node.js v18+
-- MongoDB Atlas account (free tier works)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/yourusername/SkillIntel.git
-cd SkillIntel
-```
-
-### 2. Install backend dependencies
-```bash
-npm install
+├── server.js
+├── routes/                  # auth, skills, dashboard
+├── controllers/             # request handlers
+├── models/                  # Skill, User, SkillTrend
+├── middleware/              # auth/session/error/logging
+├── services/                # trends pipeline + integrations
+├── jobs/                    # scheduler
+├── views/                   # EJS templates
+├── client/                  # React + Vite
+└── trend-service/           # optional FastAPI service for Google Trends
 ```
 
 ---
 
-# ▶️ Running the Server
+## Setup
 
-Start the server:
+### Prerequisites
+
+- Node.js **18+**
+- MongoDB Atlas (or a MongoDB URI)
+
+### 1) Install dependencies
 
 ```bash
-node server.js
+npm install
+cd client && npm install && cd ..
 ```
 
-Or with nodemon (recommended for development):
+### 2) Configure environment variables
+
+Create a `.env` in the repo root (do **not** commit it). Minimum required:
+
+```bash
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+SESSION_SECRET=your_session_secret
+NODE_ENV=development
+```
+
+Optional (enables more integrations in the trends pipeline):
+
+```bash
+# GitHub Search API (for github trends signal)
+GITHUB_TOKEN=your_github_token
+
+# Adzuna jobs source (jobs signal)
+ADZUNA_APP_ID=your_adzuna_app_id
+ADZUNA_API_KEY=your_adzuna_api_key
+
+# RapidAPI JSearch jobs source (jobs signal)
+JSEARCH_API_KEY=your_rapidapi_key
+
+# Google Trends via FastAPI service in ./trend-service
+TREND_SERVICE_URL=http://localhost:8000
+
+# Override cron expression (default: every 6 hours)
+TRENDS_CRON=0 */6 * * *
+```
+
+### 3) Seed the database (optional but recommended)
+
+```bash
+npm run seed
+```
+
+### 4) Run backend + frontend
+
+Backend (terminal 1):
 
 ```bash
 npm run dev
 ```
 
-Server will run on:
+Frontend (terminal 2):
 
-```
-http://localhost:3000
-```
-
----
-
-# 📡 API Endpoints
-
-## Get Ranked Skills
-
-```
-GET /api/skills
-```
-
-Example Response:
-
-```json
-[
-  {
-    "skill": "React",
-    "category": "Frontend",
-    "demandScore": 98,
-    "growth": 15,
-    "averageSalary": 130000
-  }
-]
-```
-
----
-
-# 🔄 Skill Processing Pipeline
-
-When the server starts, a **Skill Pipeline** runs automatically.
-
-The pipeline:
-
-1. Collects skill data
-2. Processes demand and salary metrics
-3. Ranks skills by economic value
-4. Prepares data for API access
-
-Pipeline file location:
-
-```
-/jobs/skillPipeline.js
-```
-
----
-
-# 🧠 Backend Architecture
-
-Request Flow:
-
-```
-Client Request
-      │
-      ▼
-Middleware
-(express.json / urlencoded)
-      │
-      ▼
-API Routes
-(/api/skills)
-      │
-      ▼
-Skill Processing Logic
-      │
-      ▼
-Response Sent
-```
-
----
-
-# ❗ Error Handling
-
-The application includes robust error handling.
-
-### 404 Handler
-
-- Returns JSON for API requests
-- Returns a custom HTML page for frontend routes
-
-### Global Error Handler
-
-Handles unexpected errors and prevents server crashes.
-
-Example response:
-
-```json
-{
-  "error": "Internal Server Error",
-  "message": "Something went wrong"
-}
-```
-
----
-
-# 🌐 Static File Serving
-
-Frontend files are served using Express static middleware.
-
-```
-app.use(express.static('public'))
-```
-
-Example access:
-
-```
-http://localhost:3000/index.html
-```
-
----
-
-# 🔮 Future Improvements
-
-- AI-powered skill demand prediction
-- Real-time job market scraping
-- Skill recommendation engine
-- Salary prediction model
-- Interactive analytics dashboard
-
----
-### 3. Install frontend dependencies
-```bash
-cd client && npm install && cd ..
-```
-
-### 4. Configure environment variables
-```bash
-cp .env.example .env
-# Edit .env with your MongoDB URI and secrets
-```
-
-### 5. Seed the database
-```bash
-npm run seed
-```
-This creates 10 skills + 2 users (admin & test user).
-
-### 6. Start the backend server
-```bash
-npm run dev       # Development (with nodemon)
-# or
-npm start         # Production
-```
-
-### 7. Start the React frontend (separate terminal)
 ```bash
 cd client && npm run dev
 ```
 
-### 8. Open in browser
-- **React App:** http://localhost:5173
-- **API:** http://localhost:3000/api/skills
-- **EJS Dashboard:** http://localhost:3000/dashboard
+Open:
 
-## 📡 API Endpoints
+- React app: `http://localhost:5173`
+- API: `http://localhost:3000/api/skills`
+- SSR dashboard: `http://localhost:3000/dashboard`
 
-### Skills API
+---
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/api/skills` | ❌ | Get all skills |
-| GET | `/api/skills/:name` | ❌ | Get skill by name |
-| GET | `/api/trending` | ❌ | Get skills sorted by growth |
-| GET | `/api/recommended/:skill` | ❌ | Get recommended companion skills |
-| GET | `/api/compare?skills=A,B` | ❌ | Compare multiple skills |
-| POST | `/api/skills` | ✅ JWT | Create a new skill |
+## API endpoints
 
-### Auth API
+### Skills API (public unless noted)
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| POST | `/api/auth/register` | ❌ | Create new account |
-| POST | `/api/auth/login` | ❌ | Login (returns JWT + sets session) |
-| POST | `/api/auth/logout` | ❌ | Destroy session & clear cookies |
-| GET | `/api/auth/profile` | ✅ JWT | Get current user profile |
+- `GET /api/skills` — list all skills
+- `GET /api/skills/:name` — get one skill (case-insensitive match)
+- `GET /api/trending?limit=N` — trending skills (sorted by `trendScore` with fallback)
+- `GET /api/compare?skills=A,B` — compare multiple skills
+- `GET /api/recommended/:skill` — recommended companion skills
+- `POST /api/skills` — **JWT required** (create skill)
 
-### SSR Routes
+### Auth / Profile API
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/login` | ❌ | EJS login form |
-| GET | `/dashboard` | ✅ Session | EJS dashboard (server-rendered) |
+- `POST /api/auth/register`
+- `POST /api/auth/login` — returns JWT
+- `POST /api/auth/logout`
+- `GET /api/auth/profile` — **JWT required**
+- `PUT /api/auth/profile` — **JWT required**
+- `POST /api/auth/profile` — **JWT required** (upsert-style; 201 on first save)
+- `POST /api/auth/profile/resume` — **JWT required**, multipart field name: `resume`
+- `GET /api/auth/profile/resume` — **JWT required**
 
-## 🔌 WebSocket Events (Socket.io)
+### Admin
 
-| Event | Direction | Description |
-|-------|-----------|-------------|
-| `welcome` | Server → Client | Sent on connection with socket ID |
-| `requestTrending` | Client → Server | Request latest trending skills |
-| `trendingUpdate` | Server → Client | Top 5 skills by growth |
-| `disconnect` | Both | Cleanup on disconnection |
+- `POST /api/admin/trends/refresh` — **JWT required + admin role**, triggers trends pipeline (returns 202)
 
-## 🔐 Default Users (after seeding)
+### SSR routes
 
-| Email | Password | Role |
-|-------|----------|------|
-| admin@skillintel.com | password123 | admin |
-| test@skillintel.com | test1234 | user |
+- `GET /login`
+- `GET /dashboard` — session-protected (redirects to `/login` when not logged in)
 
-## 📄 License
+---
 
-This project is licensed under the [MIT License](LICENSE).
+## WebSocket (Socket.io)
 
-## 👤 Author
+The backend attaches Socket.io to the same HTTP server.
 
-**Kartikya Sokhal**
-Backend Engineering — Semester 4 Project
+- **Server → Client**: `welcome`
+- **Client → Server**: `requestTrending`
+- **Server → Client**: `trendingUpdate`
+
+---
+
+## Trends pipeline (how it works)
+
+The trends engine is orchestrated by `services/trendsPipeline.js` and scheduled by `jobs/scheduler.js`.
+
+Signals:
+
+- **Jobs**: Adzuna + optional RapidAPI JSearch (`services/jobFetcher.js`)
+- **GitHub**: GitHub Search API (`services/githubTrends.js`) — requires `GITHUB_TOKEN`
+- **Stack Overflow**: Stack Exchange API (`services/stackoverflowTrends.js`)
+- **Google Trends (optional)**: via `trend-service` (`services/googleTrends.js`) — requires `TREND_SERVICE_URL`
+
+Persistence:
+
+- Inserts history snapshots into `SkillTrend`
+- Upserts latest computed fields onto `Skill` (so `/api/trending` is a single-collection read)
+
+---
+
+## Notes / limitations
+
+- `POST /api/skills` is JWT-protected but may not enforce admin role (admin enforcement is implemented on `/api/admin/trends/refresh`).
+- Google Trends requires running `trend-service/` and setting `TREND_SERVICE_URL`; otherwise it is automatically skipped.
+- RapidAPI JSearch may return HTTP 403 if the key is not subscribed to the API plan.
+
+---
+
+## License
+
+MIT — see `LICENSE`.
+
+## Author
+
+Kartikya Sokhal — Semester 4 Project

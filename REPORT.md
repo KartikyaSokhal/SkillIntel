@@ -10,6 +10,9 @@ User ↔ Browser (React SPA) ↔ HTTP API (Express) ↔ MongoDB (Skill & User do
           Socket.io ↔ Real‑time events (trending updates)
             ↕
           EJS Dashboard (SSR) – Session protected
+
+Background jobs (scheduled + on-demand):
+Trends Scheduler (node-cron) → Trends Pipeline → external sources (jobs/GitHub/SO/Google Trends) → MongoDB (SkillTrend history + Skill latest fields)
 ```
 
 ---
@@ -53,12 +56,18 @@ The separation enables independent evolution of the API and the SPA while reusin
 ### Backend
 - **server.js** – Entry point. Sets up environment, creates HTTP server, configures Socket.io, registers middleware (CORS, parsers, session, logger, morgan), mounts routers, 404 handler, global error handler, and starts listening after MongoDB connection.
 - **models/Skill.js** – Mongoose schema for skill documents (name, category, demandIndex, salary, growth, experienceBarrier, saturationRisk, description, tags, recommended, careerPaths, regionalDemand, timestamps). Includes a sub‑schema for regional demand and an index on `name` (unique).
+- **models/SkillTrend.js** – Trend history snapshots (one doc per run per skill). Used by the trends pipeline for percent-change and historical tracking.
 - **models/User.js** – Mongoose schema for users (name, email, password, role, createdAt). Pre‑save hook hashes passwords with bcrypt; instance method `comparePassword` verifies credentials.
 - **controllers/skillController.js** – CRUD and query functions: `getAllSkills`, `getSkillByName`, `getTrendingSkills`, `getRecommendedSkills`, `compareSkills`, `createSkill`. All use async/await and forward errors to `next`.
-- **controllers/authController.js** – Handles registration, login (JWT generation, session creation), logout, and profile retrieval.
+- **controllers/authController.js** – Handles registration, login (JWT generation + session creation), logout, profile retrieval/update, and resume upload/download.
 - **controllers/dashboardController.js** – Renders EJS dashboard and login pages.
-- **routes/skillRoutes.js** – Router for `/api/skills/*`. Registers router‑level logger, static routes (`/skills`, `/trending`, `/compare`, `/recommended/:skill`), dynamic route (`/skills/:name`), and protected POST route (`/skills` with `authMiddleware`).
-- **routes/authRoutes.js** – Auth endpoints (`/register`, `/login`, `/logout`, `/profile`).
+- **routes/skillRoutes.js** – Router mounted at `/api`. Exposes skills endpoints plus an admin endpoint for triggering the trends engine:
+  - Public: `/api/skills`, `/api/skills/:name`, `/api/trending`, `/api/compare`, `/api/recommended/:skill`
+  - Protected: `/api/skills` (POST), `/api/admin/trends/refresh` (POST; admin role required)
+- **routes/authRoutes.js** – Auth endpoints under `/api/auth`:
+  - `/register`, `/login`, `/logout`
+  - `/profile` (GET/PUT/POST, JWT-protected)
+  - `/profile/resume` (POST upload + GET download, JWT-protected)
 - **routes/dashboardRoutes.js** – SSR routes (`/login`, `/dashboard`) protected by `sessionCheck`.
 - **middleware/logger.js** – Simple request logger for skill routes.
 - **middleware/authMiddleware.js** – Verifies JWT, attaches `req.user`.
@@ -66,6 +75,21 @@ The separation enables independent evolution of the API and the SPA while reusin
 - **middleware/errorHandler.js** – Centralized error formatter (status, message, stack in dev).
 - **seed.js** – Populates `skills.json` and creates two default users (admin & test).
 - **views/** – EJS templates (`dashboard.ejs`, `login.ejs`).
+
+### Trends / Integrations (Backend Services)
+- **jobs/scheduler.js** – Arms the trends pipeline on a cron schedule (default every 6 hours) and optionally runs once at startup if no recent snapshot exists.
+- **services/trendsPipeline.js** – Orchestrates the end-to-end trend computation:
+  - Loads skill universe (from DB, or a seed list if empty)
+  - Pulls jobs (Adzuna + RapidAPI JSearch) and extracts skill mention counts
+  - Pulls GitHub counts (GitHub Search API)
+  - Pulls Stack Overflow counts (Stack Exchange API)
+  - Pulls Google Trends scores via the separate FastAPI `trend-service` (pytrends wrapper)
+  - Writes history (`SkillTrend`) and updates latest fields on `Skill`
+- **services/jobFetcher.js** – Fetches job posts (JSearch + Adzuna), filters for tech roles, dedupes, and returns a capped list.
+- **services/githubTrends.js** – GitHub Search API wrapper (requires `GITHUB_TOKEN`); fail-soft.
+- **services/stackoverflowTrends.js** – Stack Exchange API wrapper; throttled, fail-soft.
+- **services/googleTrends.js** – Calls the FastAPI `trend-service` (requires `TREND_SERVICE_URL`); fail-soft.
+- **trend-service/** – Separate Python service (FastAPI) used to access Google Trends via `pytrends`.
 
 ### Frontend (React SPA)
 - **client/src/main.jsx** – Boots React app, mounts `<App />`.
@@ -98,14 +122,19 @@ The separation enables independent evolution of the API and the SPA while reusin
 |----------|--------|------|------------|-------------|
 | `/api/skills` | GET | ❌ | `getAllSkills` | Return all skill docs.
 | `/api/skills/:name` | GET | ❌ | `getSkillByName` | Case‑insensitive lookup by name.
-| `/api/trending` | GET | ❌ | `getTrendingSkills` | Skills sorted by `growth` desc.
+| `/api/trending` | GET | ❌ | `getTrendingSkills` | Skills sorted by unified `trendScore` (fallback to legacy `growth`).
 | `/api/recommended/:skill` | GET | ❌ | `getRecommendedSkills` | Returns companion skills defined in `recommended` array.
 | `/api/compare` | GET | ❌ | `compareSkills` | Compare multiple skills via `?skills=` query.
-| `/api/skills` | POST | ✅ (JWT) | `createSkill` | Add a new skill (admin only in future).
+| `/api/skills` | POST | ✅ (JWT) | `createSkill` | Add a new skill (JWT-protected; role checks not enforced here).
+| `/api/admin/trends/refresh` | POST | ✅ (JWT + admin role) | `refreshTrends` | Triggers an on-demand trends pipeline run (returns 202).
 | `/api/auth/register` | POST | ❌ | `register` (authController) | Create user, hash password.
 | `/api/auth/login` | POST | ❌ | `login` | Verify password, issue JWT, set session.
 | `/api/auth/logout` | POST | ❌ | `logout` | Destroy session, clear cookie.
-| `/api/auth/profile` | GET | ✅ (JWT) | `profile` | Return current user info.
+| `/api/auth/profile` | GET | ✅ (JWT) | `getProfile` | Return current user info and full profile shape.
+| `/api/auth/profile` | PUT | ✅ (JWT) | `updateProfile` | Update profile fields (idempotent update).
+| `/api/auth/profile` | POST | ✅ (JWT) | `createOrUpdateProfile` | Upsert-style profile write (201 on first save, 200 on update).
+| `/api/auth/profile/resume` | POST | ✅ (JWT) | `uploadResume` | Upload resume (multipart field: `resume`, PDF/DOC/DOCX, ≤5MB).
+| `/api/auth/profile/resume` | GET | ✅ (JWT) | `downloadResume` | Download resume binary (streams from MongoDB).
 
 All controller functions are **async**, use **try/catch**, and forward errors to the global error handler.
 
@@ -130,21 +159,31 @@ All controller functions are **async**, use **try/catch**, and forward errors to
 ---
 
 ## 9. Current Progress
-- **Backend** – Fully functional CRUD API, authentication, session‑protected SSR, real‑time socket events, comprehensive error handling.
-- **Frontend** – React SPA with routing, theming, API wrapper, protected dashboard page.
-- **Data** – Seed script populates 10 skill documents and two users.
-- **Documentation** – README updated; detailed internal report (this file) generated.
+- **Backend** – API routes, JWT auth, SSR sessions, Socket.io events, global error handling are working locally.
+- **Auth/Profile** – Register/login/logout + profile CRUD and resume upload/download endpoints are implemented and verified via live HTTP requests.
+- **Trends Engine** – Scheduler + pipeline present (jobs/GitHub/StackOverflow/GoogleTrends adapters) and the cron scheduler is now armed successfully after installing missing dependency.
+- **Frontend** – React SPA dev server is running and consuming the API; SSR `/login` renders and `/dashboard` is session-protected.
+- **Verification (local smoke tests)** – Confirmed with real requests against `http://localhost:3000`:
+  - Public endpoints return expected JSON
+  - Protected endpoints accept JWT and reject missing/invalid auth
+  - Admin-only trends refresh rejects non-admin with HTTP 403
+  - SSR route protection redirects unauthenticated users
 
 ---
 
 ## 10. Known Issues / Limitations
-- **Authorization Granularity** – `createSkill` is only JWT‑protected; role‑based checks (admin vs user) are not enforced yet.
+- **Role-based enforcement** – `createSkill` is JWT-protected but does not enforce admin role (whereas `/api/admin/trends/refresh` does).
 - **Input Validation** – Controllers rely on Mongoose validation; no explicit request‑body validation (e.g., Joi) – could lead to ambiguous error messages.
 - **Scalability** – Session store is MongoDB; for high traffic a dedicated Redis store may be preferable.
 - **Testing** – No unit or integration test suite present.
 - **Frontend State** – No global state management (Redux/Context) – repeated fetches on navigation.
 - **Error Messages** – API returns generic messages; could be standardized with error codes.
+- **External API prerequisites**:
+  - GitHub trends require `GITHUB_TOKEN`.
+  - Google trends require the Python `trend-service` to be running and `TREND_SERVICE_URL` to be set; otherwise Google Trends source is disabled (pipeline continues with other sources).
+  - RapidAPI JSearch may return “not subscribed” (HTTP 403) depending on the RapidAPI plan; Adzuna still works independently.
+- **Operational/security hygiene** – `.env` contains secrets (DB URI, API keys). These must never be committed; rotate keys if exposed.
 
 ---
 
-*Prepared by Antigravity – GPT‑OSS 120B (Medium)*
+*Last updated: API & integration verification (Apr 26, 2026).*
