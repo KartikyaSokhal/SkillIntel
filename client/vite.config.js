@@ -7,7 +7,8 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        // Use IPv4 loopback to avoid occasional localhost/IPv6 (::1) ECONNREFUSED
+        target: 'http://127.0.0.1:3000',
         changeOrigin: true,
       },
     },
