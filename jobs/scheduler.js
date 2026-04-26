@@ -17,6 +17,7 @@
 const cron = require('node-cron');
 const SkillTrend = require('../models/SkillTrend');
 const { runTrendsPipeline } = require('../services/trendsPipeline');
+const { generateWeeklyInsights } = require('./weeklyInsightsJob');
 
 const CRON_EXPR = process.env.TRENDS_CRON || '0 */6 * * *';
 const STARTUP_FRESHNESS_HOURS = 24;
@@ -57,6 +58,17 @@ function arm() {
     });
 
     console.log(`[scheduler] trends pipeline armed (cron: ${CRON_EXPR}).`);
+
+    // Schedule weekly AI insights (Every Monday at 8 AM)
+    const INSIGHTS_CRON = '0 8 * * 1';
+    cron.schedule(INSIGHTS_CRON, () => {
+        console.log(`[scheduler] cron tick — generating weekly insights.`);
+        generateWeeklyInsights().catch((err) => {
+            console.error('[scheduler] weekly insights run failed:', err.message);
+        });
+    });
+    console.log(`[scheduler] weekly insights armed (cron: ${INSIGHTS_CRON}).`);
+
     maybeRunOnStartup();
 }
 

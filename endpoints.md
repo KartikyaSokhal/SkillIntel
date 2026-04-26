@@ -48,6 +48,7 @@ routes/                   # Route definitions (HTTP paths)
   authRoutes.js
   skillRoutes.js
   dashboardRoutes.js
+  insightRoutes.js        # API routes for AI insights
 
 controllers/              # Route handlers (business logic)
   authController.js
@@ -58,6 +59,7 @@ models/                   # Mongoose models
   User.js
   Skill.js
   SkillTrend.js
+  WeeklyInsight.js        # AI-generated weekly insights
 
 middleware/               # Cross-cutting middleware
   authMiddleware.js       # JWT verification, sets req.user
@@ -77,6 +79,10 @@ services/                 # “Integrations” + pipeline modules
 
 jobs/
   scheduler.js            # cron schedule + startup “freshness” run logic
+  weeklyInsightsJob.js    # automated AI news generation via Gemini
+
+utils/
+  eventBus.js             # internal event emitter decoupling jobs and Socket.io
 
 views/                    # SSR templates
   login.ejs
@@ -159,14 +165,21 @@ Notes:
 | POST | `/api/auth/profile/resume` | JWT | `authController.uploadResume` | Upload resume (multipart field name: `resume`, ≤5MB, PDF/DOC/DOCX) |
 | GET | `/api/auth/profile/resume` | JWT | `authController.downloadResume` | Download resume bytes |
 
-### 4.3 SSR endpoints (mounted under `/`)
+### 4.3 Insights API (mounted under `/api/insights`)
+
+| Method | Path | Auth | Handler | Description |
+|---|---|---|---|---|
+| GET | `/api/insights/latest` | Public | `insightRoutes.js` | Returns the most recent AI-generated weekly tech news |
+| POST | `/api/insights/generate` | Admin | `insightRoutes.js` | Manually triggers the Gemini insights job (testing/override) |
+
+### 4.4 SSR endpoints (mounted under `/`)
 
 | Method | Path | Auth | Handler | Description |
 |---|---|---|---|---|
 | GET | `/login` | Public | `dashboardController.renderLogin` | SSR login page |
 | GET | `/dashboard` | Session | `sessionCheck` → `dashboardController.renderDashboard` | SSR dashboard page (redirects to `/login` if no session) |
 
-### 4.4 404 behavior
+### 4.5 404 behavior
 
 - For unknown `/api/*` routes: returns JSON `{ success: false, message: 'API route not found' }` with **404**
 - For unknown non-API routes: returns a basic HTML 404 page
@@ -182,6 +195,7 @@ Socket.io is attached to the same HTTP server in `server.js`.
 | `welcome` | Server → Client | Sent on connection with socket id |
 | `requestTrending` | Client → Server | Client requests latest trending skills |
 | `trendingUpdate` | Server → Client | Server emits latest trending list |
+| `new-insight` | Server → Client | Server broadcasts new AI weekly insight |
 | `disconnect` | Both | connection closed |
 
 ```mermaid
@@ -278,6 +292,16 @@ flowchart TD
   - requires running `trend-service/` (FastAPI) separately
   - requires `TREND_SERVICE_URL` (e.g. `http://localhost:8000`)
   - if not set, Google Trends signal is automatically skipped (pipeline still runs)
+
+### 7.4 Weekly AI Insights Workflow
+
+1. `jobs/scheduler.js` triggers `weeklyInsightsJob.js` every Monday at 8 AM.
+2. The job queries MongoDB for the top 3 highest-growth skills.
+3. Passes the skills to Google Gemini API to generate a professional tech news summary.
+4. Saves to the `WeeklyInsight` MongoDB collection.
+5. Emits `new-insight` event via `utils/eventBus.js`.
+6. `server.js` catches the event and broadcasts it to all connected React clients via Socket.io.
+7. `LiveFeed.jsx` component animates the new insight onto the user's dashboard.
 
 ---
 

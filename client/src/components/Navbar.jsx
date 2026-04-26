@@ -34,6 +34,12 @@ export default function Navbar({ action }) {
                     <span className="nav-logo-text">Skill Intel</span>
                 </Link>
                 <div className="nav-links">
+                    <NavLink to="/explorer" className={({ isActive }) => isActive ? 'active' : ''}>
+                        Skills
+                    </NavLink>
+                    <NavLink to="/trends" className={({ isActive }) => isActive ? 'active' : ''}>
+                        Trends
+                    </NavLink>
                     {loggedIn ? (
                         <>
                             <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
@@ -50,9 +56,6 @@ export default function Navbar({ action }) {
                         <>
                             <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
                                 Market Data
-                            </NavLink>
-                            <NavLink to="/explorer" className={({ isActive }) => isActive ? 'active' : ''}>
-                                Skills
                             </NavLink>
                             <NavLink to="/compare" className={({ isActive }) => isActive ? 'active' : ''}>
                                 Comparisons

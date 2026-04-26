@@ -45,13 +45,15 @@ const { Server } = require('socket.io');
 const skillRoutes = require('./routes/skillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const insightRoutes = require('./routes/insightRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
 // ── Import Custom Middleware ──────────────────────────────────
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler');
 
-// ── Import Skill Model (for Socket.io queries) ───────────────
+// ── Import Event Bus & Models ─────────────────────────────────
+const eventBus = require('./utils/eventBus');
 const Skill = require('./models/Skill');
 
 const app = express();
@@ -164,6 +166,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API Routes — Return JSON data
 app.use('/api/auth', authRoutes);    // /api/auth/login, /api/auth/register, etc.
 app.use('/api', skillRoutes);        // /api/skills, /api/trending, etc.
+app.use('/api/insights', insightRoutes);
 app.use('/api/ai', aiRoutes);        // /api/ai/chat
 
 // SSR Routes — Return rendered HTML pages
@@ -190,8 +193,17 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ═══════════════════════════════════════════════════════════════
-// SOCKET.IO — Real-Time WebSocket Events
+// SOCKET.IO & EVENT BUS — Real-Time WebSocket Events
 // ═══════════════════════════════════════════════════════════════
+
+// Listen for internal backend events and broadcast them to all connected clients
+eventBus.on('trends-updated', (data) => {
+    io.emit('trends-updated', data);
+});
+
+eventBus.on('new-insight', (data) => {
+    io.emit('new-insight', data);
+});
 
 io.on('connection', (socket) => {
     console.log(`🔌 New client connected: ${socket.id}`);

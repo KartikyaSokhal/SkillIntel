@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DashboardStatCard from '../components/DashboardStatCard';
 import TrendingCard from '../components/TrendingCard';
+import LiveFeed from '../components/LiveFeed';
 import { apiFetch, isAuthenticated } from '../utils/api';
 import { formatSalaryLPA } from '../utils/currency';
 
@@ -30,6 +31,7 @@ export default function Dashboard() {
     const [trending, setTrending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [socketStatus, setSocketStatus] = useState('disconnected');
+    const [insight, setInsight] = useState(null);
     const [userSkills, setUserSkills] = useState([]);
     const [recommendedSkills, setRecommendedSkills] = useState([]);
     const [profileResume, setProfileResume] = useState({ hasFile: false });
@@ -41,6 +43,18 @@ export default function Dashboard() {
             navigate('/login');
         }
     }, [navigate]);
+
+    // ── Fetch latest weekly insight ───────────────────────────
+    useEffect(() => {
+        fetch('/api/insights/latest')
+            .then(r => r.json())
+            .then(json => {
+                if (json.success && json.data) {
+                    setInsight(json.data);
+                }
+            })
+            .catch(() => {});
+    }, []);
 
     // ── Fetch all skills (REST API) ───────────────────────────
     useEffect(() => {
@@ -105,6 +119,10 @@ export default function Dashboard() {
 
                 socket.on('trendingUpdate', (payload) => {
                     setTrending(payload.data || []);
+                });
+
+                socket.on('new-insight', (payload) => {
+                    setInsight(payload);
                 });
 
                 socket.on('welcome', (data) => {
@@ -181,6 +199,11 @@ export default function Dashboard() {
                     </div>
                     <div className="dashboard-date">{today}</div>
                 </div>
+            </div>
+
+            {/* ─── Live AI Insight Feed ──────────────────────────── */}
+            <div style={{ maxWidth: '1200px', margin: '2rem auto 0 auto', padding: '0 2rem' }}>
+                <LiveFeed insight={insight} />
             </div>
 
             {/* ─── Stats Row ─────────────────────────────────────── */}

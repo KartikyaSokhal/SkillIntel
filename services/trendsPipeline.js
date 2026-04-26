@@ -22,6 +22,7 @@
 
 const Skill = require('../models/Skill');
 const SkillTrend = require('../models/SkillTrend');
+const eventBus = require('../utils/eventBus');
 
 const fetchJobs = require('./jobFetcher');
 const extractSkills = require('./skillExtractor');
@@ -198,6 +199,12 @@ async function runTrendsPipeline() {
         lastRunAt = new Date();
         const elapsedMs = lastRunAt.getTime() - startedAt.getTime();
         console.log(`═══ [trendsPipeline] done in ${elapsedMs}ms ═══\n`);
+
+        // Emit real-time event to connected clients
+        eventBus.emit('trends-updated', {
+            timestamp: lastRunAt,
+            skillsScored: skillNames.length
+        });
 
         return {
             status: 'ok',

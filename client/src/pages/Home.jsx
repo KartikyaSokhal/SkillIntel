@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SkillCard from '../components/SkillCard';
 import Spinner from '../components/Spinner';
+import LiveFeed from '../components/LiveFeed';
 import { formatSalaryLPA } from '../utils/currency';
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     const [searchVal, setSearchVal] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [insight, setInsight] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,6 +39,13 @@ export default function Home() {
             .finally(() => {
                 if (isMounted) setLoading(false);
             });
+
+        fetch('/api/insights/latest')
+            .then(r => r.json())
+            .then(json => {
+                if (json.success && json.data && isMounted) setInsight(json.data);
+            })
+            .catch(() => {});
 
         return () => {
             isMounted = false;
@@ -162,6 +171,11 @@ export default function Home() {
                         <h2 className="section-title">Skill Intelligence Dashboard</h2>
                         <p className="section-subtitle">Top skills ranked by current market momentum and growth trajectories.</p>
                     </div>
+
+                    <div style={{ marginBottom: '2rem' }}>
+                        <LiveFeed insight={insight} />
+                    </div>
+
                     {loading ? (
                         <Spinner message="Loading trending skills…" />
                     ) : top6.length > 0 ? (
@@ -179,7 +193,7 @@ export default function Home() {
                         </div>
                     )}
                     <div className="trending-cta">
-                        <Link to="/explorer" className="btn btn-secondary">View All Skills →</Link>
+                        <Link to="/trends" className="btn btn-secondary">Explore All Trends →</Link>
                     </div>
                 </div>
             </section>

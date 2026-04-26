@@ -7,12 +7,13 @@ SkillIntel is a full‑stack web platform that delivers real‑time skill market
 ```
 User ↔ Browser (React SPA) ↔ HTTP API (Express) ↔ MongoDB (Skill & User docs)
             ↕
-          Socket.io ↔ Real‑time events (trending updates)
+          Socket.io ↔ Real‑time events (trending updates, new AI insights)
             ↕
           EJS Dashboard (SSR) – Session protected
 
 Background jobs (scheduled + on-demand):
-Trends Scheduler (node-cron) → Trends Pipeline → external sources (jobs/GitHub/SO/Google Trends) → MongoDB (SkillTrend history + Skill latest fields)
+1. Trends Scheduler (node-cron) → Trends Pipeline → external sources (jobs/GitHub/SO/Google Trends) → MongoDB (SkillTrend history + Skill latest fields) → EventBus → Socket.io
+2. Weekly Insights Job (node-cron) → Gemini AI API → MongoDB (WeeklyInsight) → EventBus → Socket.io
 ```
 
 ---
@@ -58,6 +59,7 @@ The separation enables independent evolution of the API and the SPA while reusin
 - **models/Skill.js** – Mongoose schema for skill documents (name, category, demandIndex, salary, growth, experienceBarrier, saturationRisk, description, tags, recommended, careerPaths, regionalDemand, timestamps). Includes a sub‑schema for regional demand and an index on `name` (unique).
 - **models/SkillTrend.js** – Trend history snapshots (one doc per run per skill). Used by the trends pipeline for percent-change and historical tracking.
 - **models/User.js** – Mongoose schema for users (name, email, password, role, createdAt). Pre‑save hook hashes passwords with bcrypt; instance method `comparePassword` verifies credentials.
+- **models/WeeklyInsight.js** – Mongoose schema for AI-generated weekly tech news (title, content, topSkills, createdAt).
 - **controllers/skillController.js** – CRUD and query functions: `getAllSkills`, `getSkillByName`, `getTrendingSkills`, `getRecommendedSkills`, `compareSkills`, `createSkill`. All use async/await and forward errors to `next`.
 - **controllers/authController.js** – Handles registration, login (JWT generation + session creation), logout, profile retrieval/update, and resume upload/download.
 - **controllers/dashboardController.js** – Renders EJS dashboard and login pages.
@@ -68,23 +70,26 @@ The separation enables independent evolution of the API and the SPA while reusin
   - `/register`, `/login`, `/logout`
   - `/profile` (GET/PUT/POST, JWT-protected)
   - `/profile/resume` (POST upload + GET download, JWT-protected)
+- **routes/insightRoutes.js** – AI insights endpoints (`/api/insights/latest`, `/api/insights/generate`).
 - **routes/dashboardRoutes.js** – SSR routes (`/login`, `/dashboard`) protected by `sessionCheck`.
 - **middleware/logger.js** – Simple request logger for skill routes.
 - **middleware/authMiddleware.js** – Verifies JWT, attaches `req.user`.
 - **middleware/sessionCheck.js** – Ensures a valid session for SSR routes.
 - **middleware/errorHandler.js** – Centralized error formatter (status, message, stack in dev).
+- **utils/eventBus.js** – Node.js EventEmitter singleton to decouple background jobs from the Express/Socket.io server.
 - **seed.js** – Populates `skills.json` and creates two default users (admin & test).
 - **views/** – EJS templates (`dashboard.ejs`, `login.ejs`).
 
 ### Trends / Integrations (Backend Services)
-- **jobs/scheduler.js** – Arms the trends pipeline on a cron schedule (default every 6 hours) and optionally runs once at startup if no recent snapshot exists.
+- **jobs/scheduler.js** – Arms the trends pipeline on a cron schedule (default every 6 hours) and the weekly insights job (every Monday 8 AM).
+- **jobs/weeklyInsightsJob.js** – Queries DB for top 3 trending skills and prompts Gemini AI to write a weekly tech news update. Saves to DB and emits `new-insight` event.
 - **services/trendsPipeline.js** – Orchestrates the end-to-end trend computation:
   - Loads skill universe (from DB, or a seed list if empty)
   - Pulls jobs (Adzuna + RapidAPI JSearch) and extracts skill mention counts
   - Pulls GitHub counts (GitHub Search API)
   - Pulls Stack Overflow counts (Stack Exchange API)
   - Pulls Google Trends scores via the separate FastAPI `trend-service` (pytrends wrapper)
-  - Writes history (`SkillTrend`) and updates latest fields on `Skill`
+  - Writes history (`SkillTrend`), updates latest fields on `Skill`, and emits `trends-updated` event.
 - **services/jobFetcher.js** – Fetches job posts (JSearch + Adzuna), filters for tech roles, dedupes, and returns a capped list.
 - **services/githubTrends.js** – GitHub Search API wrapper (requires `GITHUB_TOKEN`); fail-soft.
 - **services/stackoverflowTrends.js** – Stack Exchange API wrapper; throttled, fail-soft.
@@ -135,6 +140,8 @@ The separation enables independent evolution of the API and the SPA while reusin
 | `/api/auth/profile` | POST | ✅ (JWT) | `createOrUpdateProfile` | Upsert-style profile write (201 on first save, 200 on update).
 | `/api/auth/profile/resume` | POST | ✅ (JWT) | `uploadResume` | Upload resume (multipart field: `resume`, PDF/DOC/DOCX, ≤5MB).
 | `/api/auth/profile/resume` | GET | ✅ (JWT) | `downloadResume` | Download resume binary (streams from MongoDB).
+| `/api/insights/latest` | GET | ❌ | `insightRoutes.js` | Returns the most recent AI-generated weekly tech news.
+| `/api/insights/generate` | POST | ❌ | `insightRoutes.js` | Admin trigger to manually generate insights via Gemini.
 
 All controller functions are **async**, use **try/catch**, and forward errors to the global error handler.
 
@@ -161,8 +168,9 @@ All controller functions are **async**, use **try/catch**, and forward errors to
 ## 9. Current Progress
 - **Backend** – API routes, JWT auth, SSR sessions, Socket.io events, global error handling are working locally.
 - **Auth/Profile** – Register/login/logout + profile CRUD and resume upload/download endpoints are implemented and verified via live HTTP requests.
-- **Trends Engine** – Scheduler + pipeline present (jobs/GitHub/StackOverflow/GoogleTrends adapters) and the cron scheduler is now armed successfully after installing missing dependency.
-- **Frontend** – React SPA dev server is running and consuming the API; SSR `/login` renders and `/dashboard` is session-protected.
+- **Trends Engine** – Scheduler + pipeline present (jobs/GitHub/StackOverflow/GoogleTrends adapters) and the cron scheduler is now armed successfully.
+- **AI Insights Engine** – Weekly Gemini AI news generator implemented, decoupled via `EventBus`, and connected to Socket.io for live delivery to the React frontend (`LiveFeed.jsx`).
+- **Frontend** – React SPA dev server is running and consuming the API; SSR `/login` renders and `/dashboard` is session-protected with the live AI insights sliding in smoothly via `framer-motion`.
 - **Verification (local smoke tests)** – Confirmed with real requests against `http://localhost:3000`:
   - Public endpoints return expected JSON
   - Protected endpoints accept JWT and reject missing/invalid auth

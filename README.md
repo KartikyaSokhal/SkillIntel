@@ -11,6 +11,7 @@ SkillIntel is a full‑stack web application that provides **skill market intell
 ## Features
 
 - **Skills API**: explore skills, compare, recommended skills, trending feed
+- **AI Insights**: automated weekly tech news generation via Gemini AI
 - **Auth**: register/login/logout, JWT-protected profile endpoints
 - **Profile**: update profile fields + **resume upload/download** (PDF/DOC/DOCX, ≤5MB)
 - **SSR dashboard**: EJS dashboard protected by server sessions
@@ -133,9 +134,14 @@ Open:
 - `GET /api/skills` — list all skills
 - `GET /api/skills/:name` — get one skill (case-insensitive match)
 - `GET /api/trending?limit=N` — trending skills (sorted by `trendScore` with fallback)
-- `GET /api/compare?skills=A,B` — compare multiple skills
 - `GET /api/recommended/:skill` — recommended companion skills
+- `GET /api/skills/recommended/:skill` — Backward-compatible alias
 - `POST /api/skills` — **JWT required** (create skill)
+
+### Insights API
+
+- `GET /api/insights/latest` — fetch the most recent AI-generated weekly tech news
+- `POST /api/insights/generate` — **Admin** trigger to manually generate insights via Gemini
 
 ### Auth / Profile API
 
@@ -166,6 +172,7 @@ The backend attaches Socket.io to the same HTTP server.
 - **Server → Client**: `welcome`
 - **Client → Server**: `requestTrending`
 - **Server → Client**: `trendingUpdate`
+- **Server → Client**: `new-insight` (Live broadcast of weekly AI insights)
 
 ---
 

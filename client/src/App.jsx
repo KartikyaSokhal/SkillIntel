@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Explorer from './pages/Explorer';
 import SkillDetail from './pages/SkillDetail';
 import Compare from './pages/Compare';
+import Trends from './pages/Trends';
 
 // ── New Auth & Dashboard Pages ────────────────────────────────
 import Login from './pages/Login';
@@ -47,6 +48,7 @@ export default function App() {
                 <Route path="/explorer" element={<Explorer />} />
                 <Route path="/skill/:name" element={<SkillDetail />} />
                 <Route path="/compare" element={<Compare />} />
+                <Route path="/trends" element={<Trends />} />
 
                 {/* ── Auth Routes (new) ────────────────────────── */}
                 <Route path="/login" element={<Login />} />
