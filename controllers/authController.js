@@ -14,7 +14,10 @@
  */
 
 const User = require('../models/User');
+const Skill = require('../models/Skill');
 const jwt = require('jsonwebtoken');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 /**
  * REGISTER — Create a new user account
@@ -221,6 +224,64 @@ const getProfile = async (req, res, next) => {
 
 const VALID_LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
 const LEVEL_FALLBACK_SCORE = { Beginner: 25, Intermediate: 55, Advanced: 80, Expert: 95 };
+const DEFAULT_JOB_KEYWORDS = [
+    'api', 'microservices', 'cloud', 'scalable', 'distributed',
+    'testing', 'ci/cd', 'docker', 'kubernetes', 'security', 'performance'
+];
+
+function normalizeToken(value = '') {
+    return String(value).toLowerCase().replace(/[^a-z0-9.+#/-]/g, ' ').trim();
+}
+
+async function extractResumeText(file) {
+    const mime = file?.mimetype || '';
+    if (mime === 'application/pdf') {
+        const parsed = await pdfParse(file.buffer);
+        return { text: parsed?.text || '', parserStatus: 'pdf_ok' };
+    }
+    if (mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        const parsed = await mammoth.extractRawText({ buffer: file.buffer });
+        return { text: parsed?.value || '', parserStatus: 'docx_ok' };
+    }
+    if (mime === 'application/msword') {
+        // DOC parsing is intentionally marked unsupported for now.
+        return { text: '', parserStatus: 'doc_not_supported' };
+    }
+    return { text: '', parserStatus: 'unsupported_type' };
+}
+
+function buildAtsAnalysis(text, trendingSkills = []) {
+    const corpus = normalizeToken(text);
+    const trendNames = Array.from(new Set(
+        trendingSkills.map((s) => String(s?.name || '').trim()).filter(Boolean)
+    ));
+
+    const matchedSkills = trendNames.filter((name) => {
+        const token = normalizeToken(name);
+        return token && corpus.includes(token);
+    });
+
+    const missingSkills = trendNames.filter((name) => !matchedSkills.includes(name)).slice(0, 10);
+    const matchedJobKeywords = DEFAULT_JOB_KEYWORDS.filter((kw) => corpus.includes(normalizeToken(kw)));
+
+    const keywordPool = trendNames.length + DEFAULT_JOB_KEYWORDS.length;
+    const keywordHits = matchedSkills.length + matchedJobKeywords.length;
+    const relevanceScore = trendNames.length ? Math.round((matchedSkills.length / trendNames.length) * 100) : 0;
+    const keywordMatchScore = keywordPool ? Math.round((keywordHits / keywordPool) * 100) : 0;
+    const atsScore = Math.max(0, Math.min(100, Math.round(keywordMatchScore * 0.7 + relevanceScore * 0.3)));
+
+    const suggestions = [];
+    missingSkills.slice(0, 4).forEach((skill) => suggestions.push(`Add ${skill}`));
+    if (matchedJobKeywords.length < 3) suggestions.push('Improve keyword usage for job descriptions');
+    if (!suggestions.length) suggestions.push('Great baseline. Add project-based impact bullets for stronger ATS relevance.');
+
+    return {
+        atsScore,
+        matchedKeywords: [...matchedSkills, ...matchedJobKeywords].slice(0, 20),
+        missingSkills,
+        suggestions
+    };
+}
 
 /**
  * Strips heavy resume binary data from a profile object before sending it
@@ -232,6 +293,16 @@ function profileForClient(user) {
     if (profile.resume) {
         const { fileData, ...resumeMeta } = profile.resume;
         profile.resume = { ...resumeMeta, hasFile: !!fileData };
+    }
+    if (!profile.resumeAnalysis) {
+        profile.resumeAnalysis = {
+            atsScore: 0,
+            matchedKeywords: [],
+            missingSkills: [],
+            suggestions: [],
+            updatedAt: null,
+            parserStatus: 'not_run'
+        };
     }
     return profile;
 }
@@ -422,6 +493,29 @@ const uploadResume = async (req, res, next) => {
             uploadedAt: new Date()
         };
 
+        try {
+            const topTrending = await Skill.find()
+                .sort({ trendScore: -1, growth: -1, demandIndex: -1 })
+                .limit(20)
+                .select('name');
+            const parsed = await extractResumeText(req.file);
+            const analysis = buildAtsAnalysis(parsed.text, topTrending);
+            user.profile.resumeAnalysis = {
+                ...analysis,
+                updatedAt: new Date(),
+                parserStatus: parsed.parserStatus
+            };
+        } catch (parseErr) {
+            user.profile.resumeAnalysis = {
+                atsScore: 0,
+                matchedKeywords: [],
+                missingSkills: [],
+                suggestions: ['Resume parsed with errors. Try uploading a clean PDF or DOCX file.'],
+                updatedAt: new Date(),
+                parserStatus: 'parse_error'
+            };
+        }
+
         await user.save();
 
         res.status(201).json({
@@ -433,7 +527,8 @@ const uploadResume = async (req, res, next) => {
                 sizeBytes: user.profile.resume.sizeBytes,
                 uploadedAt: user.profile.resume.uploadedAt,
                 hasFile: true
-            }
+            },
+            resumeAnalysis: user.profile.resumeAnalysis || null
         });
     } catch (err) {
         next(err);

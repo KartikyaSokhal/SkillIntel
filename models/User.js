@@ -115,6 +115,15 @@ const userSchema = new mongoose.Schema({
             fileData: { type: Buffer, default: null },
             sizeBytes: { type: Number, default: 0 },
             uploadedAt: { type: Date, default: null }
+        },
+
+        resumeAnalysis: {
+            atsScore: { type: Number, default: 0, min: 0, max: 100 },
+            matchedKeywords: { type: [String], default: [] },
+            missingSkills: { type: [String], default: [] },
+            suggestions: { type: [String], default: [] },
+            updatedAt: { type: Date, default: null },
+            parserStatus: { type: String, default: 'not_run' }
         }
     },
 

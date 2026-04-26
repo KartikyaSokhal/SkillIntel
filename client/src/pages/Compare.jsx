@@ -1,36 +1,84 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
+import { apiFetch, isAuthenticated } from '../utils/api';
 
-const SKILL_COLORS = ['#2E86DE', '#4CAFD6', '#5DC8E8', '#3BA8C8'];
+const SKILL_COLORS = ['var(--accent-blue)', 'var(--accent-cyan)', 'var(--accent-score)', 'var(--accent-chart)'];
 const INDUSTRIES = ['FinTech & Banking', 'E-Commerce', 'Healthcare', 'AI & Startups'];
 
 export default function Compare() {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const [inputs, setInputs] = useState(['', '', '']);
+    const [inputs, setInputs] = useState(['', '']);
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const industryRandRef = useRef(null);
+    const [allSkills, setAllSkills] = useState([]);
+    const [yourSkills, setYourSkills] = useState([]);
+
+    const normalizedSkillOptions = useMemo(() => {
+        const names = allSkills
+            .map((s) => (s?.name || '').trim())
+            .filter(Boolean);
+        return Array.from(new Set(names)).sort((a, b) => a.localeCompare(b));
+    }, [allSkills]);
+
+    const canAddMore = inputs.length < 8;
 
     // Pre-fill from URL
     useEffect(() => {
         const urlSkills = searchParams.get('skills');
         if (urlSkills) {
             const parts = urlSkills.split(',');
-            const newInputs = ['', '', ''];
-            parts.forEach((p, i) => { if (i < 3) newInputs[i] = p; });
+            const newInputs = parts.map((p) => p);
+            while (newInputs.length < 2) newInputs.push('');
             setInputs(newInputs);
             if (parts.length >= 2) doCompare(newInputs);
         }
     }, []); // eslint-disable-line
 
+    useEffect(() => {
+        let mounted = true;
+        fetch('/api/skills')
+            .then((r) => r.json())
+            .then((json) => {
+                if (!mounted) return;
+                setAllSkills(Array.isArray(json.data) ? json.data : []);
+            })
+            .catch(() => {});
+
+        if (isAuthenticated()) {
+            apiFetch('/auth/profile')
+                .then((response) => {
+                    const detailed = response?.user?.profile?.skillsDetailed;
+                    const list = Array.isArray(detailed) ? detailed : [];
+                    setYourSkills(list.map((s) => (s?.name || '').trim()).filter(Boolean));
+                })
+                .catch(() => {});
+        }
+
+        return () => { mounted = false; };
+    }, []);
+
     const setInput = (i, val) => setInputs(prev => { const n = [...prev]; n[i] = val; return n; });
+
+    const addInput = () => {
+        if (!canAddMore) return;
+        setInputs((prev) => [...prev, '']);
+    };
+
+    const removeInput = (idx) => {
+        setInputs((prev) => {
+            const next = prev.filter((_, i) => i !== idx);
+            while (next.length < 2) next.push('');
+            return next;
+        });
+    };
 
     async function doCompare(overrideInputs) {
         const chosen = (overrideInputs || inputs)
@@ -54,6 +102,12 @@ export default function Compare() {
             const payload = Array.isArray(json.data) ? json.data : [];
             const valid = payload.filter(s => s && !s.error);
             if (valid.length === 0) throw new Error('None of the provided skills were found.');
+
+            // Show warning for missing skills
+            if (json.missing && json.missing.length > 0) {
+                setError(`⚠️ Could not find: ${json.missing.join(', ')}. Showing results for found skills only.`);
+            }
+
             setResults(valid);
             setSearchParams({ skills: chosen.join(',') });
         } catch (e) {
@@ -103,35 +157,66 @@ export default function Compare() {
             {/* Selector */}
             <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <datalist id="skill-options">
+                        {normalizedSkillOptions.map((name) => <option key={name} value={name} />)}
+                    </datalist>
+
                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                        <input
-                            type="text"
-                            className="compare-skill-input"
-                            placeholder="Skill 1 (e.g. React)"
-                            value={inputs[0]}
-                            onChange={e => setInput(0, e.target.value)}
-                            style={{ maxWidth: '220px' }}
-                        />
-                        <div className="vs-badge">VS</div>
-                        <input
-                            type="text"
-                            className="compare-skill-input"
-                            placeholder="Skill 2 (e.g. Angular)"
-                            value={inputs[1]}
-                            onChange={e => setInput(1, e.target.value)}
-                            style={{ maxWidth: '220px' }}
-                        />
-                        <div className="vs-badge">VS</div>
-                        <input
-                            type="text"
-                            className="compare-skill-input"
-                            placeholder="Skill 3 (optional)"
-                            value={inputs[2]}
-                            onChange={e => setInput(2, e.target.value)}
-                            style={{ maxWidth: '220px' }}
-                        />
+                        {inputs.map((val, idx) => (
+                            <div key={idx} style={{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <input
+                                    type="text"
+                                    className="compare-skill-input"
+                                    placeholder={`Skill ${idx + 1} (e.g. React)`}
+                                    value={val}
+                                    onChange={(e) => setInput(idx, e.target.value)}
+                                    list="skill-options"
+                                    style={{ maxWidth: '220px' }}
+                                />
+                                {inputs.length > 2 && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={() => removeInput(idx)}
+                                        aria-label={`Remove skill ${idx + 1}`}
+                                    >
+                                        ✕
+                                    </button>
+                                )}
+                                {idx < inputs.length - 1 && <div className="vs-badge">VS</div>}
+                            </div>
+                        ))}
+
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={addInput} disabled={!canAddMore}>
+                            + Add skill
+                        </button>
                         <button className="btn btn-primary" onClick={() => doCompare()}>⚖️ Compare</button>
                     </div>
+
+                    {yourSkills.length > 0 && (
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Your skills:</span>
+                            {yourSkills.slice(0, 14).map((s) => (
+                                <button
+                                    key={s}
+                                    type="button"
+                                    className="filter-btn"
+                                    onClick={() => {
+                                        setInputs((prev) => {
+                                            const next = [...prev];
+                                            const i = next.findIndex((x) => !String(x || '').trim());
+                                            const slot = i === -1 ? 0 : i;
+                                            next[slot] = s;
+                                            return next;
+                                        });
+                                    }}
+                                >
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Quick compare:</span>
                         <button className="filter-btn" onClick={() => quickCompare('React', 'Angular', 'Vue.js')}>React vs Angular vs Vue</button>

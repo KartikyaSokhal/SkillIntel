@@ -151,10 +151,10 @@ const compareSkills = async (req, res, next) => {
             .map(s => s.trim())
             .filter(Boolean);
 
-        if (!skillNames.length) {
+        if (skillNames.length < 2) {
             return res.status(400).json({
                 success: false,
-                message: 'Please provide at least one valid skill name'
+                message: 'Please provide at least 2 skills to compare'
             });
         }
 
@@ -162,13 +162,27 @@ const compareSkills = async (req, res, next) => {
 
         const foundSkills = await Skill.find({ name: { $in: regexNames } });
 
-        const results = skillNames.map(name => {
+        const results = [];
+        const missing = [];
+
+        skillNames.forEach(name => {
             const match = foundSkills.find(s => s.name.toLowerCase() === name.toLowerCase());
-            if (!match) return { name, error: 'Skill not found' };
-            return match;
+            if (match) {
+                results.push(match);
+            } else {
+                missing.push(name);
+            }
         });
 
-        res.json({ success: true, comparing: skillNames, data: results });
+        res.json({
+            success: true,
+            comparing: skillNames,
+            data: results,
+            missing,
+            message: missing.length
+                ? `Could not find: ${missing.join(', ')}`
+                : undefined
+        });
     } catch (err) {
         next(err);
     }

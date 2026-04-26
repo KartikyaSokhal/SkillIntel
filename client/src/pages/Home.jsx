@@ -53,6 +53,14 @@ export default function Home() {
     const topDemand = trending.length
         ? [...trending].sort((a, b) => b.demandIndex - a.demandIndex)[0]
         : null;
+    const fastestGrowing = trending.length
+        ? [...trending].sort((a, b) => (b.growth || 0) - (a.growth || 0))[0]
+        : null;
+    const emerging = trending.length
+        ? [...trending].filter(s => (s.demandIndex || 0) <= 7).sort((a, b) => (b.growth || 0) - (a.growth || 0))[0]
+          || [...trending].sort((a, b) => (b.growth || 0) - (a.growth || 0))[1]
+          || null
+        : null;
 
     return (
         <>
@@ -117,29 +125,31 @@ export default function Home() {
                 <div className="stats-strip-inner">
                     <div className="stat-item">
                         <span className="stat-icon">📈</span>
-                        <span className="stat-badge green">+248%</span>
+                        <span className="stat-badge green">
+                            {fastestGrowing ? `+${fastestGrowing.growth}%` : '—'}
+                        </span>
                         <span className="stat-label">Fastest Growing</span>
-                        <span className="stat-value">Generative AI</span>
+                        <span className="stat-value">{fastestGrowing ? fastestGrowing.name : '—'}</span>
                     </div>
                     <div className="stat-item">
                         <span className="stat-icon">💰</span>
                         <span className="stat-badge blue">Top Tier</span>
                         <span className="stat-label">Highest Paying</span>
                         <span className="stat-value">
-                            {highestPay ? `${formatSalaryLPA(highestPay)} Avg.` : '₹19 LPA Avg.'}
+                            {highestPay ? `${formatSalaryLPA(highestPay)} Avg.` : '—'}
                         </span>
                     </div>
                     <div className="stat-item">
                         <span className="stat-icon">⭐</span>
                         <span className="stat-badge purple">High Volume</span>
                         <span className="stat-label">Most In-Demand</span>
-                        <span className="stat-value">{topDemand ? topDemand.name : 'Python'}</span>
+                        <span className="stat-value">{topDemand ? topDemand.name : '—'}</span>
                     </div>
                     <div className="stat-item">
                         <span className="stat-icon">🚀</span>
                         <span className="stat-badge orange">Emerging</span>
                         <span className="stat-label">Emerging Tech</span>
-                        <span className="stat-value">Rust</span>
+                        <span className="stat-value">{emerging ? emerging.name : '—'}</span>
                     </div>
                 </div>
             </div>

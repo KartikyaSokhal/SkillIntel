@@ -45,6 +45,7 @@ const { Server } = require('socket.io');
 const skillRoutes = require('./routes/skillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 // ── Import Custom Middleware ──────────────────────────────────
 const logger = require('./middleware/logger');
@@ -163,6 +164,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API Routes — Return JSON data
 app.use('/api/auth', authRoutes);    // /api/auth/login, /api/auth/register, etc.
 app.use('/api', skillRoutes);        // /api/skills, /api/trending, etc.
+app.use('/api/ai', aiRoutes);        // /api/ai/chat
 
 // SSR Routes — Return rendered HTML pages
 app.use('/', dashboardRoutes);       // /dashboard, /login
@@ -210,9 +212,9 @@ io.on('connection', (socket) => {
     socket.on('requestTrending', async () => {
         try {
             const trending = await Skill.find()
-                .sort({ growth: -1 })
-                .limit(5)
-                .select('name growth demandIndex salary category icon');
+                .sort({ trendScore: -1, growth: -1, demandIndex: -1 })
+                .limit(10)
+                .select('name growth demandIndex salary category icon trendScore direction percentChange lastTrendComputedAt');
 
             socket.emit('trendingUpdate', { data: trending });
         } catch (err) {

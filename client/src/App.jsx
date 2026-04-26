@@ -12,11 +12,15 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Roadmap from './pages/Roadmap';
 
 // ── Footer / Static content pages ─────────────────────────────
 import About from './pages/About';
 import Methodology from './pages/Methodology';
 import Contact from './pages/Contact';
+
+// ── Global floating chatbot ───────────────────────────────────
+import ChatbotWidget from './components/ChatbotWidget';
 
 import { isAuthenticated } from './utils/api';
 
@@ -70,10 +74,21 @@ export default function App() {
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/roadmap"
+                    element={
+                        <PrivateRoute>
+                            <Roadmap />
+                        </PrivateRoute>
+                    }
+                />
 
                 {/* ── Catch-all: redirect to home ──────────────── */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+
+            {/* Floating AI Chatbot — visible on all pages when logged in */}
+            {isAuthenticated() && <ChatbotWidget context={{}} />}
         </BrowserRouter>
     );
 }

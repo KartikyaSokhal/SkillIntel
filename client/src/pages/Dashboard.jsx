@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { isAuthenticated } from '../utils/api';
+import DashboardStatCard from '../components/DashboardStatCard';
+import TrendingCard from '../components/TrendingCard';
+import { apiFetch, isAuthenticated } from '../utils/api';
 import { formatSalaryLPA } from '../utils/currency';
 
 /**
@@ -19,12 +22,17 @@ import { formatSalaryLPA } from '../utils/currency';
  * 4. On component unmount (cleanup): disconnect the socket
  *
  * This ensures we don't leak connections when navigating away.
+ *
+ * ALL STYLING uses CSS classes from index.css for full theme consistency.
  */
 export default function Dashboard() {
     const [skills, setSkills] = useState([]);
     const [trending, setTrending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [socketStatus, setSocketStatus] = useState('disconnected');
+    const [userSkills, setUserSkills] = useState([]);
+    const [recommendedSkills, setRecommendedSkills] = useState([]);
+    const [profileResume, setProfileResume] = useState({ hasFile: false });
     const navigate = useNavigate();
 
     // ── Auth guard ────────────────────────────────────────────
@@ -45,14 +53,49 @@ export default function Dashboard() {
             .catch(() => setLoading(false));
     }, []);
 
+    useEffect(() => {
+        if (!isAuthenticated()) return;
+        let mounted = true;
+        apiFetch('/auth/profile')
+            .then(async (response) => {
+                if (!mounted) return;
+                const detailed = response?.user?.profile?.skillsDetailed;
+                const fallback = response?.user?.profile?.skills;
+                const names = Array.isArray(detailed) && detailed.length
+                    ? detailed.map((s) => s?.name).filter(Boolean)
+                    : (Array.isArray(fallback) ? fallback : []);
+                setUserSkills(names);
+                setProfileResume(response?.user?.profile?.resume || { hasFile: false });
+
+                const top = names.slice(0, 3);
+                const recResults = await Promise.all(top.map(async (skill) => {
+                    try {
+                        const rec = await fetch(`/api/recommended/${encodeURIComponent(skill)}`).then((r) => r.json());
+                        return Array.isArray(rec?.data) ? rec.data : [];
+                    } catch {
+                        return [];
+                    }
+                }));
+                const merged = recResults.flat()
+                    .map((item) => (typeof item === 'string' ? item : item?.name))
+                    .filter(Boolean)
+                    .filter((name, idx, arr) => arr.indexOf(name) === idx)
+                    .filter((name) => !names.some((u) => String(u).toLowerCase() === String(name).toLowerCase()))
+                    .slice(0, 8);
+                setRecommendedSkills(merged);
+            })
+            .catch(() => {});
+        return () => { mounted = false; };
+    }, []);
+
     // ── Socket.io connection for real-time trending updates ───
     useEffect(() => {
-        // Dynamic import to avoid bundling socket.io-client if not installed
         let socket;
         async function connectSocket() {
             try {
                 const { io } = await import('socket.io-client');
-                socket = io('http://localhost:3000');
+                // Use window.location.origin to work through Vite proxy and in production
+                socket = io(window.location.origin);
 
                 socket.on('connect', () => {
                     setSocketStatus('connected');
@@ -72,9 +115,9 @@ export default function Dashboard() {
                     setSocketStatus('disconnected');
                 });
             } catch {
-                // socket.io-client not installed — fall back to REST
+                // socket.io-client not available — fall back to REST
                 console.log('Socket.io client not available, using REST fallback');
-                fetch('/api/trending')
+                fetch('/api/trending?limit=5')
                     .then(r => r.json())
                     .then(json => setTrending((json.data || []).slice(0, 5)))
                     .catch(() => {});
@@ -90,215 +133,169 @@ export default function Dashboard() {
 
     const user = JSON.parse(localStorage.getItem('skillintel_user') || '{}');
 
+    // Use real trending data; fallback to growth-sorted skills only when trending is empty
+    const trendingToRender = trending.length > 0
+        ? trending.slice(0, 5)
+        : [...skills].sort((a, b) => (b.growth || 0) - (a.growth || 0)).slice(0, 5);
+
+    const growthBuckets = useMemo(() => ({
+        high: skills.filter((s) => Number(s.growth) >= 20).length,
+        moderate: skills.filter((s) => Number(s.growth) >= 10 && Number(s.growth) < 20).length,
+        low: skills.filter((s) => Number(s.growth) < 10).length
+    }), [skills]);
+
+    const profileCompletion = useMemo(() => {
+        const hasSkills = userSkills.length > 0;
+        const hasResume = !!profileResume?.hasFile;
+        const hasName = !!user?.name;
+        const score = [hasName, hasSkills, hasResume].filter(Boolean).length;
+        return Math.round((score / 3) * 100);
+    }, [userSkills.length, profileResume?.hasFile, user?.name]);
+
+    const skillsCompletion = Math.min(100, Math.round((userSkills.length / 8) * 100));
+
+    const today = new Date().toLocaleDateString('en-IN', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
     return (
         <>
             <Navbar />
 
-            {/* Dashboard Header */}
-            <div style={styles.header}>
-                <div style={styles.headerInner}>
+            {/* ─── Dashboard Header ──────────────────────────────── */}
+            <div className="dashboard-header">
+                <div className="dashboard-header-inner">
                     <div>
-                        <h1 style={styles.title}>📊 Dashboard</h1>
-                        <p style={styles.subtitle}>
+                        <h1 className="dashboard-title">
+                            📊 Dashboard
+                        </h1>
+                        <p className="dashboard-subtitle">
                             Welcome back, <strong>{user.name || 'User'}</strong>
-                            <span style={styles.socketBadge}>
+                            <span className={`dashboard-socket-badge ${socketStatus}`}>
                                 {socketStatus === 'connected' ? '🟢 Live' : '⚪ Offline'}
                             </span>
                         </p>
                     </div>
+                    <div className="dashboard-date">{today}</div>
                 </div>
             </div>
 
-            {/* Stats Row */}
-            <div style={styles.statsRow}>
-                <div style={styles.statCard}>
-                    <div style={styles.statNumber}>{skills.length}</div>
-                    <div style={styles.statLabel}>Skills Tracked</div>
-                </div>
-                <div style={styles.statCard}>
-                    <div style={styles.statNumber}>
-                        {skills.filter(s => s.growth > 20).length}
-                    </div>
-                    <div style={styles.statLabel}>High Growth</div>
-                </div>
-                <div style={styles.statCard}>
-                    <div style={styles.statNumber}>
-                        {[...new Set(skills.map(s => s.category))].length}
-                    </div>
-                    <div style={styles.statLabel}>Categories</div>
-                </div>
+            {/* ─── Stats Row ─────────────────────────────────────── */}
+            <div className="dashboard-stats-row">
+                <DashboardStatCard icon="📦" value={skills.length} label="Skills Tracked" delay={0} />
+                <DashboardStatCard icon="🚀" value={growthBuckets.high} label="High Growth (≥20% YoY)" accent="green" delay={0.05} />
+                <DashboardStatCard icon="📈" value={growthBuckets.moderate} label="Moderate Growth (10–19%)" accent="cyan" delay={0.1} />
+                <DashboardStatCard icon="📊" value={`${profileCompletion}%`} label="Profile Completion" delay={0.15} />
+                <DashboardStatCard icon="🎯" value={`${skillsCompletion}%`} label="Skills Progress" accent="cyan" delay={0.2} />
+                <DashboardStatCard icon="📄" value={profileResume?.hasFile ? '✓ Yes' : '✗ No'} label="Resume Uploaded" accent={profileResume?.hasFile ? 'green' : 'muted'} delay={0.25} />
             </div>
 
-            <div style={styles.content}>
-                {/* Trending Section (Real-time via Socket.io) */}
-                <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>
+            <div className="dashboard-content">
+                {/* ─── Trending Section (Real-time via Socket.io) ── */}
+                <motion.div
+                    className="dashboard-section"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.15 }}
+                >
+                    <h2 className="dashboard-section-title">
                         🔥 Trending Skills
-                        <span style={styles.liveTag}>LIVE</span>
+                        <span className="dashboard-live-tag">LIVE</span>
                     </h2>
-                    <div style={styles.trendingGrid}>
-                        {(trending.length > 0 ? trending : skills.slice(0, 5)).map((skill, i) => (
-                            <Link
-                                to={`/skill/${encodeURIComponent(skill.name)}`}
-                                key={skill.name}
-                                style={styles.trendingCard}
-                            >
-                                <div style={styles.trendRank}>#{i + 1}</div>
-                                <div>
-                                    <div style={styles.trendName}>{skill.icon || '🔧'} {skill.name}</div>
-                                    <div style={styles.trendGrowth}>+{skill.growth}% growth</div>
-                                </div>
-                            </Link>
+                    <div className="dashboard-trending-grid">
+                        {trendingToRender.map((skill, i) => (
+                            <TrendingCard key={skill.name} skill={skill} rank={i + 1} delay={i * 0.04} />
                         ))}
                     </div>
-                </div>
+                </motion.div>
 
-                {/* All Skills Grid */}
-                <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>📦 All Skills</h2>
+                {/* ─── Personalized Skills ────────────────────────── */}
+                <motion.div
+                    className="dashboard-section"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.25 }}
+                >
+                    <h2 className="dashboard-section-title">🎯 Personalized Skills</h2>
+                    <div className="dashboard-personal-grid">
+                        <div className="dashboard-skills-card">
+                            <div className="dashboard-skills-card-title">Your Skills</div>
+                            <div className="dashboard-skills-tags">
+                                {userSkills.length
+                                    ? userSkills.map((s) => <span key={s} className="tag tag-blue">{s}</span>)
+                                    : <span className="text-muted">Add skills in your <Link to="/profile" style={{ color: 'var(--accent-cyan)' }}>profile</Link>.</span>
+                                }
+                            </div>
+                        </div>
+                        <div className="dashboard-skills-card">
+                            <div className="dashboard-skills-card-title">Recommended Skills</div>
+                            <div className="dashboard-skills-tags">
+                                {recommendedSkills.length
+                                    ? recommendedSkills.map((s) => <span key={s} className="tag tag-green">{s}</span>)
+                                    : <span className="text-muted">Recommendations appear from your skills.</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* ─── All Skills Grid ────────────────────────────── */}
+                <motion.div
+                    className="dashboard-section"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.35 }}
+                >
+                    <h2 className="dashboard-section-title">📦 All Skills</h2>
                     {loading ? (
-                        <p style={{ color: 'var(--text-muted)' }}>Loading skills…</p>
+                        <p className="text-muted">Loading skills…</p>
                     ) : (
-                        <div style={styles.skillsGrid}>
+                        <div className="dashboard-all-skills-grid">
                             {skills.map(skill => (
                                 <Link
                                     to={`/skill/${encodeURIComponent(skill.name)}`}
                                     key={skill.name}
-                                    style={styles.skillCard}
+                                    className="dashboard-mini-card"
                                 >
-                                    <div style={styles.skillTop}>
-                                        <span style={styles.skillIcon}>{skill.icon || '🔧'}</span>
-                                        <span style={styles.skillName}>{skill.name}</span>
+                                    <div className="dashboard-mini-top">
+                                        <span className="dashboard-mini-icon">{skill.icon || '🔧'}</span>
+                                        <span className="dashboard-mini-name">{skill.name}</span>
                                     </div>
-                                    <div style={styles.skillMeta}>
+                                    <div className="dashboard-mini-meta">
                                         <div>
-                                            <div style={styles.metaLabel}>Demand</div>
-                                            <div style={styles.metaValue}>{skill.demandIndex}/10</div>
+                                            <div className="dashboard-meta-label">Demand</div>
+                                            <div className="dashboard-meta-value">{skill.demandIndex}/10</div>
                                         </div>
                                         <div>
-                                            <div style={styles.metaLabel}>Growth</div>
-                                            <div style={{ ...styles.metaValue, color: '#4CAFD6' }}>
+                                            <div className="dashboard-meta-label">Growth</div>
+                                            <div className="dashboard-meta-value cyan">
                                                 +{skill.growth}%
                                             </div>
                                         </div>
                                         <div>
-                                            <div style={styles.metaLabel}>Salary</div>
-                                            <div style={styles.metaValue}>
+                                            <div className="dashboard-meta-label">Salary</div>
+                                            <div className="dashboard-meta-value">
                                                 {formatSalaryLPA(skill.salary)}
                                             </div>
                                         </div>
                                     </div>
-                                    {/* Demand bar */}
-                                    <div style={styles.demandTrack}>
-                                        <div style={{
-                                            ...styles.demandFill,
-                                            width: `${(skill.demandIndex / 10) * 100}%`
-                                        }} />
+                                    <div className="dashboard-demand-track">
+                                        <div
+                                            className="dashboard-demand-fill"
+                                            style={{ width: `${(skill.demandIndex / 10) * 100}%` }}
+                                        />
                                     </div>
                                 </Link>
                             ))}
                         </div>
                     )}
-                </div>
+                </motion.div>
             </div>
 
             <Footer />
         </>
     );
 }
-
-const styles = {
-    header: {
-        background: 'radial-gradient(ellipse 60% 70% at 10% 0%, #0A1E3C, transparent 65%), #050C14',
-        borderBottom: '1px solid var(--border-color)',
-        padding: '2rem',
-    },
-    headerInner: { maxWidth: '1200px', margin: '0 auto' },
-    title: { fontSize: '1.6rem', fontWeight: 700, color: 'var(--text-primary)' },
-    subtitle: { color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.3rem' },
-    socketBadge: {
-        marginLeft: '1rem',
-        fontSize: '0.75rem',
-        padding: '0.15rem 0.5rem',
-        borderRadius: '20px',
-        background: 'var(--bg-primary)',
-        border: '1px solid var(--border-color)',
-    },
-    statsRow: {
-        display: 'flex',
-        gap: '1rem',
-        maxWidth: '1200px',
-        margin: '1.5rem auto',
-        padding: '0 2rem',
-    },
-    statCard: {
-        flex: 1,
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '12px',
-        padding: '1.2rem',
-        textAlign: 'center',
-    },
-    statNumber: { fontSize: '2rem', fontWeight: 700, color: 'var(--accent-blue)' },
-    statLabel: { fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' },
-    content: { maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 3rem' },
-    section: { marginTop: '2rem' },
-    sectionTitle: { fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' },
-    liveTag: {
-        fontSize: '0.65rem',
-        marginLeft: '0.5rem',
-        padding: '0.15rem 0.5rem',
-        borderRadius: '20px',
-        background: 'var(--accent-green-light)',
-        color: 'var(--accent-green)',
-        verticalAlign: 'middle',
-    },
-    trendingGrid: { display: 'flex', gap: '0.75rem', flexWrap: 'wrap' },
-    trendingCard: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '10px',
-        padding: '0.75rem 1.2rem',
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'border-color 0.2s',
-        flex: '1 1 180px',
-    },
-    trendRank: { fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-blue)' },
-    trendName: { fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)' },
-    trendGrowth: { fontSize: '0.8rem', color: 'var(--accent-green)' },
-    skillsGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1rem',
-    },
-    skillCard: {
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '12px',
-        padding: '1.2rem',
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'border-color 0.2s, transform 0.2s',
-    },
-    skillTop: { display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' },
-    skillIcon: { fontSize: '1.3rem' },
-    skillName: { fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' },
-    skillMeta: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' },
-    metaLabel: { fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' },
-    metaValue: { fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' },
-    demandTrack: {
-        height: '4px',
-        background: 'rgba(30, 70, 110, 0.35)',
-        borderRadius: '2px',
-        overflow: 'hidden',
-    },
-    demandFill: {
-        height: '100%',
-        background: 'linear-gradient(90deg, #3BA8D0 0%, #2A7A9A 100%)',
-        borderRadius: '2px',
-    },
-};

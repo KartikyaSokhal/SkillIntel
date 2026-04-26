@@ -7,7 +7,9 @@ import ThemeToggle from './ThemeToggle';
  * Navbar Component
  * ────────────────
  * - Branding on the left
- * - Section navigation in the center
+ * - Section navigation in the center:
+ *     - Logged OUT: Market Data, Skills, Comparisons (public pages)
+ *     - Logged IN:  Dashboard, Roadmap, Profile (protected pages)
  * - Right side:
  *     - Theme toggle (light / dark)
  *     - If logged in: Avatar + name + Logout
@@ -32,19 +34,30 @@ export default function Navbar({ action }) {
                     <span className="nav-logo-text">Skill Intel</span>
                 </Link>
                 <div className="nav-links">
-                    <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
-                        Market Data
-                    </NavLink>
-                    <NavLink to="/explorer" className={({ isActive }) => isActive ? 'active' : ''}>
-                        Skills
-                    </NavLink>
-                    <NavLink to="/compare" className={({ isActive }) => isActive ? 'active' : ''}>
-                        Comparisons
-                    </NavLink>
-                    {loggedIn && (
-                        <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
-                            Dashboard
-                        </NavLink>
+                    {loggedIn ? (
+                        <>
+                            <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+                                Dashboard
+                            </NavLink>
+                            <NavLink to="/roadmap" className={({ isActive }) => isActive ? 'active' : ''}>
+                                Roadmap
+                            </NavLink>
+                            <NavLink to="/profile" className={({ isActive }) => isActive ? 'active' : ''}>
+                                Profile
+                            </NavLink>
+                        </>
+                    ) : (
+                        <>
+                            <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
+                                Market Data
+                            </NavLink>
+                            <NavLink to="/explorer" className={({ isActive }) => isActive ? 'active' : ''}>
+                                Skills
+                            </NavLink>
+                            <NavLink to="/compare" className={({ isActive }) => isActive ? 'active' : ''}>
+                                Comparisons
+                            </NavLink>
+                        </>
                     )}
                 </div>
                 <div className="nav-actions" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>

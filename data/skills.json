@@ -437,5 +437,723 @@
                 "level": "High"
             }
         ]
+    },
+    {
+        "name": "JavaScript",
+        "category": "Frontend",
+        "icon": "🟨",
+        "demandIndex": 9.3,
+        "salary": 1350000,
+        "growth": 16,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Core Language of the Web and Modern Full-Stack Development",
+        "tags": [
+            "Ubiquitous",
+            "Full-Stack"
+        ],
+        "recommended": [
+            "TypeScript",
+            "React",
+            "Node.js",
+            "HTML/CSS"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Critical" },
+            { "city": "Gurgaon, Haryana", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" }
+        ]
+    },
+    {
+        "name": "Go",
+        "category": "Backend",
+        "icon": "🐹",
+        "demandIndex": 7.9,
+        "salary": 1850000,
+        "growth": 26,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "High-Performance Backend Language for Distributed Systems",
+        "tags": [
+            "Cloud Native",
+            "Microservices"
+        ],
+        "recommended": [
+            "Docker",
+            "Kubernetes",
+            "PostgreSQL",
+            "gRPC"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Platform Engineering",
+            "SRE"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Java",
+        "category": "Backend",
+        "icon": "☕",
+        "demandIndex": 8.5,
+        "salary": 1600000,
+        "growth": 9,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Enterprise Backend Language for Large-Scale Systems",
+        "tags": [
+            "Enterprise",
+            "Reliable"
+        ],
+        "recommended": [
+            "Spring Boot",
+            "PostgreSQL",
+            "Kafka",
+            "Docker"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Enterprise Development"
+        ],
+        "regionalDemand": [
+            { "city": "Hyderabad, Telangana", "level": "Critical" },
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" }
+        ]
+    },
+    {
+        "name": "C++",
+        "category": "Systems",
+        "icon": "🧩",
+        "demandIndex": 7.2,
+        "salary": 2100000,
+        "growth": 7,
+        "experienceBarrier": "High",
+        "saturationRisk": "Stable",
+        "description": "Systems Programming for Performance-Critical Applications",
+        "tags": [
+            "Performance",
+            "Core Systems"
+        ],
+        "recommended": [
+            "Linux",
+            "Networking",
+            "Rust",
+            "DSA"
+        ],
+        "careerPaths": [
+            "Systems Engineering",
+            "Game Development",
+            "Quant Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Mumbai, Maharashtra", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "MongoDB",
+        "category": "Database",
+        "icon": "🍃",
+        "demandIndex": 8.3,
+        "salary": 1450000,
+        "growth": 13,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Document Database for Modern Applications",
+        "tags": [
+            "NoSQL",
+            "Developer Friendly"
+        ],
+        "recommended": [
+            "Node.js",
+            "Mongoose",
+            "Redis",
+            "Docker"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Gurgaon, Haryana", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Noida, Uttar Pradesh", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "PostgreSQL",
+        "category": "Database",
+        "icon": "🐘",
+        "demandIndex": 8.6,
+        "salary": 1550000,
+        "growth": 15,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "Production-Grade Relational Database",
+        "tags": [
+            "SQL",
+            "Reliable"
+        ],
+        "recommended": [
+            "SQL",
+            "Docker",
+            "Kubernetes",
+            "Redis"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Data Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Redis",
+        "category": "Database",
+        "icon": "🧠",
+        "demandIndex": 7.6,
+        "salary": 1650000,
+        "growth": 17,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "In-Memory Cache and Data Store for Low Latency Systems",
+        "tags": [
+            "Performance",
+            "Caching"
+        ],
+        "recommended": [
+            "PostgreSQL",
+            "Docker",
+            "Node.js",
+            "Kubernetes"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Platform Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Docker",
+        "category": "DevOps",
+        "icon": "🐳",
+        "demandIndex": 8.8,
+        "salary": 1750000,
+        "growth": 21,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Containerization Standard for Modern Development",
+        "tags": [
+            "DevOps Essential",
+            "Cloud Native"
+        ],
+        "recommended": [
+            "Kubernetes",
+            "Linux",
+            "CI/CD",
+            "Terraform"
+        ],
+        "careerPaths": [
+            "DevOps Engineering",
+            "SRE",
+            "Platform Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Critical" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Terraform",
+        "category": "DevOps",
+        "icon": "🏗️",
+        "demandIndex": 7.7,
+        "salary": 1850000,
+        "growth": 23,
+        "experienceBarrier": "High",
+        "saturationRisk": "Low",
+        "description": "Infrastructure as Code for Multi-Cloud Provisioning",
+        "tags": [
+            "IaC",
+            "Automation"
+        ],
+        "recommended": [
+            "AWS",
+            "Azure",
+            "GCP",
+            "Kubernetes"
+        ],
+        "careerPaths": [
+            "DevOps Engineering",
+            "Cloud Architecture"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Linux",
+        "category": "DevOps",
+        "icon": "🐧",
+        "demandIndex": 8.1,
+        "salary": 1600000,
+        "growth": 12,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Core Operating System for Servers, Cloud, and DevOps",
+        "tags": [
+            "Fundamentals",
+            "Infrastructure"
+        ],
+        "recommended": [
+            "Docker",
+            "Networking",
+            "Bash",
+            "Kubernetes"
+        ],
+        "careerPaths": [
+            "SRE",
+            "DevOps Engineering",
+            "Cloud Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "GraphQL",
+        "category": "Backend",
+        "icon": "🕸️",
+        "demandIndex": 7.1,
+        "salary": 1650000,
+        "growth": 14,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "API Query Language for Flexible Data Fetching",
+        "tags": [
+            "APIs",
+            "Modern Stack"
+        ],
+        "recommended": [
+            "TypeScript",
+            "Node.js",
+            "Apollo",
+            "PostgreSQL"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Next.js",
+        "category": "Frontend",
+        "icon": "▲",
+        "demandIndex": 7.8,
+        "salary": 1550000,
+        "growth": 24,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "React Framework for Production-Grade Web Apps",
+        "tags": [
+            "SSR",
+            "Full-Stack"
+        ],
+        "recommended": [
+            "React",
+            "TypeScript",
+            "Node.js",
+            "Vercel"
+        ],
+        "careerPaths": [
+            "Frontend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Gurgaon, Haryana", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "CI/CD",
+        "category": "DevOps",
+        "icon": "🔁",
+        "demandIndex": 7.4,
+        "salary": 1700000,
+        "growth": 18,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Continuous Integration and Delivery for Fast, Safe Releases",
+        "tags": [
+            "Automation",
+            "Quality"
+        ],
+        "recommended": [
+            "Docker",
+            "Git",
+            "Kubernetes",
+            "Terraform"
+        ],
+        "careerPaths": [
+            "DevOps Engineering",
+            "Release Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Azure",
+        "category": "Cloud",
+        "icon": "🟦",
+        "demandIndex": 7.3,
+        "salary": 1750000,
+        "growth": 16,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Microsoft Cloud Platform for Enterprise Workloads",
+        "tags": [
+            "Enterprise",
+            "Cloud"
+        ],
+        "recommended": [
+            "Terraform",
+            "Kubernetes",
+            "DevOps",
+            "Linux"
+        ],
+        "careerPaths": [
+            "Cloud Engineering",
+            "Solutions Architecture"
+        ],
+        "regionalDemand": [
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "GCP",
+        "category": "Cloud",
+        "icon": "🟥",
+        "demandIndex": 6.8,
+        "salary": 1750000,
+        "growth": 14,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "Google Cloud Platform for Data and Cloud-Native Systems",
+        "tags": [
+            "Data",
+            "Cloud"
+        ],
+        "recommended": [
+            "Kubernetes",
+            "Terraform",
+            "BigQuery",
+            "Linux"
+        ],
+        "careerPaths": [
+            "Cloud Engineering",
+            "Data Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Rising" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Express",
+        "category": "Backend",
+        "icon": "🚏",
+        "demandIndex": 8.2,
+        "salary": 1400000,
+        "growth": 11,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Minimal Node.js Web Framework for APIs",
+        "tags": [
+            "APIs",
+            "Popular"
+        ],
+        "recommended": [
+            "Node.js",
+            "MongoDB",
+            "JWT",
+            "TypeScript"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Gurgaon, Haryana", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "NestJS",
+        "category": "Backend",
+        "icon": "🧱",
+        "demandIndex": 7.4,
+        "salary": 1550000,
+        "growth": 20,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Low",
+        "description": "Opinionated TypeScript Framework for Scalable Node Backends",
+        "tags": [
+            "Scalable",
+            "TypeScript"
+        ],
+        "recommended": [
+            "TypeScript",
+            "PostgreSQL",
+            "Redis",
+            "Docker"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Platform Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Git",
+        "category": "DevOps",
+        "icon": "🔧",
+        "demandIndex": 8.9,
+        "salary": 1200000,
+        "growth": 8,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Version Control System for Modern Collaboration",
+        "tags": [
+            "Fundamentals",
+            "Collaboration"
+        ],
+        "recommended": [
+            "CI/CD",
+            "GitHub",
+            "Linux",
+            "Docker"
+        ],
+        "careerPaths": [
+            "Software Engineering",
+            "DevOps Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "SQL",
+        "category": "Database",
+        "icon": "🗃️",
+        "demandIndex": 9.1,
+        "salary": 1350000,
+        "growth": 10,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Stable",
+        "description": "Query Language for Relational Data and Analytics",
+        "tags": [
+            "Fundamentals",
+            "Data"
+        ],
+        "recommended": [
+            "PostgreSQL",
+            "Python",
+            "Data Modeling",
+            "BI Tools"
+        ],
+        "careerPaths": [
+            "Data Engineering",
+            "Data Analytics",
+            "Backend Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Critical" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "High" },
+            { "city": "Delhi NCR", "level": "High" }
+        ]
+    },
+    {
+        "name": "Kafka",
+        "category": "Backend",
+        "icon": "📨",
+        "demandIndex": 7.0,
+        "salary": 2000000,
+        "growth": 18,
+        "experienceBarrier": "High",
+        "saturationRisk": "Low",
+        "description": "Event Streaming Platform for Real-Time Data Pipelines",
+        "tags": [
+            "Streaming",
+            "Real-Time"
+        ],
+        "recommended": [
+            "Java",
+            "Go",
+            "Kubernetes",
+            "Observability"
+        ],
+        "careerPaths": [
+            "Data Engineering",
+            "Platform Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Rising" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "FastAPI",
+        "category": "Backend",
+        "icon": "⚡",
+        "demandIndex": 7.6,
+        "salary": 1650000,
+        "growth": 27,
+        "experienceBarrier": "Low",
+        "saturationRisk": "Low",
+        "description": "Modern Python API Framework for High-Performance Services",
+        "tags": [
+            "Python",
+            "APIs"
+        ],
+        "recommended": [
+            "Python",
+            "PostgreSQL",
+            "Docker",
+            "JWT"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "AI Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "High" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "Django",
+        "category": "Backend",
+        "icon": "🟩",
+        "demandIndex": 6.9,
+        "salary": 1450000,
+        "growth": 10,
+        "experienceBarrier": "Moderate",
+        "saturationRisk": "Stable",
+        "description": "Python Web Framework for Rapid Development",
+        "tags": [
+            "Python",
+            "Web"
+        ],
+        "recommended": [
+            "Python",
+            "PostgreSQL",
+            "Redis",
+            "Docker"
+        ],
+        "careerPaths": [
+            "Backend Engineering",
+            "Full-Stack Development"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "High" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Chennai, Tamil Nadu", "level": "Rising" }
+        ]
+    },
+    {
+        "name": "gRPC",
+        "category": "Backend",
+        "icon": "📡",
+        "demandIndex": 6.6,
+        "salary": 1950000,
+        "growth": 16,
+        "experienceBarrier": "High",
+        "saturationRisk": "Low",
+        "description": "High-Performance RPC Framework for Microservices",
+        "tags": [
+            "Microservices",
+            "Performance"
+        ],
+        "recommended": [
+            "Go",
+            "Java",
+            "Kubernetes",
+            "Observability"
+        ],
+        "careerPaths": [
+            "Platform Engineering",
+            "Backend Engineering"
+        ],
+        "regionalDemand": [
+            { "city": "Bangalore, Karnataka", "level": "Rising" },
+            { "city": "Hyderabad, Telangana", "level": "Rising" },
+            { "city": "Pune, Maharashtra", "level": "Rising" },
+            { "city": "Delhi NCR", "level": "Rising" }
+        ]
     }
 ]

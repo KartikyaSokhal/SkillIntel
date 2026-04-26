@@ -29,7 +29,8 @@ const emptyProfile = {
     interestsTechnical: [],
     interestsStrategic: [],
     skillsDetailed: [],
-    resume: { fileName: '', mimeType: '', uploadedAt: null, sizeBytes: 0, hasFile: false }
+    resume: { fileName: '', mimeType: '', uploadedAt: null, sizeBytes: 0, hasFile: false },
+    resumeAnalysis: { atsScore: 0, matchedKeywords: [], missingSkills: [], suggestions: [], parserStatus: 'not_run' }
 };
 
 function formatBytes(bytes) {
@@ -227,7 +228,14 @@ export default function Profile() {
                         uploadedAt: p.resume?.uploadedAt || null,
                         sizeBytes: p.resume?.sizeBytes || 0,
                         hasFile: !!p.resume?.hasFile
-                    }
+                    },
+                    resumeAnalysis: {
+                        atsScore: p.resumeAnalysis?.atsScore || 0,
+                        matchedKeywords: Array.isArray(p.resumeAnalysis?.matchedKeywords) ? p.resumeAnalysis.matchedKeywords : [],
+                        missingSkills: Array.isArray(p.resumeAnalysis?.missingSkills) ? p.resumeAnalysis.missingSkills : [],
+                        suggestions: Array.isArray(p.resumeAnalysis?.suggestions) ? p.resumeAnalysis.suggestions : [],
+                        parserStatus: p.resumeAnalysis?.parserStatus || 'not_run'
+                    },
                 };
                 setProfile(merged);
                 setOriginalProfile(merged);
@@ -318,7 +326,14 @@ export default function Profile() {
                         uploadedAt: p.resume?.uploadedAt || profile.resume.uploadedAt,
                         sizeBytes: p.resume?.sizeBytes || profile.resume.sizeBytes,
                         hasFile: !!p.resume?.hasFile || profile.resume.hasFile
-                    }
+                    },
+                    resumeAnalysis: {
+                        atsScore: p.resumeAnalysis?.atsScore || profile.resumeAnalysis?.atsScore || 0,
+                        matchedKeywords: Array.isArray(p.resumeAnalysis?.matchedKeywords) ? p.resumeAnalysis.matchedKeywords : (profile.resumeAnalysis?.matchedKeywords || []),
+                        missingSkills: Array.isArray(p.resumeAnalysis?.missingSkills) ? p.resumeAnalysis.missingSkills : (profile.resumeAnalysis?.missingSkills || []),
+                        suggestions: Array.isArray(p.resumeAnalysis?.suggestions) ? p.resumeAnalysis.suggestions : (profile.resumeAnalysis?.suggestions || []),
+                        parserStatus: p.resumeAnalysis?.parserStatus || profile.resumeAnalysis?.parserStatus || 'not_run'
+                    },
                 };
                 setProfile(fresh);
                 setOriginalProfile(fresh);
@@ -352,6 +367,7 @@ export default function Profile() {
             fd.append('resume', file);
             const response = await apiFetch('/auth/profile/resume', { method: 'POST', body: fd });
             const r = response?.resume || {};
+            const a = response?.resumeAnalysis || {};
             setProfile((prev) => ({
                 ...prev,
                 resume: {
@@ -360,7 +376,14 @@ export default function Profile() {
                     sizeBytes: r.sizeBytes || file.size,
                     uploadedAt: r.uploadedAt || new Date().toISOString(),
                     hasFile: true
-                }
+                },
+                resumeAnalysis: {
+                    atsScore: a.atsScore || 0,
+                    matchedKeywords: Array.isArray(a.matchedKeywords) ? a.matchedKeywords : [],
+                    missingSkills: Array.isArray(a.missingSkills) ? a.missingSkills : [],
+                    suggestions: Array.isArray(a.suggestions) ? a.suggestions : [],
+                    parserStatus: a.parserStatus || 'not_run'
+                },
             }));
             setToast({ type: 'success', message: 'Resume uploaded.' });
         } catch (err) {
@@ -378,18 +401,12 @@ export default function Profile() {
                     <Link to="/dashboard" className="profile-sidebar-link">
                         <span className="profile-sidebar-icon">▦</span> Dashboard
                     </Link>
-                    <Link to="/explorer" className="profile-sidebar-link">
-                        <span className="profile-sidebar-icon">⌬</span> Intelligence
-                    </Link>
-                    <Link to="/compare" className="profile-sidebar-link">
+                    <Link to="/roadmap" className="profile-sidebar-link">
                         <span className="profile-sidebar-icon">⌁</span> Roadmap
                     </Link>
                     <span className="profile-sidebar-link active">
                         <span className="profile-sidebar-icon">◉</span> Profile
                     </span>
-                    <Link to="/" className="profile-sidebar-link">
-                        <span className="profile-sidebar-icon">⚙</span> Settings
-                    </Link>
                 </aside>
 
                 <main className="profile-main">
@@ -471,6 +488,20 @@ export default function Profile() {
                                         Document Integrity
                                     </div>
                                     <IntegrityRing score={integrityScore} />
+                                    <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 10, padding: '0.75rem' }}>
+                                        <div className="profile-label">ATS SCORE</div>
+                                        <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-blue)' }}>
+                                            {profile.resumeAnalysis?.atsScore || 0}/100
+                                        </div>
+                                        {profile.resumeAnalysis?.parserStatus === 'doc_not_supported' && (
+                                            <p className="text-muted" style={{ fontSize: '0.8rem' }}>DOC parsing is limited. Upload PDF or DOCX for better ATS analysis.</p>
+                                        )}
+                                        {!!profile.resumeAnalysis?.suggestions?.length && (
+                                            <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem', color: 'var(--text-secondary)' }}>
+                                                {profile.resumeAnalysis.suggestions.slice(0, 3).map((s) => <li key={s}>{s}</li>)}
+                                            </ul>
+                                        )}
+                                    </div>
                                     <ResumeDropZone resume={profile.resume} uploading={uploading} onUpload={handleResumeUpload} />
                                 </motion.section>
                             </div>
