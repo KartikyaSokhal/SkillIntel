@@ -1,5 +1,4 @@
 import { useTheme } from '../contexts/ThemeContext';
-
 export default function ThemeToggle() {
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';

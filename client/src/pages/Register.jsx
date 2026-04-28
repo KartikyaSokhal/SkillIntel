@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
-
-/**
- * Register Page
- * ─────────────
- * Creates a new user account via POST /api/auth/register.
- * Includes client-side validation before sending to the API.
- * On success: redirects to /login.
- */
 export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -18,41 +10,31 @@ export default function Register() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
-
         // ── Client-side validation ────────────────────────────
         if (!name || !email || !password || !confirmPassword) {
             return setError('All fields are required');
         }
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return setError('Please enter a valid email address');
         }
-
         if (password.length < 6) {
             return setError('Password must be at least 6 characters');
         }
-
         if (password !== confirmPassword) {
             return setError('Passwords do not match');
         }
-
         setLoading(true);
-
         try {
             const data = await apiFetch('/auth/register', {
                 method: 'POST',
                 body: JSON.stringify({ name, email, password }),
             });
-
             setSuccess(data.message || 'Account created! Redirecting to login…');
-
-            // Redirect to login after a brief delay
             setTimeout(() => navigate('/login'), 1500);
         } catch (err) {
             setError(err.message || 'Registration failed. Please try again.');
@@ -60,16 +42,13 @@ export default function Register() {
             setLoading(false);
         }
     };
-
     return (
         <div style={styles.wrapper}>
             <div style={styles.card}>
                 <div style={styles.logo}>⚡ SkillIntel</div>
                 <p style={styles.subtitle}>Create your account</p>
-
                 {error && <div style={styles.errorBox}>{error}</div>}
                 {success && <div style={styles.successBox}>{success}</div>}
-
                 <form onSubmit={handleSubmit}>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Full Name</label>
@@ -123,7 +102,6 @@ export default function Register() {
                         {loading ? 'Creating account…' : 'Create Account'}
                     </button>
                 </form>
-
                 <p style={styles.linkText}>
                     Already have an account?{' '}
                     <Link to="/login" style={styles.link}>Login</Link>
@@ -132,7 +110,6 @@ export default function Register() {
         </div>
     );
 }
-
 const styles = {
     wrapper: {
         minHeight: '100vh',

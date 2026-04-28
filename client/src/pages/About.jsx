@@ -1,6 +1,5 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
 export default function About() {
     return (
         <>
@@ -13,7 +12,6 @@ export default function About() {
                     what surveys claim it wants — by aggregating live signals from job boards,
                     open-source momentum, developer Q&amp;A, and global search interest.
                 </p>
-
                 <h2>What we do</h2>
                 <ul>
                     <li>Track demand for hundreds of technical skills across India and global markets.</li>
@@ -21,7 +19,6 @@ export default function About() {
                     <li>Surface salary benchmarks, regional demand, and recommended companion skills.</li>
                     <li>Help users plan careers and roadmaps grounded in live data, not opinion.</li>
                 </ul>
-
                 <h2>Why it matters</h2>
                 <p>
                     Career and hiring decisions are too often made on stale data. Bootcamp curriculums
@@ -29,7 +26,6 @@ export default function About() {
                     loop by exposing the same data signals that the most informed hiring managers
                     already use — but in a single, transparent dashboard.
                 </p>
-
                 <h2>How to use it</h2>
                 <ul>
                     <li><strong>Explorer</strong> — browse the full skill catalog with filters.</li>

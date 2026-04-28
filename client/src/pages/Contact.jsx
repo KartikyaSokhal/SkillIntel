@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
 export default function Contact() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
     const [sent, setSent] = useState(false);
-
     const handleSubmit = (event) => {
         event.preventDefault();
         const subject = encodeURIComponent(`SkillIntel inquiry from ${form.name || 'a visitor'}`);
@@ -13,9 +11,7 @@ export default function Contact() {
         window.location.href = `mailto:hello@skillintel.dev?subject=${subject}&body=${body}`;
         setSent(true);
     };
-
     const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
-
     return (
         <>
             <Navbar />
@@ -26,7 +22,6 @@ export default function Contact() {
                     {' '}<a href="mailto:hello@skillintel.dev">hello@skillintel.dev</a> or use the
                     form below — it opens your mail client with the message pre-filled.
                 </p>
-
                 <h2>Send a message</h2>
                 <form onSubmit={handleSubmit}>
                     <label className="profile-label" htmlFor="contact-name">Your name</label>
@@ -37,7 +32,6 @@ export default function Contact() {
                         onChange={(e) => update('name', e.target.value)}
                         required
                     />
-
                     <label className="profile-label" htmlFor="contact-email">Email</label>
                     <input
                         id="contact-email"
@@ -47,7 +41,6 @@ export default function Contact() {
                         onChange={(e) => update('email', e.target.value)}
                         required
                     />
-
                     <label className="profile-label" htmlFor="contact-message">Message</label>
                     <textarea
                         id="contact-message"
@@ -57,7 +50,6 @@ export default function Contact() {
                         onChange={(e) => update('message', e.target.value)}
                         required
                     />
-
                     <div>
                         <button type="submit" className="btn btn-primary">Open in mail client</button>
                     </div>

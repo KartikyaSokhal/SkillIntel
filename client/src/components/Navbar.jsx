@@ -2,28 +2,15 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { getStoredUser, clearAuth, isAuthenticated } from '../utils/api';
 import Avatar from './Avatar';
 import ThemeToggle from './ThemeToggle';
-
-/**
- * Navbar Component
- * ────────────────
- * - Branding on the left
- * - Section navigation in the center
- * - Right side:
- *     - Theme toggle (light / dark)
- *     - If logged in: Avatar + name + Logout
- *     - Otherwise: Login + Register CTAs
- */
 export default function Navbar({ action }) {
     const navigate = useNavigate();
     const loggedIn = isAuthenticated();
     const user = getStoredUser();
-
     const handleLogout = () => {
         clearAuth();
         fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
         navigate('/login');
     };
-
     return (
         <nav className="navbar">
             <div className="nav-inner">

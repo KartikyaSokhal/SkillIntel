@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
-
 const CAREER_ICONS = {
     'Data Science': '🧪',
     'Backend Engineering': '</>',
@@ -17,7 +16,6 @@ const CAREER_ICONS = {
     'Enterprise Software': '🏢',
     'Fintech': '💹',
 };
-
 const CAREER_OUTLOOKS = {
     'Data Science': { label: 'BULLISH OUTLOOK', color: 'var(--accent-green)' },
     'Backend Engineering': { label: 'STABLE OUTLOOK', color: 'var(--accent-blue)' },
@@ -25,7 +23,6 @@ const CAREER_OUTLOOKS = {
     'Frontend Engineering': { label: 'BULLISH OUTLOOK', color: 'var(--accent-green)' },
     'Full-Stack Development': { label: 'STABLE OUTLOOK', color: 'var(--accent-blue)' },
 };
-
 function demandLevelClass(level) {
     if (!level) return '';
     const l = level.toLowerCase();
@@ -33,7 +30,6 @@ function demandLevelClass(level) {
     if (l === 'high') return 'high';
     return 'rising';
 }
-
 export default function SkillDetail() {
     const { name } = useParams();
     const navigate = useNavigate();
@@ -41,10 +37,8 @@ export default function SkillDetail() {
     const [recommended, setRecommended] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     useEffect(() => {
         if (!name) { setError('No skill name provided.'); setLoading(false); return; }
-
         fetch(`/api/skills/${encodeURIComponent(name)}`)
             .then(async r => {
                 if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Not found'); }
@@ -53,16 +47,13 @@ export default function SkillDetail() {
             .then(json => {
                 setSkill(json.data);
                 setLoading(false);
-                // fetch recommended
                 return fetch(`/api/skills/recommended/${encodeURIComponent(json.data.name)}`);
             })
             .then(r => r.json())
             .then(json => setRecommended(json.data || []))
             .catch(e => { setError(e.message || 'Skill not found.'); setLoading(false); });
     }, [name]);
-
     const usagePcts = [84, 62, 78, 55, 70, 45];
-
     if (loading) {
         return (
             <>
@@ -72,7 +63,6 @@ export default function SkillDetail() {
             </>
         );
     }
-
     if (error) {
         return (
             <>
@@ -87,10 +77,8 @@ export default function SkillDetail() {
             </>
         );
     }
-
     const expSub = skill.experienceBarrier === 'Low' ? '< 1 year' :
         skill.experienceBarrier === 'Moderate' ? '1-3 years' : '3+ years';
-
     return (
         <>
             <Navbar action={
@@ -98,8 +86,7 @@ export default function SkillDetail() {
                     + Add to Compare
                 </button>
             } />
-
-            {/* Detail Hero */}
+            {}
             <div className="detail-hero">
                 <div className="detail-hero-inner">
                     <div className="breadcrumb" style={{ marginBottom: '1rem' }}>
@@ -107,7 +94,6 @@ export default function SkillDetail() {
                         <Link to="/explorer">Skills</Link><span>›</span>
                         <span>{skill.name}</span>
                     </div>
-
                     <div className="detail-hero-top">
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                             <div className="detail-skill-icon">{skill.icon || '🔧'}</div>
@@ -126,8 +112,7 @@ export default function SkillDetail() {
                             <Link to={`/compare?skills=${encodeURIComponent(skill.name)}`} className="btn btn-primary">⚖️ Compare</Link>
                         </div>
                     </div>
-
-                    {/* Metrics strip */}
+                    {}
                     <div className="detail-metrics-strip">
                         <div className="metric-cell">
                             <div className="metric-cell-label">Demand Index</div>
@@ -157,11 +142,10 @@ export default function SkillDetail() {
                     </div>
                 </div>
             </div>
-
-            {/* Main Content */}
+            {}
             <div className="section">
                 <div className="two-col-grid">
-                    {/* Regional Demand */}
+                    {}
                     <div className="card">
                         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>📍 Regional Demand</h3>
                         {(skill.regionalDemand || []).map(r => (
@@ -171,8 +155,7 @@ export default function SkillDetail() {
                             </div>
                         ))}
                     </div>
-
-                    {/* Related Skills */}
+                    {}
                     <div className="card">
                         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>🔗 Related Skills &amp; Ecosystem</h3>
                         <div className="related-skills-grid">
@@ -193,8 +176,7 @@ export default function SkillDetail() {
                         </div>
                     </div>
                 </div>
-
-                {/* Career Paths */}
+                {}
                 <div style={{ marginTop: '1.5rem' }}>
                     <div className="card">
                         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem' }}>🚀 Career Paths</h3>
@@ -217,8 +199,7 @@ export default function SkillDetail() {
                         </div>
                     </div>
                 </div>
-
-                {/* Recommended Skills */}
+                {}
                 <div style={{ marginTop: '1.5rem' }}>
                     <div className="card">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
@@ -268,7 +249,6 @@ export default function SkillDetail() {
                     </div>
                 </div>
             </div>
-
             <Footer />
         </>
     );

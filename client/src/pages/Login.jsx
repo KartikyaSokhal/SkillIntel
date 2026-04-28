@@ -1,37 +1,23 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
-
-/**
- * Login Page
- * ──────────
- * Authenticates the user via POST /api/auth/login.
- * On success: stores JWT + user info in localStorage, redirects to dashboard.
- * On failure: shows inline error message.
- */
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
-
         try {
             const data = await apiFetch('/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password }),
             });
-
-            // Store JWT token and user info in localStorage
             localStorage.setItem('skillintel_token', data.token);
             localStorage.setItem('skillintel_user', JSON.stringify(data.user));
-
-            // Redirect to home/dashboard
             navigate('/');
         } catch (err) {
             setError(err.message || 'Invalid credentials. Please try again.');
@@ -39,15 +25,12 @@ export default function Login() {
             setLoading(false);
         }
     };
-
     return (
         <div style={styles.wrapper}>
             <div style={styles.card}>
                 <div style={styles.logo}>⚡ SkillIntel</div>
                 <p style={styles.subtitle}>Sign in to your account</p>
-
                 {error && <div style={styles.errorBox}>{error}</div>}
-
                 <form onSubmit={handleSubmit}>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Email</label>
@@ -79,7 +62,6 @@ export default function Login() {
                         {loading ? 'Signing in…' : 'Sign In'}
                     </button>
                 </form>
-
                 <p style={styles.linkText}>
                     Don't have an account?{' '}
                     <Link to="/register" style={styles.link}>Register</Link>
@@ -88,7 +70,6 @@ export default function Login() {
         </div>
     );
 }
-
 const styles = {
     wrapper: {
         minHeight: '100vh',

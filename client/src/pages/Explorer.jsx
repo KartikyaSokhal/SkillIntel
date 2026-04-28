@@ -4,13 +4,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
-
 function ExplorerCard({ skill, index }) {
     const navigate = useNavigate();
     const growthColor = skill.growth >= 20 ? 'green' : skill.growth >= 10 ? 'blue' : 'text-muted';
     const growthSign = skill.growth > 0 ? '+' : '';
     const demandPct = (skill.demandIndex / 10) * 100;
-
     return (
         <div
             className="skill-card fade-in"
@@ -24,7 +22,6 @@ function ExplorerCard({ skill, index }) {
                     <div className="skill-category">{skill.category}</div>
                 </div>
             </div>
-
             <div className="demand-bar-wrapper">
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                     <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Demand</span>
@@ -34,7 +31,6 @@ function ExplorerCard({ skill, index }) {
                     <div className="demand-bar-fill" style={{ width: `${demandPct}%` }} />
                 </div>
             </div>
-
             <div className="skill-metrics">
                 <div className="metric-item">
                     <div className="metric-label">Avg Salary (India)</div>
@@ -45,7 +41,6 @@ function ExplorerCard({ skill, index }) {
                     <div className={`metric-value ${growthColor}`}>{growthSign}{skill.growth}%</div>
                 </div>
             </div>
-
             <div className="skill-card-footer">
                 <div className="skill-tags" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{skill.description || ''}</div>
                 <span style={{ color: 'var(--accent-blue)', fontSize: '0.82rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.2rem', whiteSpace: 'nowrap' }}>
@@ -56,14 +51,12 @@ function ExplorerCard({ skill, index }) {
         </div>
     );
 }
-
 export default function Explorer() {
     const [allSkills, setAllSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeCat, setActiveCat] = useState('All');
     const [filterText, setFilterText] = useState('');
     const [error, setError] = useState(false);
-
     useEffect(() => {
         fetch('/api/skills')
             .then(async (response) => {
@@ -76,9 +69,7 @@ export default function Explorer() {
             .then((json) => { setAllSkills(Array.isArray(json.data) ? json.data : []); setLoading(false); })
             .catch(() => { setError(true); setLoading(false); });
     }, []);
-
     const categories = useMemo(() => ['All', ...new Set(allSkills.map(s => s.category))], [allSkills]);
-
     const filtered = useMemo(() => {
         let result = allSkills;
         if (activeCat !== 'All') result = result.filter(s => s.category === activeCat);
@@ -92,12 +83,10 @@ export default function Explorer() {
         }
         return result;
     }, [allSkills, activeCat, filterText]);
-
     return (
         <>
             <Navbar action={<Link to="/compare" className="btn btn-secondary btn-sm">Compare Skills</Link>} />
-
-            {/* Page Header */}
+            {}
             <div className="page-header" style={{ background: 'var(--bg-dark)' }}>
                 <div className="page-header-inner">
                     <div>
@@ -122,8 +111,7 @@ export default function Explorer() {
                     </div>
                 </div>
             </div>
-
-            {/* Category Filters */}
+            {}
             <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '0.75rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div className="filters-bar">
@@ -139,8 +127,7 @@ export default function Explorer() {
                     </div>
                 </div>
             </div>
-
-            {/* Grid */}
+            {}
             <div className="section">
                 {loading ? (
                     <Spinner message="Fetching skill intelligence…" />
@@ -160,7 +147,6 @@ export default function Explorer() {
                     </div>
                 )}
             </div>
-
             <Footer />
         </>
     );

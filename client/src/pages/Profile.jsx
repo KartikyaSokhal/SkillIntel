@@ -5,17 +5,14 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Avatar from '../components/Avatar';
 import { apiFetch, getStoredUser } from '../utils/api';
-
 const cardMotion = (delay = 0) => ({
     initial: { opacity: 0, y: 14 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.35, delay, ease: 'easeOut' }
 });
-
 const DRAFT_KEY = 'skillintel_profile_draft';
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
 const LEVEL_SCORE = { Beginner: 25, Intermediate: 55, Advanced: 80, Expert: 95 };
-
 const emptyProfile = {
     name: '',
     email: '',
@@ -31,14 +28,12 @@ const emptyProfile = {
     skillsDetailed: [],
     resume: { fileName: '', mimeType: '', uploadedAt: null, sizeBytes: 0, hasFile: false }
 };
-
 function formatBytes(bytes) {
     if (!bytes) return '';
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
-
 function computeIntegrityScore(profile) {
     let filled = 0;
     let total = 0;
@@ -60,19 +55,16 @@ function computeIntegrityScore(profile) {
     });
     return Math.round((filled / Math.max(total, 1)) * 100);
 }
-
 function ChipRow({ label, items, onAdd, onRemove, placeholder }) {
     const [draft, setDraft] = useState('');
     const inputRef = useRef(null);
     const [adding, setAdding] = useState(false);
-
     const commit = () => {
         const value = draft.trim();
         if (value) onAdd(value);
         setDraft('');
         setAdding(false);
     };
-
     return (
         <div>
             <div className="profile-label">{label}</div>
@@ -104,7 +96,6 @@ function ChipRow({ label, items, onAdd, onRemove, placeholder }) {
         </div>
     );
 }
-
 function IntegrityRing({ score }) {
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
@@ -137,16 +128,13 @@ function IntegrityRing({ score }) {
         </div>
     );
 }
-
 function ResumeDropZone({ resume, uploading, onUpload }) {
     const inputRef = useRef(null);
     const [dragging, setDragging] = useState(false);
-
     const handleFiles = (files) => {
         if (!files || !files.length) return;
         onUpload(files[0]);
     };
-
     return (
         <div
             className={`resume-drop ${dragging ? 'dragging' : ''}`}
@@ -178,7 +166,6 @@ function ResumeDropZone({ resume, uploading, onUpload }) {
         </div>
     );
 }
-
 export default function Profile() {
     const [profile, setProfile] = useState(emptyProfile);
     const [originalProfile, setOriginalProfile] = useState(emptyProfile);
@@ -187,9 +174,7 @@ export default function Profile() {
     const [uploading, setUploading] = useState(false);
     const [toast, setToast] = useState(null);
     const [skillDraft, setSkillDraft] = useState({ name: '', level: 'Intermediate' });
-
     const storedUser = useMemo(() => getStoredUser(), []);
-
     useEffect(() => {
         let mounted = true;
         const draftRaw = localStorage.getItem(DRAFT_KEY);
@@ -197,9 +182,8 @@ export default function Profile() {
             try {
                 const draft = JSON.parse(draftRaw);
                 setProfile((prev) => ({ ...prev, ...draft }));
-            } catch { /* ignore */ }
+            } catch {  }
         }
-
         apiFetch('/auth/profile')
             .then((response) => {
                 if (!mounted) return;
@@ -237,30 +221,23 @@ export default function Profile() {
                 setProfile((prev) => ({ ...prev, name: prev.name || storedUser?.name || '', email: storedUser?.email || '' }));
             })
             .finally(() => mounted && setLoading(false));
-
         return () => { mounted = false; };
     }, [storedUser?.name, storedUser?.email]);
-
     useEffect(() => {
         if (loading) return;
         localStorage.setItem(DRAFT_KEY, JSON.stringify(profile));
     }, [profile, loading]);
-
     const update = (field, value) => setProfile((prev) => ({ ...prev, [field]: value }));
-
     const integrityScore = useMemo(() => computeIntegrityScore(profile), [profile]);
-
     const addInterest = (key) => (value) => {
         if (!value) return;
         const list = profile[key] || [];
         if (list.includes(value)) return;
         update(key, [...list, value]);
     };
-
     const removeInterest = (key) => (value) => {
         update(key, (profile[key] || []).filter((item) => item !== value));
     };
-
     const addSkill = () => {
         const name = skillDraft.name.trim();
         if (!name) return;
@@ -273,22 +250,18 @@ export default function Profile() {
         update('skillsDetailed', next);
         setSkillDraft({ name: '', level: 'Intermediate' });
     };
-
     const removeSkill = (name) => {
         update('skillsDetailed', profile.skillsDetailed.filter((s) => s.name !== name));
     };
-
     const changeSkillLevel = (name, level) => {
         update('skillsDetailed', profile.skillsDetailed.map((s) => (
             s.name === name ? { ...s, level, score: LEVEL_SCORE[level] || s.score } : s
         )));
     };
-
     const handleSave = async (event) => {
         event?.preventDefault();
         setSaving(true);
         setToast(null);
-
         try {
             const payload = {
                 name: profile.name,
@@ -333,12 +306,10 @@ export default function Profile() {
             setSaving(false);
         }
     };
-
     const handleCancel = () => {
         setProfile(originalProfile);
         setToast(null);
     };
-
     const handleResumeUpload = async (file) => {
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) {
@@ -369,7 +340,6 @@ export default function Profile() {
             setUploading(false);
         }
     };
-
     return (
         <>
             <Navbar />
@@ -391,7 +361,6 @@ export default function Profile() {
                         <span className="profile-sidebar-icon">⚙</span> Settings
                     </Link>
                 </aside>
-
                 <main className="profile-main">
                     <div className="profile-header-row">
                         <div className="profile-header-text">
@@ -410,7 +379,6 @@ export default function Profile() {
                             </button>
                         </div>
                     </div>
-
                     {loading ? (
                         <div className="profile-card"><p className="text-muted">Loading profile…</p></div>
                     ) : (
@@ -464,7 +432,6 @@ export default function Profile() {
                                         </div>
                                     </div>
                                 </motion.section>
-
                                 <motion.section className="profile-card" {...cardMotion(0.05)}>
                                     <div className="profile-card-title">
                                         <span className="profile-card-title-icon">◎</span>
@@ -474,7 +441,6 @@ export default function Profile() {
                                     <ResumeDropZone resume={profile.resume} uploading={uploading} onUpload={handleResumeUpload} />
                                 </motion.section>
                             </div>
-
                             <motion.section className="profile-card" {...cardMotion(0.1)}>
                                 <div className="profile-card-title">
                                     <span className="profile-card-title-icon">⌖</span>
@@ -523,7 +489,6 @@ export default function Profile() {
                                     </div>
                                 </div>
                             </motion.section>
-
                             <div className="profile-grid">
                                 <motion.section className="profile-card" {...cardMotion(0.15)}>
                                     <div className="profile-card-title">
@@ -547,7 +512,6 @@ export default function Profile() {
                                         />
                                     </div>
                                 </motion.section>
-
                                 <motion.section className="profile-card" {...cardMotion(0.2)}>
                                     <div className="profile-card-title" style={{ justifyContent: 'space-between', display: 'flex', width: '100%' }}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}>
@@ -558,7 +522,6 @@ export default function Profile() {
                                             {profile.skillsDetailed.length} tracked
                                         </span>
                                     </div>
-
                                     <div className="verified-skills">
                                         {profile.skillsDetailed.length === 0 && (
                                             <p className="text-muted" style={{ fontSize: '0.85rem' }}>
@@ -592,7 +555,6 @@ export default function Profile() {
                                             </div>
                                         ))}
                                     </div>
-
                                     <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr auto', gap: '0.5rem', marginTop: '0.5rem' }}>
                                         <input
                                             className="profile-input"
@@ -612,7 +574,6 @@ export default function Profile() {
                                     </div>
                                 </motion.section>
                             </div>
-
                             {toast && (
                                 <div className={`profile-toast ${toast.type}`}>{toast.message}</div>
                             )}

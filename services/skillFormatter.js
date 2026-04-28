@@ -2,16 +2,12 @@ function formatSkills(skills, demandMap) {
   return skills.map(skill => {
     const rawName = String(skill.name || '').trim();
     if (!rawName) return null;
-
     const name =
       rawName.charAt(0).toUpperCase() +
       rawName.slice(1);
-
     const demandScore =
       demandMap[rawName.toLowerCase()] || 50;
-
     const demandIndex = Number(Math.min(10, Math.max(1, Math.round((demandScore / 10) * 10) / 10)));
-
     let averageSalary = 1000000;
     if (typeof skill.averageSalary === 'string') {
       const salaryMatch = skill.averageSalary.replace(/,/g, '').match(/\d+/g);
@@ -21,14 +17,11 @@ function formatSkills(skills, demandMap) {
     } else if (typeof skill.averageSalary === 'number') {
       averageSalary = skill.averageSalary;
     }
-
-    // Gemini prompt asks for USD; convert probable USD values to INR.
     const salary = averageSalary < 1000000 ? Math.round(averageSalary * 83) : averageSalary;
     const growth = Number(skill.growthPercentage || skill.growth || 10);
     const recommended = (skill.recommendedRelatedSkills || skill.recommended || [])
       .map(item => String(item || '').trim())
       .filter(Boolean);
-
     return {
       name,
       category: skill.category || 'Technology',
@@ -42,7 +35,5 @@ function formatSkills(skills, demandMap) {
       recommended
     };
   }).filter(Boolean);
-
 }
-
 module.exports = formatSkills;

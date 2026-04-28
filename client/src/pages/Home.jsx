@@ -5,17 +5,14 @@ import Footer from '../components/Footer';
 import SkillCard from '../components/SkillCard';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
-
 export default function Home() {
     const [trending, setTrending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchVal, setSearchVal] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-
     useEffect(() => {
         let isMounted = true;
-
         fetch('/api/trending?limit=24')
             .then(async (response) => {
                 const json = await response.json();
@@ -37,27 +34,22 @@ export default function Home() {
             .finally(() => {
                 if (isMounted) setLoading(false);
             });
-
         return () => {
             isMounted = false;
         };
     }, []);
-
     const handleSearch = () => {
         if (searchVal.trim()) navigate(`/skill/${encodeURIComponent(searchVal.trim())}`);
     };
-
     const top6 = trending.slice(0, 6);
     const top5pills = trending.slice(0, 5);
     const highestPay = trending.length ? Math.max(...trending.map(s => s.salary)) : 0;
     const topDemand = trending.length
         ? [...trending].sort((a, b) => b.demandIndex - a.demandIndex)[0]
         : null;
-
     return (
         <>
             <Navbar />
-
             {/* Hero */}
             <section className="hero">
                 <div className="hero-badge">
@@ -72,7 +64,6 @@ export default function Home() {
                     Analyze labor market data for skill demand, salary benchmarks, and long-term growth trajectories.
                     Make data-driven career and hiring decisions.
                 </p>
-
                 <div className="hero-search-area">
                     <div className="search-wrapper">
                         <span className="search-icon">🔍</span>
@@ -99,7 +90,6 @@ export default function Home() {
                         ))}
                     </div>
                 </div>
-
                 <div className="hero-cta">
                     <Link to="/explorer" className="btn btn-primary">Explore the Skill Market</Link>
                     <button
@@ -111,8 +101,7 @@ export default function Home() {
                     </button>
                 </div>
             </section>
-
-            {/* Stats Strip */}
+            {}
             <div className="stats-strip">
                 <div className="stats-strip-inner">
                     <div className="stat-item">
@@ -143,8 +132,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-
-            {/* Trending Dashboard */}
+            {}
             <section id="trending-dashboard" className="trending-section" aria-live="polite">
                 <div className="trending-section-inner">
                     <div className="section-header">
@@ -173,7 +161,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
             <Footer />
         </>
     );

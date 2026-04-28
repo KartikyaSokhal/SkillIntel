@@ -4,20 +4,16 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { formatSalaryLPA } from '../utils/currency';
-
 const SKILL_COLORS = ['#2E86DE', '#4CAFD6', '#5DC8E8', '#3BA8C8'];
 const INDUSTRIES = ['FinTech & Banking', 'E-Commerce', 'Healthcare', 'AI & Startups'];
-
 export default function Compare() {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
-
     const [inputs, setInputs] = useState(['', '', '']);
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const industryRandRef = useRef(null);
-
     // Pre-fill from URL
     useEffect(() => {
         const urlSkills = searchParams.get('skills');
@@ -29,28 +25,23 @@ export default function Compare() {
             if (parts.length >= 2) doCompare(newInputs);
         }
     }, []); // eslint-disable-line
-
     const setInput = (i, val) => setInputs(prev => { const n = [...prev]; n[i] = val; return n; });
-
     async function doCompare(overrideInputs) {
         const chosen = (overrideInputs || inputs)
             .map(s => s.trim())
             .filter(Boolean);
         if (chosen.length < 2) { alert('Please enter at least 2 skills to compare.'); return; }
-
         setLoading(true);
         setResults(null);
         setError(null);
         // stable random seed for industry bars
         industryRandRef.current = chosen.map(() => INDUSTRIES.map(() => Math.floor(Math.random() * 40 + 15)));
-
         try {
             const res = await fetch(`/api/compare?skills=${encodeURIComponent(chosen.join(','))}`);
             const json = await res.json();
             if (!res.ok || json.success === false) {
                 throw new Error(json.message || json.error || 'Failed to compare skills');
             }
-
             const payload = Array.isArray(json.data) ? json.data : [];
             const valid = payload.filter(s => s && !s.error);
             if (valid.length === 0) throw new Error('None of the provided skills were found.');
@@ -62,13 +53,11 @@ export default function Compare() {
             setLoading(false);
         }
     }
-
     function quickCompare(s1, s2, s3) {
         const newInputs = [s1, s2, s3 || ''];
         setInputs(newInputs);
         doCompare(newInputs);
     }
-
     const expertVerdict = results ? (() => {
         const sorted = [...results].sort((a, b) => b.demandIndex - a.demandIndex);
         const top = sorted[0];
@@ -76,7 +65,6 @@ export default function Compare() {
         const runner = sorted[1];
         return { top, bottom, runner };
     })() : null;
-
     return (
         <>
             <Navbar action={
@@ -84,7 +72,6 @@ export default function Compare() {
                     ⬆ Share Report
                 </button>
             } />
-
             {/* Page Header */}
             <div className="page-header">
                 <div className="page-header-inner">
@@ -99,7 +86,6 @@ export default function Compare() {
                     </div>
                 </div>
             </div>
-
             {/* Selector */}
             <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -141,19 +127,16 @@ export default function Compare() {
                     </div>
                 </div>
             </div>
-
-            {/* Loading */}
+            {}
             {loading && <Spinner message="Fetching comparison data from /api/compare…" />}
-
-            {/* Error */}
+            {}
             {error && (
                 <div className="error-state" style={{ padding: '3rem' }}>
                     <h2>⚠️ {error}</h2>
                     <p>Try different skill names.</p>
                 </div>
             )}
-
-            {/* Empty State */}
+            {}
             {!loading && !results && !error && (
                 <div style={{ textAlign: 'center', padding: '5rem 2rem', color: 'var(--text-muted)' }}>
                     <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚖️</div>
@@ -161,11 +144,10 @@ export default function Compare() {
                     <p>Enter 2-3 skills above and click <strong>Compare</strong>, or use a quick compare preset.</p>
                 </div>
             )}
-
-            {/* Results */}
+            {}
             {results && !loading && (
                 <>
-                    {/* Cards header */}
+                    {}
                     <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', padding: '1.5rem 2rem' }}>
                         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${results.length}, 1fr)`, gap: '1rem' }}>
@@ -188,9 +170,8 @@ export default function Compare() {
                             </div>
                         </div>
                     </div>
-
                     <div className="section">
-                        {/* Metrics Table */}
+                        {}
                         <div className="card mb-3" style={{ padding: 0, overflow: 'hidden' }}>
                             <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
                                 <h3 style={{ fontWeight: 700, fontSize: '1rem' }}>📊 Performance Metrics Matrix</h3>
@@ -244,8 +225,7 @@ export default function Compare() {
                                 </table>
                             </div>
                         </div>
-
-                        {/* Growth + Industry */}
+                        {}
                         <div className="two-col-grid" style={{ marginTop: '1.5rem' }}>
                             <div className="card">
                                 <h3 style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '1.25rem' }}>📈 Growth Momentum (YoY)</h3>
@@ -265,7 +245,6 @@ export default function Compare() {
                                     );
                                 })}
                             </div>
-
                             <div className="card">
                                 <h3 style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '1.25rem' }}>🏭 Market Share by Industry</h3>
                                 {INDUSTRIES.map((ind, ii) => {
@@ -296,8 +275,7 @@ export default function Compare() {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Expert Verdict */}
+                        {}
                         {expertVerdict && (
                             <div style={{ marginTop: '1.5rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)', padding: '1.75rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                                 <div style={{ width: 48, height: 48, background: 'var(--accent-blue-light)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
@@ -322,7 +300,6 @@ export default function Compare() {
                     </div>
                 </>
             )}
-
             <Footer />
         </>
     );

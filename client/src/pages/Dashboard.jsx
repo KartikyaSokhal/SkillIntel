@@ -4,37 +4,17 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { isAuthenticated } from '../utils/api';
 import { formatSalaryLPA } from '../utils/currency';
-
-/**
- * Dashboard Page (React SPA — Protected)
- * ────────────────────────────────────────
- * This page is protected: if no JWT is in localStorage,
- * the user is redirected to /login.
- *
- * SOCKET.IO CLIENT LIFECYCLE:
- * ───────────────────────────
- * 1. On component mount: connect to the WebSocket server
- * 2. Emit 'requestTrending' to ask for latest trending data
- * 3. Listen for 'trendingUpdate' event — update state when received
- * 4. On component unmount (cleanup): disconnect the socket
- *
- * This ensures we don't leak connections when navigating away.
- */
 export default function Dashboard() {
     const [skills, setSkills] = useState([]);
     const [trending, setTrending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [socketStatus, setSocketStatus] = useState('disconnected');
     const navigate = useNavigate();
-
-    // ── Auth guard ────────────────────────────────────────────
     useEffect(() => {
         if (!isAuthenticated()) {
             navigate('/login');
         }
     }, [navigate]);
-
-    // ── Fetch all skills (REST API) ───────────────────────────
     useEffect(() => {
         fetch('/api/skills')
             .then(r => r.json())
@@ -44,35 +24,26 @@ export default function Dashboard() {
             })
             .catch(() => setLoading(false));
     }, []);
-
-    // ── Socket.io connection for real-time trending updates ───
     useEffect(() => {
-        // Dynamic import to avoid bundling socket.io-client if not installed
         let socket;
         async function connectSocket() {
             try {
                 const { io } = await import('socket.io-client');
                 socket = io('http://localhost:3000');
-
                 socket.on('connect', () => {
                     setSocketStatus('connected');
-                    // Request trending data immediately on connection
                     socket.emit('requestTrending');
                 });
-
                 socket.on('trendingUpdate', (payload) => {
                     setTrending(payload.data || []);
                 });
-
                 socket.on('welcome', (data) => {
                     console.log('🔌 WebSocket:', data.message);
                 });
-
                 socket.on('disconnect', () => {
                     setSocketStatus('disconnected');
                 });
             } catch {
-                // socket.io-client not installed — fall back to REST
                 console.log('Socket.io client not available, using REST fallback');
                 fetch('/api/trending')
                     .then(r => r.json())
@@ -81,20 +52,15 @@ export default function Dashboard() {
             }
         }
         connectSocket();
-
-        // Cleanup: disconnect socket when component unmounts
         return () => {
             if (socket) socket.disconnect();
         };
     }, []);
-
     const user = JSON.parse(localStorage.getItem('skillintel_user') || '{}');
-
     return (
         <>
             <Navbar />
-
-            {/* Dashboard Header */}
+            {}
             <div style={styles.header}>
                 <div style={styles.headerInner}>
                     <div>
@@ -108,8 +74,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-
-            {/* Stats Row */}
+            {}
             <div style={styles.statsRow}>
                 <div style={styles.statCard}>
                     <div style={styles.statNumber}>{skills.length}</div>
@@ -128,9 +93,8 @@ export default function Dashboard() {
                     <div style={styles.statLabel}>Categories</div>
                 </div>
             </div>
-
             <div style={styles.content}>
-                {/* Trending Section (Real-time via Socket.io) */}
+                {}
                 <div style={styles.section}>
                     <h2 style={styles.sectionTitle}>
                         🔥 Trending Skills
@@ -152,8 +116,7 @@ export default function Dashboard() {
                         ))}
                     </div>
                 </div>
-
-                {/* All Skills Grid */}
+                {}
                 <div style={styles.section}>
                     <h2 style={styles.sectionTitle}>📦 All Skills</h2>
                     {loading ? (
@@ -188,7 +151,7 @@ export default function Dashboard() {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* Demand bar */}
+                                    {}
                                     <div style={styles.demandTrack}>
                                         <div style={{
                                             ...styles.demandFill,
@@ -201,12 +164,10 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-
             <Footer />
         </>
     );
 }
-
 const styles = {
     header: {
         background: 'radial-gradient(ellipse 60% 70% at 10% 0%, #0A1E3C, transparent 65%), #050C14',

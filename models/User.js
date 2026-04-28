@@ -1,68 +1,28 @@
-/**
- * ═══════════════════════════════════════════════════════════════
- * User Model — SkillIntel
- * ═══════════════════════════════════════════════════════════════
- *
- * This Mongoose model represents a registered user of the platform.
- * It demonstrates:
- *   - Schema validation (required fields, unique constraints)
- *   - Pre-save middleware (Mongoose hook) for automatic password hashing
- *   - Instance methods for password verification
- *   - bcryptjs usage for one-way password hashing (10 salt rounds)
- *
- * SECURITY NOTE:
- *   Passwords are NEVER stored in plain text. bcryptjs generates a
- *   random salt and hashes the password before it hits the database.
- *   The comparePassword() method hashes the candidate and compares
- *   the result — the original password is never recoverable.
- * ═══════════════════════════════════════════════════════════════
- */
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const userSchema = new mongoose.Schema({
-    /** Full name of the user */
-    name: {
+        name: {
         type: String,
         required: [true, 'Name is required']
     },
-
-    /** Email — must be unique across all users (used as login ID) */
-    email: {
+        email: {
         type: String,
         required: [true, 'Email is required'],
         unique: true,
         lowercase: true,
         trim: true
     },
-
-    /** Hashed password — never returned in API responses */
-    password: {
+        password: {
         type: String,
         required: [true, 'Password is required'],
         minlength: [6, 'Password must be at least 6 characters']
     },
-
-    /** Role-based access: 'user' (default) or 'admin' */
-    role: {
+        role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
     },
-
-    /**
-     * Extended profile fields.
-     *
-     * Schema is additive: legacy fields (status, currentRole, salary, intent,
-     * resume.{fileName,uploadedAt}, skills) are preserved verbatim so existing
-     * users keep working. New v2 fields are added below for the redesigned
-     * profile dashboard (location, organization, bio, headline, avatarUrl,
-     * interestsTechnical, interestsStrategic, skillsDetailed, and the resume
-     * binary fields fileData + mimeType).
-     */
-    profile: {
-        // ─── Legacy fields (preserved) ──────────────────────────
+        profile: {
         status: {
             type: String,
             enum: ['Student', 'Working Professional'],
@@ -84,7 +44,6 @@ const userSchema = new mongoose.Schema({
             type: [String],
             default: []
         },
-
         // ─── v2 fields (additive) ───────────────────────────────
         location: { type: String, default: '' },
         organization: { type: String, default: '' },
@@ -106,7 +65,6 @@ const userSchema = new mongoose.Schema({
             }],
             default: []
         },
-
         resume: {
             fileName: { type: String, default: '' },
             mimeType: { type: String, default: '' },
@@ -117,14 +75,12 @@ const userSchema = new mongoose.Schema({
             uploadedAt: { type: Date, default: null }
         }
     },
-
     /** Account creation timestamp */
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
-
 /**
  * PRE-SAVE HOOK — Mongoose Middleware (Document Middleware)
  * ─────────────────────────────────────────────────────────
@@ -142,24 +98,11 @@ const userSchema = new mongoose.Schema({
  *   the save is aborted with the error.
  */
 userSchema.pre('save', async function () {
-    // Only hash if the password field was modified (or is new)
     if (!this.isModified('password')) return;
-
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
-
-/**
- * INSTANCE METHOD — comparePassword
- * ──────────────────────────────────
- * Compares a plain-text candidate password against the stored hash.
- * Returns true if they match, false otherwise.
- *
- * @param {string} candidatePassword - The plain-text password to verify
- * @returns {Promise<boolean>} - Whether the password matches
- */
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
-
 module.exports = mongoose.model('User', userSchema);

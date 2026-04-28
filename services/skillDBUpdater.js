@@ -1,9 +1,7 @@
 const Skill = require("../models/Skill");
-
 async function updateSkillsDB(skills) {
   try {
     const timestamp = new Date();
-
     await Skill.bulkWrite(
       skills.map(skill => ({
         updateOne: {
@@ -13,11 +11,9 @@ async function updateSkillsDB(skills) {
         }
       }))
     );
-
     console.log("✅ Skills saved to MongoDB");
   } catch (error) {
     console.error("❌ DB update error:", error.message);
   }
 }
-
 module.exports = updateSkillsDB;

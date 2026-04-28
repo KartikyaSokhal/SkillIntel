@@ -1,20 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { formatSalaryLPA } from '../utils/currency';
-
 const directionGlyph = { UP: '↑', DOWN: '↓', STABLE: '→' };
 const directionClass = { UP: 'trend-up', DOWN: 'trend-down', STABLE: 'trend-stable' };
-
 export default function SkillCard({ skill, index = 0 }) {
     const navigate = useNavigate();
     const growthColor = skill.growth >= 20 ? 'green' : skill.growth >= 10 ? 'blue' : 'text-muted';
     const growthSign = skill.growth > 0 ? '+' : '';
     const demandPct = (skill.demandIndex / 10) * 100;
-
     const hasTrend = typeof skill.trendScore === 'number' && skill.direction;
     const pctChange = typeof skill.percentChange === 'number' ? skill.percentChange : null;
     const pctSign = pctChange !== null && pctChange > 0 ? '+' : '';
-
     return (
         <motion.div
             className="skill-card"
@@ -41,13 +37,11 @@ export default function SkillCard({ skill, index = 0 }) {
                     </div>
                 )}
             </div>
-
             <div className="skill-tags">
                 {(skill.tags || []).map(t => (
                     <span key={t} className="tag tag-gray">{t}</span>
                 ))}
             </div>
-
             <div className="skill-metrics">
                 <div className="metric-item">
                     <div className="metric-label">Demand Index</div>
@@ -69,7 +63,6 @@ export default function SkillCard({ skill, index = 0 }) {
                     <div className="metric-value" style={{ fontSize: '0.85rem' }}>{skill.experienceBarrier}</div>
                 </div>
             </div>
-
             <div>
                 <div className="demand-bar-wrapper">
                     <div className="demand-bar-track">
@@ -77,7 +70,6 @@ export default function SkillCard({ skill, index = 0 }) {
                     </div>
                 </div>
             </div>
-
             <div className="skill-card-footer">
                 <span className="text-muted" style={{ fontSize: '0.8rem' }}>View Details →</span>
             </div>
