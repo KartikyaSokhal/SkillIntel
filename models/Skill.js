@@ -39,4 +39,4 @@ const skillSchema = new mongoose.Schema({
     googleTrendScore: { type: Number },
     lastTrendComputedAt: { type: Date }
 }, { timestamps: true });
-module.exports = mongoose.model('Skill', skillSchema);
+module.exports = mongoose.models.Skill || mongoose.model('Skill', skillSchema);

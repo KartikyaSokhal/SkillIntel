@@ -26,7 +26,16 @@ const emptyProfile = {
     interestsTechnical: [],
     interestsStrategic: [],
     skillsDetailed: [],
-    resume: { fileName: '', mimeType: '', uploadedAt: null, sizeBytes: 0, hasFile: false }
+    resume: {
+        fileName: '',
+        mimeType: '',
+        uploadedAt: null,
+        sizeBytes: 0,
+        hasFile: false,
+        score: 0,
+        foundSkills: [],
+        missingSkills: []
+    }
 };
 function formatBytes(bytes) {
     if (!bytes) return '';
@@ -210,7 +219,10 @@ export default function Profile() {
                         mimeType: p.resume?.mimeType || '',
                         uploadedAt: p.resume?.uploadedAt || null,
                         sizeBytes: p.resume?.sizeBytes || 0,
-                        hasFile: !!p.resume?.hasFile
+                        hasFile: !!p.resume?.hasFile,
+                        score: p.resume?.score || 0,
+                        foundSkills: p.resume?.foundSkills || [],
+                        missingSkills: p.resume?.missingSkills || []
                     }
                 };
                 setProfile(merged);
@@ -323,6 +335,8 @@ export default function Profile() {
             fd.append('resume', file);
             const response = await apiFetch('/auth/profile/resume', { method: 'POST', body: fd });
             const r = response?.resume || {};
+            const analysis = response?.analysis || {};
+
             setProfile((prev) => ({
                 ...prev,
                 resume: {
@@ -330,7 +344,10 @@ export default function Profile() {
                     mimeType: r.mimeType || file.type,
                     sizeBytes: r.sizeBytes || file.size,
                     uploadedAt: r.uploadedAt || new Date().toISOString(),
-                    hasFile: true
+                    hasFile: true,
+                    score: analysis.score || 0,
+                    foundSkills: analysis.foundSkills || [],
+                    missingSkills: analysis.missingSkills || []
                 }
             }));
             setToast({ type: 'success', message: 'Resume uploaded.' });
@@ -437,8 +454,29 @@ export default function Profile() {
                                         <span className="profile-card-title-icon">◎</span>
                                         Document Integrity
                                     </div>
-                                    <IntegrityRing score={integrityScore} />
+                                    <IntegrityRing score={profile.resume.score || integrityScore} />
                                     <ResumeDropZone resume={profile.resume} uploading={uploading} onUpload={handleResumeUpload} />
+                                    {profile.resume.hasFile && (
+                                      <div style={{ marginTop: '1rem' }}>
+                                        <div className="profile-label">Detected Skills</div>
+                                        <div className="chip-row">
+                                          {profile.resume.foundSkills.map((skill) => (
+                                            <span key={skill} className="chip">{skill}</span>
+                                          ))}
+                                        </div>
+
+                                        <div className="profile-label" style={{ marginTop: '0.6rem' }}>
+                                          Missing Skills
+                                        </div>
+                                        <div className="chip-row">
+                                          {profile.resume.missingSkills.map((skill) => (
+                                            <span key={skill} className="chip" style={{ opacity: 0.6 }}>
+                                              {skill}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
                                 </motion.section>
                             </div>
                             <motion.section className="profile-card" {...cardMotion(0.1)}>

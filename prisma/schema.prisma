@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+
+  provider = "postgresql"
+
+}
+
+//////////////////////////////////////////////////////
+// USER & PROFILE
+//////////////////////////////////////////////////////
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+
+  profile   Profile?
+}
+
+model Profile {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  user      User    @relation(fields: [userId], references: [id])
+
+  status    String  @default("Student")
+  currentRole String?
+  salary    Int?
+  intent    String?
+
+  location  String?
+  organization String?
+  bio       String?
+  headline  String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+
+  skills               UserSkill[]
+  interestsTech        InterestTech[]
+  interestsStrategic   InterestStrategic[]
+  resume               Resume?
+}
+
+model Resume {
+  id         Int      @id @default(autoincrement())
+  profileId  Int      @unique
+  profile    Profile  @relation(fields: [profileId], references: [id])
+
+  fileName   String
+  mimeType   String
+  filePath   String
+  sizeBytes  Int
+  uploadedAt DateTime @default(now())
+}
+
+//////////////////////////////////////////////////////
+// SKILL CORE
+//////////////////////////////////////////////////////
+
+model Skill {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  category    String
+  icon        String?
+
+  demandIndex Float?
+  salary      Float?
+  growth      Float?
+
+  experienceBarrier String?
+  saturationRisk    String?
+  description       String?
+
+  trendScore Float?
+  direction  Direction?
+  percentChange Float?
+
+  jobCountCurrent Int?
+  jobCountPrevious Int?
+
+  githubScore Float?
+  stackoverflowScore Float?
+  googleTrendScore Float?
+
+  lastTrendComputedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // RELATIONS (NAMED)
+  tags        Tag[]                @relation("SkillTags")
+  recommended RecommendedSkill[]  @relation("SkillRecommended")
+  careerPaths CareerPath[]        @relation("SkillCareerPaths")
+  regionalDemand RegionalDemand[] @relation("SkillRegionalDemand")
+  trends      SkillTrend[]        @relation("SkillTrends")
+
+  @@index([name])
+  @@index([trendScore])
+}
+
+//////////////////////////////////////////////////////
+// SKILL RELATED TABLES
+//////////////////////////////////////////////////////
+
+model Tag {
+  id      Int    @id @default(autoincrement())
+  skillId Int
+  name    String
+
+  skill Skill @relation("SkillTags", fields: [skillId], references: [id])
+
+  @@unique([skillId, name])
+}
+
+model RecommendedSkill {
+  id      Int    @id @default(autoincrement())
+  skillId Int
+  name    String
+
+  skill Skill @relation("SkillRecommended", fields: [skillId], references: [id])
+
+  @@unique([skillId, name])
+}
+
+model CareerPath {
+  id      Int    @id @default(autoincrement())
+  skillId Int
+  name    String
+
+  skill Skill @relation("SkillCareerPaths", fields: [skillId], references: [id])
+
+  @@unique([skillId, name])
+}
+
+model RegionalDemand {
+  id      Int    @id @default(autoincrement())
+  skillId Int
+  city    String
+  level   String
+
+  skill Skill @relation("SkillRegionalDemand", fields: [skillId], references: [id])
+
+  @@unique([skillId, city])
+}
+
+//////////////////////////////////////////////////////
+// TRENDS
+//////////////////////////////////////////////////////
+
+model SkillTrend {
+  id        Int      @id @default(autoincrement())
+  skillId   Int
+  skill     Skill    @relation("SkillTrends", fields: [skillId], references: [id])
+
+  jobCountCurrent Int @default(0)
+  jobCountPrevious Int @default(0)
+
+  githubScore Float @default(0)
+  stackoverflowScore Float @default(0)
+  googleTrendScore Float @default(0)
+
+  trendScore Float @default(0)
+  direction  Direction @default(STABLE)
+  percentChange Float @default(0)
+
+  timestamp DateTime @default(now())
+
+  @@index([skillId, timestamp])
+}
+
+//////////////////////////////////////////////////////
+// PROFILE EXTENSIONS
+//////////////////////////////////////////////////////
+
+model UserSkill {
+  id        Int    @id @default(autoincrement())
+  profileId Int
+  name      String
+  level     SkillLevel @default(INTERMEDIATE)
+  score     Int @default(50)
+
+  profile Profile @relation(fields: [profileId], references: [id])
+}
+
+model InterestTech {
+  id        Int @id @default(autoincrement())
+  profileId Int
+  name      String
+
+  profile Profile @relation(fields: [profileId], references: [id])
+}
+
+model InterestStrategic {
+  id        Int @id @default(autoincrement())
+  profileId Int
+  name      String
+
+  profile Profile @relation(fields: [profileId], references: [id])
+}
+
+//////////////////////////////////////////////////////
+// ENUMS
+//////////////////////////////////////////////////////
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Direction {
+  UP
+  DOWN
+  STABLE
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}

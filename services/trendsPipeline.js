@@ -55,7 +55,7 @@ async function runTrendsPipeline() {
     isRunning = true;
     lastError = null;
     const startedAt = new Date();
-    console.log(`\n═══ [trendsPipeline] starting @ ${startedAt.toISOString()} ═══`);
+    console.log("\n=== [trendsPipeline] starting @ " + startedAt.toISOString() + " ===");
     try {
         const skillNames = await loadSkillUniverse();
         console.log(`[trendsPipeline] tracking ${skillNames.length} skills.`);
@@ -145,7 +145,7 @@ async function runTrendsPipeline() {
         }
         lastRunAt = new Date();
         const elapsedMs = lastRunAt.getTime() - startedAt.getTime();
-        console.log(`═══ [trendsPipeline] done in ${elapsedMs}ms ═══\n`);
+        console.log("=== [trendsPipeline] done in " + elapsedMs + "ms ===\n");
         return {
             status: 'ok',
             startedAt,

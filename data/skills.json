@@ -1,441 +1,244 @@
 [
-    {
-        "name": "Python",
-        "category": "Backend/Data",
-        "icon": "🐍",
-        "demandIndex": 9.8,
-        "salary": 1500000,
-        "growth": 22,
-        "experienceBarrier": "Medium",
-        "saturationRisk": "Low",
-        "description": "Versatile General-Purpose Programming Language",
-        "tags": [
-            "Most Demanded",
-            "AI/ML Leader"
-        ],
-        "recommended": [
-            "Pandas",
-            "NumPy",
-            "SQL",
-            "FastAPI",
-            "Django"
-        ],
-        "careerPaths": [
-            "Data Science",
-            "Backend Engineering",
-            "AI & Machine Learning"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Chennai, Tamil Nadu",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "React",
-        "category": "Frontend",
-        "icon": "⚛️",
-        "demandIndex": 9.2,
-        "salary": 1300000,
-        "growth": 18,
-        "experienceBarrier": "Moderate",
-        "saturationRisk": "Elevated",
-        "description": "Meta's Industry-Standard UI Library",
-        "tags": [
-            "Market Leader",
-            "Most Wanted"
-        ],
-        "recommended": [
-            "TypeScript",
-            "Next.js",
-            "Redux",
-            "Tailwind CSS"
-        ],
-        "careerPaths": [
-            "Frontend Engineering",
-            "Full-Stack Development",
-            "Mobile Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Gurgaon, Haryana",
-                "level": "High"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Noida, Uttar Pradesh",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "TypeScript",
-        "category": "Frontend",
-        "icon": "📘",
-        "demandIndex": 8.9,
-        "salary": 1400000,
-        "growth": 34,
-        "experienceBarrier": "Low",
-        "saturationRisk": "Low",
-        "description": "Strongly-Typed JavaScript Superset",
-        "tags": [
-            "Trending",
-            "Fast Adopting"
-        ],
-        "recommended": [
-            "React",
-            "Node.js",
-            "NestJS",
-            "Angular"
-        ],
-        "careerPaths": [
-            "Frontend Engineering",
-            "Backend Engineering",
-            "Full-Stack Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Delhi NCR",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "Angular",
-        "category": "Frontend",
-        "icon": "🅰️",
-        "demandIndex": 7.2,
-        "salary": 1200000,
-        "growth": 4.2,
-        "experienceBarrier": "High",
-        "saturationRisk": "Stable",
-        "description": "Google's Enterprise-Grade Frontend Framework",
-        "tags": [
-            "Enterprise",
-            "Scalable"
-        ],
-        "recommended": [
-            "TypeScript",
-            "RxJS",
-            "NgRx",
-            "NestJS"
-        ],
-        "careerPaths": [
-            "Frontend Engineering",
-            "Enterprise Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "Critical"
-            },
-            {
-                "city": "Chennai, Tamil Nadu",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "Vue.js",
-        "category": "Frontend",
-        "icon": "💚",
-        "demandIndex": 6.5,
-        "salary": 1100000,
-        "growth": 12.8,
-        "experienceBarrier": "Low",
-        "saturationRisk": "Low Risk",
-        "description": "Community-Driven Progressive Framework",
-        "tags": [
-            "Dev Friendly",
-            "Flexible"
-        ],
-        "recommended": [
-            "Nuxt.js",
-            "Pinia",
-            "TypeScript",
-            "Vite"
-        ],
-        "careerPaths": [
-            "Frontend Engineering",
-            "Startup Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "High"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "Rising"
-            },
-            {
-                "city": "Mumbai, Maharashtra",
-                "level": "High"
-            }
-        ]
-    },
-    {
-        "name": "Generative AI",
-        "category": "AI & Data",
-        "icon": "🤖",
-        "demandIndex": 9.5,
-        "salary": 2200000,
-        "growth": 248,
-        "experienceBarrier": "High",
-        "saturationRisk": "Low",
-        "description": "AI Model Building & Prompt Engineering",
-        "tags": [
-            "Fastest Growing",
-            "Highest Paying"
-        ],
-        "recommended": [
-            "Python",
-            "LangChain",
-            "OpenAI API",
-            "Hugging Face"
-        ],
-        "careerPaths": [
-            "AI Engineering",
-            "ML Research",
-            "Product AI"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "Critical"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Delhi NCR",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "Rust",
-        "category": "Systems",
-        "icon": "🦀",
-        "demandIndex": 7.8,
-        "salary": 2000000,
-        "growth": 82,
-        "experienceBarrier": "High",
-        "saturationRisk": "Niche Fast-Growth",
-        "description": "High-Performance Systems Programming Language",
-        "tags": [
-            "Emerging Tech",
-            "Systemic"
-        ],
-        "recommended": [
-            "C++",
-            "WebAssembly",
-            "Go",
-            "Linux"
-        ],
-        "careerPaths": [
-            "Systems Engineering",
-            "WebAssembly",
-            "Blockchain"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "High"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "Critical"
-            },
-            {
-                "city": "Chennai, Tamil Nadu",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "Node.js",
-        "category": "Backend",
-        "icon": "🟢",
-        "demandIndex": 8.7,
-        "salary": 1400000,
-        "growth": 14,
-        "experienceBarrier": "Low",
-        "saturationRisk": "Stable",
-        "description": "JavaScript Runtime for Server-Side Development",
-        "tags": [
-            "Ubiquitous",
-            "Full-Stack Friendly"
-        ],
-        "recommended": [
-            "Express",
-            "NestJS",
-            "MongoDB",
-            "TypeScript"
-        ],
-        "careerPaths": [
-            "Backend Engineering",
-            "Full-Stack Development",
-            "API Development"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Gurgaon, Haryana",
-                "level": "High"
-            },
-            {
-                "city": "Noida, Uttar Pradesh",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "Kubernetes",
-        "category": "DevOps",
-        "icon": "☸️",
-        "demandIndex": 8.4,
-        "salary": 1900000,
-        "growth": 28,
-        "experienceBarrier": "High",
-        "saturationRisk": "Low",
-        "description": "Container Orchestration at Enterprise Scale",
-        "tags": [
-            "DevOps Essential",
-            "Cloud Native"
-        ],
-        "recommended": [
-            "Docker",
-            "Helm",
-            "Terraform",
-            "AWS"
-        ],
-        "careerPaths": [
-            "DevOps Engineering",
-            "SRE",
-            "Cloud Architecture"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Mumbai, Maharashtra",
-                "level": "Rising"
-            }
-        ]
-    },
-    {
-        "name": "AWS",
-        "category": "Cloud",
-        "icon": "☁️",
-        "demandIndex": 9.0,
-        "salary": 1800000,
-        "growth": 19,
-        "experienceBarrier": "Moderate",
-        "saturationRisk": "Stable",
-        "description": "Amazon Web Services – Global Cloud Computing Leader",
-        "tags": [
-            "Top Tier",
-            "Industry Standard"
-        ],
-        "recommended": [
-            "Terraform",
-            "Kubernetes",
-            "Lambda",
-            "DynamoDB"
-        ],
-        "careerPaths": [
-            "Cloud Engineering",
-            "Solutions Architecture",
-            "DevOps"
-        ],
-        "regionalDemand": [
-            {
-                "city": "Bangalore, Karnataka",
-                "level": "Critical"
-            },
-            {
-                "city": "Hyderabad, Telangana",
-                "level": "High"
-            },
-            {
-                "city": "Pune, Maharashtra",
-                "level": "High"
-            },
-            {
-                "city": "Chennai, Tamil Nadu",
-                "level": "High"
-            }
-        ]
-    }
+  {
+    "name": "AWS",
+    "category": "Cloud",
+    "demandIndex": 10,
+    "salary": 12450000,
+    "growth": 22,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "AWS market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "GCP",
+      "Azure",
+      "Terraform",
+      "Serverless",
+      "Docker",
+      "Kubernetes",
+      "Python"
+    ]
+  },
+  {
+    "name": "Python",
+    "category": "Programming Language",
+    "demandIndex": 9.1,
+    "salary": 10790000,
+    "growth": 18,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "Python market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL",
+      "Docker",
+      "AWS",
+      "Pandas"
+    ]
+  },
+  {
+    "name": "React",
+    "category": "Frontend",
+    "demandIndex": 8.2,
+    "salary": 11205000,
+    "growth": 18,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "React market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "JavaScript",
+      "TypeScript",
+      "Next.js",
+      "Redux",
+      "Tailwind CSS",
+      "GraphQL",
+      "Node.js"
+    ]
+  },
+  {
+    "name": "SQL",
+    "category": "Database",
+    "demandIndex": 8.2,
+    "salary": 9960000,
+    "growth": 10,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "SQL market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
+      "Redis",
+      "Python",
+      "AWS RDS",
+      "Apache Cassandra"
+    ]
+  },
+  {
+    "name": "Docker",
+    "category": "DevOps",
+    "demandIndex": 7.3,
+    "salary": 11620000,
+    "growth": 20,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "Docker market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "Kubernetes",
+      "AWS",
+      "Terraform",
+      "Jenkins",
+      "GitLab CI",
+      "Helm",
+      "Argo CD"
+    ]
+  },
+  {
+    "name": "Kubernetes",
+    "category": "DevOps",
+    "demandIndex": 7.3,
+    "salary": 12865000,
+    "growth": 25,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "Kubernetes market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "Docker",
+      "Helm",
+      "AWS",
+      "GCP",
+      "Azure",
+      "Terraform",
+      "Prometheus"
+    ]
+  },
+  {
+    "name": "Node.js",
+    "category": "Backend",
+    "demandIndex": 5.5,
+    "salary": 11205000,
+    "growth": 14,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "Node.js market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "JavaScript",
+      "TypeScript",
+      "Express.js",
+      "NestJS",
+      "MongoDB",
+      "PostgreSQL",
+      "Docker"
+    ]
+  },
+  {
+    "name": "JavaScript",
+    "category": "Programming Language",
+    "demandIndex": 4.5,
+    "salary": 10790000,
+    "growth": 12,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "JavaScript market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "TypeScript",
+      "React",
+      "Angular",
+      "Vue.js",
+      "Node.js",
+      "HTML",
+      "CSS"
+    ]
+  },
+  {
+    "name": "TypeScript",
+    "category": "Programming Language",
+    "demandIndex": 3.6,
+    "salary": 11620000,
+    "growth": 23,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "TypeScript market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "JavaScript",
+      "React",
+      "Angular",
+      "Node.js",
+      "NestJS",
+      "GraphQL",
+      "Zod"
+    ]
+  },
+  {
+    "name": "Machine Learning",
+    "category": "AI",
+    "demandIndex": 2.7,
+    "salary": 12450000,
+    "growth": 22,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "Machine Learning market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "AWS SageMaker",
+      "SQL",
+      "Docker"
+    ]
+  },
+  {
+    "name": "MongoDB",
+    "category": "Database",
+    "demandIndex": 1.8,
+    "salary": 10790000,
+    "growth": 12,
+    "experienceBarrier": "Moderate",
+    "saturationRisk": "Stable",
+    "description": "MongoDB market intelligence from recent hiring trends.",
+    "tags": [
+      "Pipeline"
+    ],
+    "recommended": [
+      "Node.js",
+      "Express.js",
+      "Mongoose",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "AWS DynamoDB"
+    ]
+  }
 ]

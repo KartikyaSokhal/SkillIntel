@@ -69,7 +69,7 @@ async function fetchJSearch() {
   console.log("\nFetching jobs from JSearch...");
   try {
     const res = await axios.get(
-      "https:
+      "https://jsearch.p.rapidapi.com/search",
       {
         params: {
           query: "software developer india",
