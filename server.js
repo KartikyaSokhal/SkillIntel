@@ -47,7 +47,8 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://skill-intel-ui.vercel.app"
+    "https://skill-intel-ui.vercel.app",
+    "https://skill-intel-qq6rh9zs7-kartikyasokhals-projects.vercel.app"
   ],
   credentials: true
 }));
