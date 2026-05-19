@@ -15,9 +15,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 // Public routes
 router.get('/skills', getAllSkills);
+router.get('/skills/recommended/:skill', getRecommendedSkills);
 router.get('/skills/:name', getSkillByName);
 router.get('/trending', getTrendingSkills);
-router.get('/recommended', authMiddleware, getRecommendedSkills);
 router.post('/compare', compareSkills);
 
 // Admin / protected
