@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { isAuthenticated } from '../utils/api';
+import { isAuthenticated, apiFetch, getSocketUrl } from '../utils/api';
 import { formatSalaryLPA } from '../utils/currency';
 export default function Dashboard() {
     const [skills, setSkills] = useState([]);
@@ -16,8 +16,7 @@ export default function Dashboard() {
         }
     }, [navigate]);
     useEffect(() => {
-        fetch('/api/skills')
-            .then(r => r.json())
+        apiFetch('/skills')
             .then(json => {
                 setSkills(json.data || []);
                 setLoading(false);
@@ -29,7 +28,7 @@ export default function Dashboard() {
         async function connectSocket() {
             try {
                 const { io } = await import('socket.io-client');
-                socket = io('http://localhost:3000');
+                socket = io(getSocketUrl());
                 socket.on('connect', () => {
                     setSocketStatus('connected');
                     socket.emit('requestTrending');
@@ -45,8 +44,7 @@ export default function Dashboard() {
                 });
             } catch {
                 console.log('Socket.io client not available, using REST fallback');
-                fetch('/api/trending')
-                    .then(r => r.json())
+                apiFetch('/trending')
                     .then(json => setTrending((json.data || []).slice(0, 5)))
                     .catch(() => {});
             }

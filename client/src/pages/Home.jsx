@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiFetch } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SkillCard from '../components/SkillCard';
@@ -13,14 +14,7 @@ export default function Home() {
     const navigate = useNavigate();
     useEffect(() => {
         let isMounted = true;
-        fetch('/api/trending?limit=24')
-            .then(async (response) => {
-                const json = await response.json();
-                if (!response.ok || json.success === false) {
-                    throw new Error(json.message || 'Failed to load trending skills');
-                }
-                return json;
-            })
+        apiFetch('/trending?limit=24')
             .then((json) => {
                 if (!isMounted) return;
                 setTrending(Array.isArray(json.data) ? json.data : []);

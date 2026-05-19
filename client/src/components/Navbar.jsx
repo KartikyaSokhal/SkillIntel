@@ -1,5 +1,5 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { getStoredUser, clearAuth, isAuthenticated } from '../utils/api';
+import { getStoredUser, clearAuth, isAuthenticated, apiFetch } from '../utils/api';
 import Avatar from './Avatar';
 import ThemeToggle from './ThemeToggle';
 export default function Navbar({ action }) {
@@ -8,7 +8,7 @@ export default function Navbar({ action }) {
     const user = getStoredUser();
     const handleLogout = () => {
         clearAuth();
-        fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+        apiFetch('/auth/logout', { method: 'POST' }).catch(() => {});
         navigate('/login');
     };
     return (

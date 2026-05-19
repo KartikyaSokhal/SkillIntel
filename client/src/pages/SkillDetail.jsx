@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { apiFetch } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
@@ -39,17 +40,12 @@ export default function SkillDetail() {
     const [error, setError] = useState(null);
     useEffect(() => {
         if (!name) { setError('No skill name provided.'); setLoading(false); return; }
-        fetch(`/api/skills/${encodeURIComponent(name)}`)
-            .then(async r => {
-                if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Not found'); }
-                return r.json();
-            })
+        apiFetch(`/skills/${encodeURIComponent(name)}`)
             .then(json => {
                 setSkill(json.data);
                 setLoading(false);
-                return fetch(`/api/skills/recommended/${encodeURIComponent(json.data.name)}`);
+                return apiFetch(`/skills/recommended/${encodeURIComponent(json.data.name)}`);
             })
-            .then(r => r.json())
             .then(json => setRecommended(json.data || []))
             .catch(e => { setError(e.message || 'Skill not found.'); setLoading(false); });
     }, [name]);

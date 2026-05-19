@@ -1,4 +1,9 @@
-const API_BASE = import.meta.env.PROD ? 'https://skillintel.onrender.com/api' : '/api';
+// Base URL for the API. It relies entirely on the environment variable set by Vite.
+export const API_BASE = `${import.meta.env.VITE_API_URL}/api`;
+
+export function getSocketUrl() {
+    return import.meta.env.VITE_API_URL;
+}
 export async function apiFetch(endpoint, options = {}) {
     const token = localStorage.getItem('skillintel_token');
     const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;

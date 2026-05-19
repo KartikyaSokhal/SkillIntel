@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiFetch } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
@@ -58,14 +59,7 @@ export default function Explorer() {
     const [filterText, setFilterText] = useState('');
     const [error, setError] = useState(false);
     useEffect(() => {
-        fetch('/api/skills')
-            .then(async (response) => {
-                const json = await response.json();
-                if (!response.ok || json.success === false) {
-                    throw new Error(json.message || 'Failed to load skills');
-                }
-                return json;
-            })
+        apiFetch('/skills')
             .then((json) => { setAllSkills(Array.isArray(json.data) ? json.data : []); setLoading(false); })
             .catch(() => { setError(true); setLoading(false); });
     }, []);

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { apiFetch } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
@@ -37,9 +38,8 @@ export default function Compare() {
         // stable random seed for industry bars
         industryRandRef.current = chosen.map(() => INDUSTRIES.map(() => Math.floor(Math.random() * 40 + 15)));
         try {
-            const res = await fetch(`/api/compare?skills=${encodeURIComponent(chosen.join(','))}`);
-            const json = await res.json();
-            if (!res.ok || json.success === false) {
+            const json = await apiFetch(`/compare?skills=${encodeURIComponent(chosen.join(','))}`);
+            if (json.success === false) {
                 throw new Error(json.message || json.error || 'Failed to compare skills');
             }
             const payload = Array.isArray(json.data) ? json.data : [];
