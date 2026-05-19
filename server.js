@@ -44,7 +44,11 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 //////////////////////////////////////////////////////
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? '*' : ['http://localhost:5173', 'http://localhost:3000'],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://skill-intel-ui.vercel.app"
+  ],
   credentials: true
 }));
 
