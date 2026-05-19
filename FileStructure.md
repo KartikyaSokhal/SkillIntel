@@ -43,6 +43,15 @@ flowchart LR
 ```
 server.js                 # Express app + middleware + routes + socket.io + boot
 seed.js                   # Seeds skills/users
+prisma.config.ts          # Prisma adapter setup configuration
+
+config/                   # Database connections
+  mogo.js                 # MongoDB configuration
+  prisma.js               # Prisma & PostgreSQL pool configuration
+
+prisma/                   # Prisma ORM setup
+  schema.prisma           # Relational schemas for PostgreSQL
+  migrations/             # SQL auto-migrations
 
 routes/                   # Route definitions (HTTP paths)
   authRoutes.js
@@ -64,8 +73,11 @@ middleware/               # Cross-cutting middleware
   sessionCheck.js         # SSR session guard
   logger.js               # request logging
   errorHandler.js         # centralized error formatting
+  upload.js               # Multer config for form-data & file uploads
 
 services/                 # “Integrations” + pipeline modules
+  dualWriteService.js     # Manages synchronization between Mongo & Postgres
+  resumeScorer.js         # Service to process and score uploaded resumes
   trendsPipeline.js       # orchestrates trend computation and persistence
   jobFetcher.js           # Adzuna + JSearch fetching, filtering, dedupe
   githubTrends.js         # GitHub Search API signal

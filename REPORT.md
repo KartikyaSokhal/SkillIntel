@@ -1,7 +1,7 @@
 # Project Internal Report
 
 ## 1. System Overview
-SkillIntel is a full‑stack web platform that delivers real‑time skill market intelligence for the Indian tech sector. It combines a **Node.js/Express** backend (with **MongoDB Atlas** for persistence) and a **React + Vite** SPA frontend. The backend also serves **EJS**‑rendered server‑side pages for the dashboard and handles **Socket.io** WebSocket streams to push live trending‑skill updates to connected clients.
+SkillIntel is a full‑stack web platform that delivers real‑time skill market intelligence for the Indian tech sector. It combines a **Node.js/Express** backend with a dual-database architecture: **MongoDB Atlas** for flexible document storage and **PostgreSQL** (via **Prisma ORM**) for structured relational data. The backend also serves **EJS**‑rendered server‑side pages for the dashboard, handles **Multer** for form-data (with planned **Cloudinary** integration), and manages **Socket.io** WebSocket streams to push live trending‑skill updates. It also includes comprehensive unit testing strategies and is designed for cloud deployments (Vercel/Render/AWS).
 
 **End‑to‑end flow**:
 ```
@@ -22,7 +22,7 @@ Trends Scheduler (node-cron) → Trends Pipeline → external sources (jobs/GitH
 |-------|------------|------|
 | **Server** | Express.js + HTTP server (http.createServer) | Routing, middleware, API, SSR, static assets |
 | **WebSocket** | Socket.io (attached to same HTTP server) | Push live data (trending skills) |
-| **Data** | MongoDB Atlas + Mongoose ODM | Document storage for `Skill` and `User` models |
+| **Data** | PostgreSQL (Prisma) & MongoDB (Mongoose) | Relational schemas for structured data & flexible document storage (Dual-write enabled) |
 | **Auth** | JWT (API) + express‑session + connect‑mongo (SSR) | Stateless token auth for SPA, session‑based auth for EJS pages |
 | **Client** | React (Vite) + React Router | SPA UI, API wrapper (`utils/api.js`), theming (`ThemeProvider`) |
 | **SSR** | EJS templates (`views/`) | Dashboard rendered on server, protected by session middleware |
@@ -155,6 +155,8 @@ All controller functions are **async**, use **try/catch**, and forward errors to
 5. **Mongoose Index on `name`** – Guarantees fast lookups and uniqueness for skill identifiers.
 6. **Pre‑save Hook for Password Hashing** – Centralizes security; passwords never stored plain.
 7. **Separate React SPA** – Vite provides fast HMR; the SPA consumes the same API, keeping the backend single‑source of truth.
+8. **Migration to PostgreSQL & Prisma** – To handle structured relational data reliably, we adopted PostgreSQL and Prisma ORM, conducting deep dives into Prisma schemas, migrations, and CRUD operations.
+9. **Robust Form-Data & Testing** – Implemented **Multer** for multipart/form-data with Cloudinary on the roadmap. Set up scalable unit testing and pipelines for deployment to Vercel/Render/AWS.
 
 ---
 

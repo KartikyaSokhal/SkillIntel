@@ -44,7 +44,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 //////////////////////////////////////////////////////
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: process.env.NODE_ENV === 'production' ? '*' : ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true
 }));
 

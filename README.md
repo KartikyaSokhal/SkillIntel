@@ -24,12 +24,16 @@ SkillIntel is a full‑stack web application that provides **skill market intell
 
 ## Tech stack
 
-- **Backend**: Node.js, Express.js, Mongoose, MongoDB Atlas
+- **Backend Databases**: PostgreSQL (Relational) via **Prisma ORM**, MongoDB Atlas (NoSQL) via Mongoose. Dual-write capabilities supported.
+- **Backend Framework**: Node.js, Express.js
 - **Auth**: JWT (`jsonwebtoken`), password hashing (`bcryptjs`)
 - **Sessions**: `express-session` + `connect-mongo`
+- **File Uploads**: `multer` for form-data, integration planned with Cloudinary
 - **SSR**: EJS
 - **Real-time**: Socket.io
 - **Jobs / pipeline**: `node-cron`, axios
+- **Testing**: Unit testing configuration (Jest/Mocha/Chai setup ongoing)
+- **Deployment Targets**: Configured for Vercel, Render, AWS, etc.
 - **Frontend**: React + Vite
 
 ---

@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.PROD ? 'https://skillintel.onrender.com/api' : '/api';
 export async function apiFetch(endpoint, options = {}) {
     const token = localStorage.getItem('skillintel_token');
     const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;

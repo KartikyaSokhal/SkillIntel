@@ -101,10 +101,17 @@ next();
 - **Full Duplex:** HTTP is half-duplex (client asks, server answers). WebSockets are full-duplex (server can push data unprompted).
 - **Socket.io:** Used in `server.js` (`io.on('connection')`). It upgrades the HTTP server to WebSockets. In SkillIntel, clients emit `requestTrending`, and the server queries the DB and emits `trendingUpdate` to push live data.
 
-### 7. PostgreSQL (Conceptual comparison)
-- If the examiner asks: "Why didn't you use PostgreSQL?"
-- **Answer:** PostgreSQL is a relational database strictly enforcing tables, rows, and foreign keys. It is better for highly transactional data like banking (ACID compliance). I chose MongoDB because the structure of user profiles and dynamic skill tags is inherently hierarchical and subject to change, making a NoSQL JSON document store a more natural fit.
+### 7. PostgreSQL & Prisma (New Architecture)
+- **Why dual databases?** We use PostgreSQL via Prisma ORM for structured, relational data like Users and Profiles where ACID compliance and strict foreign keys are essential. MongoDB is retained for flexible document storage (like dynamic skill tags).
+- **Prisma vs Mongoose:** Prisma is a modern, type-safe ORM that auto-generates a query client based on our `schema.prisma` file, enabling robust SQL operations. Mongoose is an ODM for MongoDB.
 
+### 8. File Uploads (Multer & Cloudinary)
+- **Multer:** Middleware for handling `multipart/form-data`. We use it to parse incoming files (like resumes) and store them temporarily in memory (`multer.memoryStorage()`).
+- **Cloudinary:** Planned/implemented for storing large media files in the cloud to prevent bloating our primary databases with buffers.
+
+### 9. Testing & Deployment
+- **Unit Testing:** Ensuring individual controllers and services function correctly in isolation (e.g., via Jest) to catch bugs early.
+- **Deployment:** The API is structured to run seamlessly on modern cloud PaaS like Vercel, Render, or AWS by securely injecting environment variables like `DATABASE_URL` and `JWT_SECRET`.
 ---
 
 ## 🔹 PART 5: DATA FLOW (Step-by-Step)
@@ -138,6 +145,8 @@ next();
 9. In `authController.js`, why don't you send the password back in the response object?
 10. In `models/Skill.js`, you have `unique: true` on the `name` field. How does this affect MongoDB under the hood? *(Ans: It creates a database Index, turning O(n) full-collection scans into O(log n) lookups).*
 11. What happens if your Node.js server crashes? Will logged-in users via EJS be logged out? *(Ans: No, because I used `connect-mongo` to store sessions persistently in the DB, not in RAM).*
+12. How does Prisma improve your PostgreSQL workflow? *(Ans: It provides a type-safe query builder, seamless SQL auto-migrations, and an intuitive `schema.prisma` definition).*
+13. What is the benefit of `multer.memoryStorage()`? *(Ans: It keeps the file as a buffer in RAM instead of writing it to the local disk, which is optimal when immediately uploading it to a cloud provider like Cloudinary or saving to a database).*
 
 ---
 
